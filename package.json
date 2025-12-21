@@ -1,0 +1,35 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@asouei/safe-fetch": "^1.0.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@vueuse/core": "^14.1.0",
+    "mitt": "^3.0.1",
+    "pinia": "^3.0.4",
+    "vite": "^7.3.0",
+    "vue": "^3.5.14",
+    "vue-i18n": "^11.2.7",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.10",
+    "@vicons/fa": "^0.13.0",
+    "@vicons/utils": "^0.1.4",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "@vue/tsconfig": "^0.8.1",
+    "autoprefixer": "^10.4.23",
+    "naive-ui": "^2.43.2",
+    "tailwindcss": "^4.1.7",
+    "typescript": "^5.9.3",
+    "vfonts": "^0.0.3",
+    "vue-tsc": "^3.2.0"
+  }
+}
