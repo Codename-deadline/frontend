@@ -1,3 +1,35 @@
 {
-  "test": "Hello world"
+  "back": "Back",
+  "language": {
+    "en": "English",
+    "ru": "Русский"
+  },
+  "auth": {
+    "otp": {
+      "label": "OTP",
+      "verify": "Verify OTP",
+      "resend": "Resend OTP",
+      "expired": "OTP expired",
+      "invalid": "Invalid OTP",
+      "success": "OTP verified successfully"
+    },
+    "sign-up": {
+      "fields": {
+        "identifier": {
+          "telegram": "Telegram user ID"
+        },
+        "username": "Username",
+        "fullName": "Full name",
+        "language": "Language"
+      },
+      "sign-up": "Sign up",
+      "method": "Sign up with either of the following methods to get started:",
+      "alreadyRegistered": "Already registered:"
+    },
+    "sign-in": {
+      "sign-in": "Sign in",
+      "method": "Sign in with either of the following methods to get started:",
+      "notRegistered": "Not registered yet:"
+    }
+  }
 }

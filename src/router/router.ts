@@ -9,6 +9,16 @@ const router = createRouter({
       component: () => import("../views/HomeView.vue"),
     },
     {
+      path: "/auth",
+      name: "Auth",
+      component: () => import("../views/AuthView.vue"),
+    },
+    {
+      path: "/auth/otp",
+      name: "OTP",
+      component: () => import("../views/OtpView.vue"),
+    },
+    {
       path: "/:catchAll(.*)",
       redirect: "/",
     },
