@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   darkTheme,
-  lightTheme,
+  type GlobalThemeOverrides,
   NConfigProvider,
   NGlobalStyle,
   NNotificationProvider,
@@ -13,9 +13,19 @@ import { useRouter } from "vue-router";
 
 const env = import.meta.env;
 
-const osTheme = useOsTheme();
-const _theme = computed(() => (osTheme.value === "dark" ? darkTheme : lightTheme));
+const themeOverridesLight: GlobalThemeOverrides = {
+  common: {
+    bodyColor: "#F4F8FD",
+  },
+};
 
+const darkThemeOverrides: GlobalThemeOverrides = {};
+
+const osTheme = useOsTheme();
+
+const isDark = computed(() => osTheme.value === "dark");
+const _theme = computed(() => (isDark.value ? darkTheme : null));
+const _themeOverrides = computed(() => (isDark.value ? darkThemeOverrides : themeOverridesLight));
 const _locale = computed(() => ruRU);
 
 const router = useRouter();
@@ -29,7 +39,7 @@ if (!localStorage.getItem("accessToken")) {
 </script>
 
 <template>
-    <n-config-provider :theme="_theme" :locale="_locale">
+    <n-config-provider :theme="_theme" :theme-overrides="_themeOverrides" :locale="_locale">
       <n-global-style />  
       <n-notification-provider :max="5">
         <RouterView />

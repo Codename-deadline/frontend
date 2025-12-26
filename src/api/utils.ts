@@ -25,16 +25,16 @@ export const validateAndRequest = async <TInput, TOutput>(
     };
   }
 
-  const result = await request(parsed.data);
-  if (!result.ok) {
+  const response = await request(parsed.data);
+  if (!response.ok) {
     return {
       ok: false,
       reason: "api",
-      error: result,
+      error: response,
     };
   }
 
-  return { ok: true, data: result.data };
+  return { ok: true, data: response.data };
 };
 
 const extractParams = (issue: ZodIssue) => {
@@ -51,16 +51,12 @@ const extractParams = (issue: ZodIssue) => {
 };
 
 export const parseZodError = (error: z.ZodError): FormErrors => {
-  const errors: FormErrors = {};
+  const errors: FormErrors = [];
 
   for (const issue of error.issues) {
-    const field = issue.path.join(".") || "_form";
-
-    if (!errors[field]) {
-      errors[field] = [];
-    }
-
-    errors[field].push({
+    const field = (issue.path.join(".") || "_form").toLowerCase();
+    errors.push({
+      field,
       code: issue.code,
       params: extractParams(issue),
     });

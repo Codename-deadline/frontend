@@ -21,7 +21,7 @@
   }
 
   h1 {
-    font-size: 2.5rem; /* 40px */
+    font-size: 2.25rem; /* 36px */
   }
 
   h2 {
@@ -46,26 +46,5 @@
 
   small {
     font-size: 0.75rem; /* 12px */
-  }
-}
-
-@media (max-width: 1024px) {
-  h1 {
-    font-size: 3.158rem;
-  }
-  h2 {
-    font-size: 2.369rem;
-  }
-  h3 {
-    font-size: 1.777rem;
-  }
-  h4 {
-    font-size: 1.333rem;
-  }
-  h5 {
-    font-size: 1.111rem;
-  }
-  small {
-    font-size: 0.7rem;
   }
 }

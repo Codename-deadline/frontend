@@ -12,7 +12,7 @@ export const client = createSafeFetch({
     retries: 2,
     baseDelayMs: 300,
   },
-  headers: { Authorization: "Bearer token" },
+  headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
   interceptors: {
     onRequest: (_, init) => {
       const headers = new Headers(init.headers);

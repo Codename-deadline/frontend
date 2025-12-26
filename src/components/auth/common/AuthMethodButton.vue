@@ -16,12 +16,12 @@ const _updateMethod = () => {
 </script>
 
 <template>
-  <n-button @click="_updateMethod" class="w-1/2!" type="info" size="large">
+  <n-button @click="_updateMethod" type="info" size="large">
     <template #icon>
-      <n-icon>
+      <Icon>
         <component :is="icon" />
-      </n-icon>
+      </Icon>
     </template>
-    Telegram
+    <span class="capitalize">{{ method.valueOf().toLowerCase() }}</span>
   </n-button>
 </template>

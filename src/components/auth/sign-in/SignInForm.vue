@@ -2,21 +2,27 @@
 import { toRef } from "@vueuse/core";
 // biome-ignore lint/correctness/noUnusedImports: Biome does not yet check <template>
 import { NFormItem, NInput } from "naive-ui";
-import { ref } from "vue";
+import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import BaseAuthForm from "@/components/auth/BaseAuthForm.vue";
+import * as apiAuth from "@/api/auth";
+import type { SignInRequest } from "@/api/schemas/auth/SignInRequest";
+import BaseAuthForm from "@/components/auth/common/BaseAuthForm.vue";
+import { useApi } from "@/composables/useApi";
+import type { AuthMethod } from "@/types/api";
 import { Language } from "@/types/Language";
+import { displayApiError, displayFormErrors, redirectToOTP } from "@/utils";
 
 const { t } = useI18n();
 const router = useRouter();
+const { makeRequest } = useApi();
 
 const props = defineProps<{
-  method: string;
+  method: AuthMethod;
 }>();
-const authMethod = toRef(props, "method");
+const authMethod: Ref<AuthMethod> = toRef(() => props.method);
 
-const _signInData = ref({
+const _signInData = ref<SignInRequest>({
   identifier: "",
   channel: "",
   username: "",
@@ -25,30 +31,34 @@ const _signInData = ref({
 const languageOptions: Array<{ label: string; value: Language }> = [];
 Object.values(Language).forEach((language) => {
   languageOptions.push({
-    label: t(`language.${language}`),
+    label: t(`language.${language.valueOf().toLowerCase()}`),
     value: language,
   });
 });
 
-const _submit = () => {
-  _signInData.value.channel = authMethod.value as string;
-  const otpId = "test";
-  router.push({
-    path: "/auth/otp",
-    query: {
-      id: otpId,
-    },
-  });
-  // TODO: Implement form submission logic
+const _submit = async () => {
+  _signInData.value.channel = authMethod.value.valueOf();
+
+  const response = await makeRequest(() => apiAuth.signIn(_signInData.value), displayFormErrors, displayApiError);
+  if (!response.ok) return;
+
+  redirectToOTP(router, response.data.otpId, authMethod.value);
 };
 </script>
 
 <template>
-  <BaseAuthForm @submit="_submit" :isSignIn="true">
-    <n-form-item :label="t('auth.sign-up.fields.identifier.telegram')">
+  <BaseAuthForm
+    @submit="_submit"
+    :isSignIn="true"
+    :authMethod="authMethod"
+    buttonSelector="auth.sign-in.action"
+    headerSelector="auth.sign-in.header"
+    descriptionSelector="auth.sign-in.description"
+  >
+    <n-form-item :label="t('auth.sign-in.fields.identifier.telegram')">
       <n-input v-model:value="_signInData.identifier" placeholder="Enter your identifier" />
     </n-form-item>
-    <n-form-item :label="t('auth.sign-up.fields.username')">
+    <n-form-item :label="t('auth.sign-in.fields.username')">
       <n-input
         v-model:value="_signInData.username"
         type="text"

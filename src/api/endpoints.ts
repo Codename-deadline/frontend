@@ -8,7 +8,7 @@ const endpoints: Record<Endpoint, string> = {
   [Endpoint.AUTH_SIGN_UP]: "/auth/register-otp",
   [Endpoint.AUTH_SIGN_IN]: "/auth/otp",
   [Endpoint.AUTH_VERIFY_OTP]: "/auth/otp/verify",
-  [Endpoint.AUTH_VERIFY_PASSWORD]: "/auth/otp/verify-password",
+  [Endpoint.AUTH_VERIFY_PASSWORD]: "/auth/verify-password",
 };
 const endpointPrefix: string = "/api";
 

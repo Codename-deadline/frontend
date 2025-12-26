@@ -7,18 +7,19 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import * as apiAuth from "@/api/auth";
 import type { SignUpRequest } from "@/api/schemas/auth/SignUpRequest";
-import BaseAuthForm from "@/components/auth/BaseAuthForm.vue";
+import BaseAuthForm from "@/components/auth/common/BaseAuthForm.vue";
 import { useApi } from "@/composables/useApi";
+import type { AuthMethod } from "@/types/api";
 import { Language } from "@/types/Language";
-import { displayApiError, displayFormErrors } from "@/utils";
+import { displayApiError, displayFormErrors, redirectToOTP } from "@/utils";
 
 const router = useRouter();
 const { t } = useI18n();
 
 const props = defineProps<{
-  method: string;
+  method: AuthMethod;
 }>();
-const authMethod: Ref<string> = toRef(props, "method");
+const authMethod: Ref<AuthMethod> = toRef(() => props.method);
 
 const _registrationData = ref<SignUpRequest>({
   identifier: "",
@@ -44,17 +45,19 @@ const _submit = async () => {
   const response = await makeRequest(() => apiAuth.signUp(_registrationData.value), displayFormErrors, displayApiError);
   if (!response.ok) return;
 
-  router.push({
-    path: "/auth/otp",
-    query: {
-      otpId: response.data.otpId,
-    },
-  });
+  redirectToOTP(router, response.data.otpId, authMethod.value);
 };
 </script>
 
 <template>
-  <BaseAuthForm @submit="_submit" :isSignIn="false">
+  <BaseAuthForm
+    @submit="_submit"
+    :isSignIn="false"
+    :authMethod="authMethod"
+    buttonSelector="auth.sign-up.action"
+    headerSelector="auth.sign-up.header"
+    descriptionSelector="auth.sign-up.description"
+  >
     <n-form-item :label="t(`auth.sign-up.fields.identifier.${authMethod.toLowerCase()}`)">
       <n-input v-model:value="_registrationData.identifier" placeholder="Enter your identifier" />
     </n-form-item>

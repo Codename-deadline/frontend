@@ -6,11 +6,12 @@ export enum AuthMethod {
 }
 
 export type FieldError = {
+  field: string;
   code: string;
   params?: Record<string, unknown>;
 };
 
-export type FormErrors = Record<string, FieldError[]>;
+export type FormErrors = FieldError[];
 
 export type ApiError = { ok: false; error: NormalizedError; response?: Response };
 

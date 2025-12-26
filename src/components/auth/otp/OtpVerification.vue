@@ -1,23 +1,24 @@
 <script setup lang="ts">
-import { NButton, NForm, NFormItem, NInputOtp } from "naive-ui";
+import { NForm, NFormItem, NInputOtp } from "naive-ui";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import * as apiAuth from "@/api/auth";
-import { displayFormErrors, storeTokenPair, displayApiError } from "@/utils";
-import { useApi as useApi } from "@/composables/useApi";
+import { useApi } from "@/composables/useApi";
+import type { AuthMethod } from "@/types/api";
+import { displayApiError, displayFormErrors, storeTokenPair } from "@/utils";
+import BaseAuthForm from "../common/BaseAuthForm.vue";
 
 // biome-ignore lint/correctness/noUnusedVariables: Biome does not yet check <template>
 const { t } = useI18n();
-
-const route = useRoute();
-const router = useRouter();
-const otpId = route.query.otpId?.toString() || "";
-if (!otpId) {
-  router.push({ path: "/" });
-}
-
 const { makeRequest } = useApi();
+const router = useRouter(); // TODO: Move to OtpView?
+
+const props = defineProps<{
+  otpId: string;
+  authMethod: AuthMethod;
+}>();
+const emit = defineEmits<(e: "password-required", requestId: string) => void>();
 
 const otp = ref<string[]>([]);
 const _onlyAllowNumber = (value: string) => !value || /^\d+$/.test(value);
@@ -25,18 +26,25 @@ const _onlyAllowNumber = (value: string) => !value || /^\d+$/.test(value);
 const _submit = async () => {
   const otpCode: string = otp.value.join("");
 
-  const result = await makeRequest(
-    () => apiAuth.verifyOtp({ id: otpId, code: otpCode }),
+  const response = await makeRequest(
+    () => apiAuth.verifyOtp({ id: props.otpId, code: otpCode }),
     displayFormErrors,
     displayApiError,
   );
-  if (!result.ok) return;
+  if (!response.ok) return;
 
-  if (result.data.passwordRequired) {
-    // TODO: Request password
+  if (response.data.passwordRequired) {
+    // TODO: Show an error message
+    if (!response.data.requestId) {
+      // This will only happen if the server returns an invalid response
+      console.error("Request id is missing");
+      return;
+    }
+    console.log(response.data.requestId);
+    emit("password-required", response.data.requestId);
   } else {
-    const tokenPair = result.data.tokenPair;
-    // TODO: Proper error handling
+    const tokenPair = response.data.tokenPair;
+    // TODO: Show an error message
     if (!tokenPair) {
       // This will only happen if the server returns an invalid response
       console.error("Token pair is missing");
@@ -49,12 +57,19 @@ const _submit = async () => {
 </script>
 
 <template>
-  <n-form>
-    <n-form-item :label="t('auth.otp.label')">
-      <n-input-otp v-model:value="otp" :allow-input="_onlyAllowNumber"/>
-    </n-form-item>
-    <div class="flex justify-center">
-      <n-button type="info" @click="_submit">{{ t('auth.otp.verify') }}</n-button>
-    </div>
-  </n-form>
+  <BaseAuthForm
+    @submit="_submit"
+    :isSignIn="true"
+    :authMethod="authMethod"
+    button-selector="auth.otp.action"
+    header-selector="auth.otp.header"
+    description-selector="auth.otp.description"
+  >
+    <n-form class="flex! justify-center!">
+      <n-form-item :label="t('auth.otp.fields.otp')">
+        <n-input-otp v-model:value="otp" :allow-input="_onlyAllowNumber" size="large"/>
+      </n-form-item>
+    </n-form>
+  </BaseAuthForm>
+
 </template>

@@ -25,7 +25,7 @@ app.use(i18n);
 app.use(pinia);
 app.use(router);
 
-app.component("NIcon", Icon);
-app.component("NIconConfigProvider", IconConfigProvider);
+app.component("Icon", Icon);
+app.component("IconConfigProvider", IconConfigProvider);
 
 app.mount("#app");
