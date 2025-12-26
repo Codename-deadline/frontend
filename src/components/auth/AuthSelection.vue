@@ -3,9 +3,8 @@ import { Telegram as TelegramIcon } from "@vicons/fa";
 import { NButton, NCard } from "naive-ui";
 import { type Component, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
 import { APP_NAME } from "@/constants/app";
-import { AuthMethod } from "@/types/AuthMethod";
+import { AuthMethod } from "@/types/api";
 import AuthMethodButton from "./AuthMethodButton.vue";
 
 const emit = defineEmits<(e: "method-selected", method: AuthMethod, isSignIn: boolean) => void>();
@@ -49,11 +48,15 @@ watch(currentMethod, (newMethod) => {
     <small class="flex justify-center mt-4">
       <div class="space-x-1" v-if="isSignIn">
         <span>{{ t("auth.sign-in.notRegistered") }}</span>
-        <n-button text size="tiny" @click="isSignIn = false">{{ t("auth.sign-up.sign-up") }}</n-button>
+        <n-button text size="tiny" @click="isSignIn = false">{{
+          t("auth.sign-up.sign-up")
+        }}</n-button>
       </div>
       <div class="space-x-1" v-else>
         <span>{{ t("auth.sign-up.alreadyRegistered") }}</span>
-        <n-button text size="tiny" @click="isSignIn = true">{{ t("auth.sign-in.sign-in") }}</n-button>
+        <n-button text size="tiny" @click="isSignIn = true">{{
+          t("auth.sign-in.sign-in")
+        }}</n-button>
       </div>
     </small>
   </n-card>

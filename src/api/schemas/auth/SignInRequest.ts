@@ -1,5 +1,5 @@
 import z from "zod";
-import { AuthMethod } from "@/types/AuthMethod";
+import { AuthMethod } from "@/types/api";
 
 export const SignInRequestSchema = z.object({
   identifier: z.string().min(1).max(255),

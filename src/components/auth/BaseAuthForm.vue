@@ -10,9 +10,9 @@ const emit = defineEmits({
   submit: () => true,
 });
 
-const props = defineProps({
-  isSignIn: Boolean,
-});
+const props = defineProps<{
+  isSignIn: boolean;
+}>();
 let translationSelector = `${props.isSignIn ? "sign-in" : "sign-up"}`;
 translationSelector = `auth.${translationSelector}.${translationSelector}`;
 

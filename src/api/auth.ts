@@ -6,40 +6,25 @@ import { type SignUpRequest, SignUpRequestSchema } from "./schemas/auth/SignUpRe
 import { SignUpResponseSchema } from "./schemas/auth/SignUpResponse";
 import { type VerifyOtpRequest, VerifyOtpRequestSchema } from "./schemas/auth/VerifyOtpRequest";
 import { VerifyOtpResponseSchema } from "./schemas/auth/VerifyOtpResponse";
-import { validateWith } from "./utils";
+import { validateAndRequest, validateWith } from "./utils";
 
-export const signUp = async (data: SignUpRequest) => {
-  const result = SignUpRequestSchema.safeParse(data);
-  if (!result.success) {
-    console.error("Invalid request:", result.error);
-    return;
-  }
+export const signUp = (data: SignUpRequest) =>
+  validateAndRequest(SignUpRequestSchema, data, (validated) =>
+    client.post(getEndpoint(Endpoint.AUTH_SIGN_UP), validated, {
+      validate: validateWith(SignUpResponseSchema),
+    }),
+  );
 
-  return await client.post(getEndpoint(Endpoint.AUTH_SIGN_UP), data, {
-    validate: validateWith(SignUpResponseSchema),
-  });
-};
+export const signIn = async (data: SignInRequest) =>
+  validateAndRequest(SignInRequestSchema, data, (validated) =>
+    client.post(getEndpoint(Endpoint.AUTH_SIGN_IN), validated, {
+      validate: validateWith(SignInResponseSchema),
+    }),
+  );
 
-export const signIn = async (data: SignInRequest) => {
-  const result = SignInRequestSchema.safeParse(data);
-  if (!result.success) {
-    console.error("Invalid request:", result.error);
-    return;
-  }
-
-  return await client.post(getEndpoint(Endpoint.AUTH_SIGN_IN), data, {
-    validate: validateWith(SignInResponseSchema),
-  });
-};
-
-export const verifyOtp = async (data: VerifyOtpRequest) => {
-  const result = VerifyOtpRequestSchema.safeParse(data);
-  if (!result.success) {
-    console.error("Invalid request:", result.error);
-    return;
-  }
-
-  return await client.post(getEndpoint(Endpoint.AUTH_VERIFY_OTP), data, {
-    validate: validateWith(VerifyOtpResponseSchema),
-  });
-};
+export const verifyOtp = async (data: VerifyOtpRequest) =>
+  validateAndRequest(VerifyOtpRequestSchema, data, (validated) =>
+    client.post(getEndpoint(Endpoint.AUTH_VERIFY_OTP), validated, {
+      validate: validateWith(VerifyOtpResponseSchema),
+    }),
+  );

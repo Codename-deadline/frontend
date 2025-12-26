@@ -11,9 +11,9 @@ import { Language } from "@/types/Language";
 const { t } = useI18n();
 const router = useRouter();
 
-const props = defineProps({
-  method: String,
-});
+const props = defineProps<{
+  method: string;
+}>();
 const authMethod = toRef(props, "method");
 
 const _signInData = ref({

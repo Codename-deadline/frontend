@@ -2,33 +2,38 @@
 import { NButton, NForm, NFormItem, NInputOtp } from "naive-ui";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import * as apiAuth from "@/api/auth";
-import BaseAuthForm from "@/components/auth/BaseAuthForm.vue";
-import { redirectToHome, storeTokenPair } from "@/utils";
+import { displayFormErrors, storeTokenPair, displayApiError } from "@/utils";
+import { useApi as useApi } from "@/composables/useApi";
 
 // biome-ignore lint/correctness/noUnusedVariables: Biome does not yet check <template>
 const { t } = useI18n();
 
 const route = useRoute();
+const router = useRouter();
 const otpId = route.query.otpId?.toString() || "";
 if (!otpId) {
-  redirectToHome();
+  router.push({ path: "/" });
 }
+
+const { makeRequest } = useApi();
 
 const otp = ref<string[]>([]);
 const _onlyAllowNumber = (value: string) => !value || /^\d+$/.test(value);
 
 const _submit = async () => {
-  console.log(otp.value);
-  const result = await apiAuth.verifyOtp({ id: otpId, code: otp.value.join("") });
-  if (!result) return;
-  if (!result.ok) {
-    console.error("Failed to sign up:", result.error);
-    return;
-  }
+  const otpCode: string = otp.value.join("");
+
+  const result = await makeRequest(
+    () => apiAuth.verifyOtp({ id: otpId, code: otpCode }),
+    displayFormErrors,
+    displayApiError,
+  );
+  if (!result.ok) return;
 
   if (result.data.passwordRequired) {
+    // TODO: Request password
   } else {
     const tokenPair = result.data.tokenPair;
     // TODO: Proper error handling
@@ -38,7 +43,7 @@ const _submit = async () => {
       return;
     }
     storeTokenPair(tokenPair);
-    redirectToHome();
+    router.push({ path: "/" });
   }
 };
 </script>

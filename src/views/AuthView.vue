@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import AuthForm from "@/components/auth/AuthForm.vue";
 import AuthSelection from "@/components/auth/AuthSelection.vue";
 import emitter from "@/plugins/emitter";
-import type { AuthMethod } from "@/types/AuthMethod";
+import type { AuthMethod } from "@/types/api";
 
 const selectedMethod = ref<AuthMethod>();
 const isSignInSelected = ref<boolean>(true);
-const _isMethodSelected = computed<boolean>(() => selectedMethod.value !== undefined);
 
 emitter.on("resetAuthProgress", () => {
   selectedMethod.value = undefined;
@@ -20,8 +19,11 @@ const _handleMethodSelected = (method: AuthMethod, isSignIn: boolean) => {
 </script>
 
 <template>
-    <div class="w-full h-lvh flex items-center justify-center">
-        <AuthSelection v-if="!_isMethodSelected" @method-selected="_handleMethodSelected"/>
-        <AuthForm v-else :method="selectedMethod" :isSignIn="isSignInSelected"/>
-    </div>
+  <div class="w-full h-lvh flex items-center justify-center">
+    <AuthSelection
+      v-if="!selectedMethod"
+      @method-selected="_handleMethodSelected"
+    />
+    <AuthForm v-else :method="selectedMethod" :isSignIn="isSignInSelected" />
+  </div>
 </template>

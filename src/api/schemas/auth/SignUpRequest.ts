@@ -1,5 +1,5 @@
 import z from "zod";
-import { AuthMethod } from "@/types/AuthMethod";
+import { AuthMethod } from "@/types/api";
 import { Language } from "@/types/Language";
 
 export const SignUpRequestSchema = z.object({

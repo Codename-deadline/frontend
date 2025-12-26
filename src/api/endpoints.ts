@@ -1,5 +1,3 @@
-const env = import.meta.env;
-
 export enum Endpoint {
   AUTH_SIGN_UP = 0,
   AUTH_SIGN_IN = 1,

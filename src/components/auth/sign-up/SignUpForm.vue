@@ -6,27 +6,21 @@ import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import * as apiAuth from "@/api/auth";
+import type { SignUpRequest } from "@/api/schemas/auth/SignUpRequest";
 import BaseAuthForm from "@/components/auth/BaseAuthForm.vue";
+import { useApi } from "@/composables/useApi";
 import { Language } from "@/types/Language";
+import { displayApiError, displayFormErrors } from "@/utils";
 
 const router = useRouter();
 const { t } = useI18n();
 
-const props = defineProps({
-  method: {
-    type: String,
-    required: true,
-  },
-});
+const props = defineProps<{
+  method: string;
+}>();
 const authMethod: Ref<string> = toRef(props, "method");
 
-const _registrationData = ref<{
-  identifier: string;
-  channel: string;
-  username: string;
-  fullName: string;
-  language: Language;
-}>({
+const _registrationData = ref<SignUpRequest>({
   identifier: "",
   channel: "",
   username: "",
@@ -42,22 +36,18 @@ Object.values(Language).forEach((language) => {
   });
 });
 
+const { makeRequest } = useApi();
+
 const _submit = async () => {
-  // TODO: Toast error message
   _registrationData.value.channel = authMethod.value.toUpperCase();
 
-  const result = await apiAuth.signUp(_registrationData.value);
-  // TODO: Proper error handling
-  if (!result) return;
-  if (!result.ok) {
-    console.error("Failed to sign up:", result.error);
-    return;
-  }
-  // TODO: Change language to selected
+  const response = await makeRequest(() => apiAuth.signUp(_registrationData.value), displayFormErrors, displayApiError);
+  if (!response.ok) return;
+
   router.push({
     path: "/auth/otp",
     query: {
-      otpId: result.data.otpId,
+      otpId: response.data.otpId,
     },
   });
 };

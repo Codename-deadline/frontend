@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { NButton } from "naive-ui";
 import type { Component } from "vue";
-import type { AuthMethod } from "@/types/AuthMethod";
+import type { AuthMethod } from "@/types/api";
 
 const props = defineProps<{
   method: AuthMethod;
