@@ -119,5 +119,14 @@
       "description": "Sign in to keep your tasks and deadlines on track",
       "notRegistered": "Not registered yet:"
     }
-  }
+  },
+  "navigation": {
+    "buttons": {
+      "organizations": "Orgs",
+      "threads": "Threads",
+      "deadlines": "Deadlines",
+      "invitations": "Invites"
+    }
+  },
+  "organizations": {}
 }
