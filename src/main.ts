@@ -8,7 +8,7 @@ import { defaultLocale, fallbackLocale, getTranslation, Locale } from "@/locales
 import router from "@/router/router";
 import App from "./App.vue";
 
-const app = createApp(App);
+export const app = createApp(App);
 const pinia = createPinia();
 
 const i18n = createI18n({

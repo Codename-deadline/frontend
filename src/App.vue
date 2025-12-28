@@ -1,16 +1,36 @@
-<template>
-    <n-config-provider :theme="_theme" :locale="_locale">
-        <n-global-style />
-        <RouterView />
-    </n-config-provider>
-</template>
-
 <script setup lang="ts">
-import { darkTheme, lightTheme, ruRU, useOsTheme } from "naive-ui";
+import {
+  darkTheme,
+  type GlobalThemeOverrides,
+  NConfigProvider,
+  NGlobalStyle,
+  NNotificationProvider,
+  ruRU,
+  useOsTheme,
+} from "naive-ui";
 import { computed } from "vue";
 
-const osTheme = useOsTheme();
-const _theme = computed(() => (osTheme.value === "dark" ? darkTheme : lightTheme));
+const themeOverridesLight: GlobalThemeOverrides = {
+  common: {
+    bodyColor: "#F4F8FD",
+  },
+};
 
+const darkThemeOverrides: GlobalThemeOverrides = {};
+
+const osTheme = useOsTheme();
+
+const isDark = computed(() => osTheme.value === "dark");
+const _theme = computed(() => (isDark.value ? darkTheme : null));
+const _themeOverrides = computed(() => (isDark.value ? darkThemeOverrides : themeOverridesLight));
 const _locale = computed(() => ruRU);
 </script>
+
+<template>
+    <n-config-provider :theme="_theme" :theme-overrides="_themeOverrides" :locale="_locale">
+      <n-global-style />  
+      <n-notification-provider :max="3">
+        <RouterView />
+      </n-notification-provider>
+    </n-config-provider>
+</template>

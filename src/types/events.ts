@@ -1,3 +1,3 @@
-import type { EventType } from "mitt";
-
-export type Events = Record<EventType, unknown>; // Replace with an appropriate type
+export type Events = {
+  resetAuthProgress?: null;
+};
