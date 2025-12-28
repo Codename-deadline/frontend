@@ -9,7 +9,6 @@ import {
   useOsTheme,
 } from "naive-ui";
 import { computed } from "vue";
-import { useRouter } from "vue-router";
 
 const themeOverridesLight: GlobalThemeOverrides = {
   common: {
@@ -25,8 +24,6 @@ const isDark = computed(() => osTheme.value === "dark");
 const _theme = computed(() => (isDark.value ? darkTheme : null));
 const _themeOverrides = computed(() => (isDark.value ? darkThemeOverrides : themeOverridesLight));
 const _locale = computed(() => ruRU);
-
-const router = useRouter();
 </script>
 
 <template>

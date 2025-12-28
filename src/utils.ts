@@ -2,8 +2,8 @@ import type { NotificationApiInjection } from "naive-ui/es/notification/src/Noti
 import { capitalize } from "vue";
 import type { Router } from "vue-router";
 import type { TokenPair } from "@/api/schemas/auth/common/TokenPair";
-import type { ApiError, AuthMethod, FieldError, FormErrors } from "./types/api";
 import { GeneralErrorSchema } from "./api/common/GeneralError";
+import type { ApiError, AuthMethod, FieldError, FormErrors } from "./types/api";
 
 export const storeTokenPair = (tokenPair: TokenPair) => {
   localStorage.setItem("accessToken", tokenPair.accessToken);

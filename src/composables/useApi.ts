@@ -1,11 +1,11 @@
 import { useNotification } from "naive-ui";
 import type { NotificationApiInjection } from "naive-ui/es/notification/src/NotificationProvider";
 import { useI18n } from "vue-i18n";
+import { type Router, useRoute, useRouter } from "vue-router";
+import { refreshToken as apiAuthRefreshToken } from "@/api/auth";
 import { parseZodError } from "@/api/utils";
 import type { ApiError, FormErrors, SafeApiCall } from "@/types/api";
 import type { OperationResult } from "@/types/OperationResult";
-import { useRoute, useRouter, type Router } from "vue-router";
-import { refreshToken as apiAuthRefreshToken } from "@/api/auth";
 import { storeTokenPair } from "@/utils";
 
 export function useApi() {
