@@ -8,6 +8,66 @@
     "back": "Back"
   },
   "errors": {
+    "error": "Error",
+    "unknown-error": "Unknown error",
+    "api": {
+      "timeout": "Request timed out.",
+      "no-network": "Failed to establish internet connection.",
+      "deserialization-error": "Failed to process the received data.",
+      "auth": {
+        "insufficient-permissions": "You do not have permission to perform this action.",
+        "invalid-credentials": "Invalid username or password.",
+        "sessions-limit-exceeded": "You have {opened} active sessions, which exceeds the maximum allowed ({max})."
+      },
+      "sign-up": {
+        "request-not-found": "The registration request was not found.",
+        "insufficient-data": "Not enough data was provided to complete registration."
+      },
+      "password-change": {
+        "unchanged": "The new password must be different from the current one.",
+        "invalid-credentials": "The current password is incorrect."
+      },
+      "user": {
+        "already-exists": "A user with this information already exists.",
+        "not-found": "User \"{username}\" was not found."
+      },
+      "action": {
+        "self-removal": "You cannot perform this action on yourself."
+      },
+      "role-change": {
+        "self": "You cannot change your own role.",
+        "invalid-scope-role": "The selected role is not valid for this scope.",
+        "no-role": "No role was specified for the role change."
+      },
+      "invitation": {
+        "not-found": "The invitation was not found.",
+        "invalid-role": "The invitation contains an invalid role.",
+        "personal-org": "You cannot invite users to a personal organization.",
+        "already-org-member": "The user is already a member of this organization.",
+        "already-answered": "This invitation has already been responded to."
+      },
+      "organization": {
+        "not-found": "The organization was not found."
+      },
+      "thread": {
+        "not-found": "The thread was not found."
+      },
+      "deadline": {
+        "not-found": "The deadline was not found.",
+        "invalid-timestamp": "The deadline must be at least {min} minutes in the future. Only {remaining} minutes remain."
+      },
+      "integration": {
+        "account-not-available": "This account is already linked to another user.",
+        "account-not-linked": "No linked account was found for this integration.",
+        "invalid-identifier-format": "The integration identifier format is invalid.",
+        "messenger-linkage-limit-exceeded": "The maximum number of linked messenger accounts has been reached."
+      },
+      "attachment": {
+        "not-found": "The attachment was not found.",
+        "upload-failed": "Failed to upload the attachment.",
+        "invalid-file-type": "This file type is not supported."
+      }
+    },
     "form": {
       "invalid-input": "Invalid input",
       "too-small": "{field} is too small. Minimum length: {min}",

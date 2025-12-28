@@ -1,5 +1,7 @@
 import { client } from "./client";
 import { Endpoint, getEndpoint } from "./endpoints";
+import { RefreshTokenRequestSchema } from "./schemas/auth/RefreshTokenRequest";
+import { RefreshTokenResponseSchema } from "./schemas/auth/RefreshTokenResponse";
 import { type SignInRequest, SignInRequestSchema } from "./schemas/auth/SignInRequest";
 import { SignInResponseSchema } from "./schemas/auth/SignInResponse";
 import { type SignUpRequest, SignUpRequestSchema } from "./schemas/auth/SignUpRequest";
@@ -35,5 +37,12 @@ export const verifyPassword = async (data: VerifyPasswordRequest) =>
   validateAndRequest(VerifyPasswordRequestSchema, data, (validated) =>
     client.post(getEndpoint(Endpoint.AUTH_VERIFY_PASSWORD), validated, {
       validate: validateWith(VerifyPasswordResponseSchema),
+    }),
+  );
+
+export const refreshToken = async () =>
+  validateAndRequest(RefreshTokenRequestSchema, {}, (validated) =>
+    client.post(getEndpoint(Endpoint.AUTH_REFRESH_TOKEN), validated, {
+      validate: validateWith(RefreshTokenResponseSchema),
     }),
   );

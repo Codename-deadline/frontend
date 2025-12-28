@@ -3,6 +3,7 @@ import { capitalize } from "vue";
 import type { Router } from "vue-router";
 import type { TokenPair } from "@/api/schemas/auth/common/TokenPair";
 import type { ApiError, AuthMethod, FieldError, FormErrors } from "./types/api";
+import { GeneralErrorSchema } from "./api/common/GeneralError";
 
 export const storeTokenPair = (tokenPair: TokenPair) => {
   localStorage.setItem("accessToken", tokenPair.accessToken);
@@ -40,9 +41,38 @@ export const displayFormErrors = (t: any, notification: NotificationApiInjection
   });
 };
 
-export const displayApiError = (t: any, notification: NotificationApiInjection, error: ApiError) => {
-  // TODO: Display api error.
-  error;
-  t;
-  notification;
+export const displayApiError = (safeT: any, notification: NotificationApiInjection, error: ApiError) => {
+  const apiError = error.error;
+
+  let errorMessageContent: string | null = null;
+
+  switch (apiError.name) {
+    case "HttpError": {
+      const parsed = GeneralErrorSchema.safeParse(apiError.body);
+      if (!parsed.success) {
+        console.error("Failed to display error data");
+        break;
+      }
+      errorMessageContent = safeT(`errors.api.${parsed.data.code}`, parsed.data.params ?? {});
+      break;
+    }
+    case "NetworkError": {
+      errorMessageContent = safeT("errors.api.no-network");
+      break;
+    }
+    case "TimeoutError": {
+      errorMessageContent = safeT("errors.api.timeout");
+      break;
+    }
+    case "ValidationError": {
+      console.error("Failed to parse response body");
+      break;
+    }
+  }
+
+  notification.error({
+    title: safeT("errors.error"),
+    content: errorMessageContent ?? safeT("errors.unknown-error"),
+    duration: 3500,
+  });
 };

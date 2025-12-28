@@ -1,8 +1,9 @@
 import z from "zod";
 
-const errorString = z.literal("error");
-
-export const GeneralError = z.object({
-  type: errorString,
-  detail: z.string().readonly(),
+export const GeneralErrorSchema = z.object({
+  detail: z.string().readonly().optional(),
+  params: z.object().optional(),
+  code: z.string(),
 });
+
+export type GeneralError = z.infer<typeof GeneralErrorSchema>;
