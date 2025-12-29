@@ -11,10 +11,10 @@ import {
 } from "naive-ui";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useUserStore } from "./stores/UserStore";
-import { Language } from "./types/Language";
 import GlobalEventHandler from "./GlobalEventHandler.vue";
 import { useTokenStore } from "./stores/TokenStore";
+import { useUserStore } from "./stores/UserStore";
+import { Language } from "./types/Language";
 
 const themeOverridesLight: GlobalThemeOverrides = {
   common: {

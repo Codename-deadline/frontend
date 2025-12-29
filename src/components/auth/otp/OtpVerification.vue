@@ -5,10 +5,10 @@ import { useI18n } from "vue-i18n";
 import * as apiAuth from "@/api/auth";
 import { useApi } from "@/composables/useApi";
 import emitter from "@/plugins/emitter";
+import { useTokenStore } from "@/stores/TokenStore";
 import type { AuthMethod } from "@/types/api";
 import { displayApiError, displayFormErrors } from "@/utils";
 import BaseAuthForm from "../common/BaseAuthForm.vue";
-import { useTokenStore } from "@/stores/TokenStore";
 
 // biome-ignore lint/correctness/noUnusedVariables: Biome does not yet check <template>
 const { t } = useI18n();

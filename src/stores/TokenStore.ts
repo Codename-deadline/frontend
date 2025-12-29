@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { TokenPairSchema, type TokenPair } from "@/api/schemas/auth/common/TokenPair";
+import type { TokenPair } from "@/api/schemas/auth/common/TokenPair";
 import type { JWT } from "@/api/schemas/common/JWT";
 
 export const useTokenStore = defineStore("tokens", () => {

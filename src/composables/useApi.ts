@@ -4,10 +4,10 @@ import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { refreshToken as apiAuthRefreshToken } from "@/api/auth";
 import { parseZodError } from "@/api/utils";
-import type { ApiError, FormErrors, SafeApiCall } from "@/types/api";
-import type { OperationResult } from "@/types/OperationResult";
 import emitter from "@/plugins/emitter";
 import { useTokenStore } from "@/stores/TokenStore";
+import type { ApiError, FormErrors, SafeApiCall } from "@/types/api";
+import type { OperationResult } from "@/types/OperationResult";
 
 export function useApi() {
   const { t, te } = useI18n();

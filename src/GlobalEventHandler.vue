@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { useRouter } from "vue-router";
-import emitter from "./plugins/emitter";
 import { useNotification } from "naive-ui";
-import { useApi } from "./composables/useApi";
-import { getMe } from "./api/user";
-import { displayApiError, displayFormErrors } from "./utils";
+import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useUserStore } from "./stores/UserStore";
+import { useRouter } from "vue-router";
+import { getMe } from "./api/user";
+import { useApi } from "./composables/useApi";
+import emitter from "./plugins/emitter";
 import { useTokenStore } from "./stores/TokenStore";
+import { useUserStore } from "./stores/UserStore";
+import { displayApiError, displayFormErrors } from "./utils";
 
 const userStore = useUserStore();
 const tokenStore = useTokenStore();
