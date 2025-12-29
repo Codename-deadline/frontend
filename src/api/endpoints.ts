@@ -4,6 +4,7 @@ export enum Endpoint {
   AUTH_VERIFY_OTP = 2,
   AUTH_VERIFY_PASSWORD = 3,
   AUTH_REFRESH_TOKEN = 4,
+  USER_ME = 5,
 }
 const endpoints: Record<Endpoint, string> = {
   [Endpoint.AUTH_SIGN_UP]: "/auth/register-otp",
@@ -11,6 +12,7 @@ const endpoints: Record<Endpoint, string> = {
   [Endpoint.AUTH_VERIFY_OTP]: "/auth/otp/verify",
   [Endpoint.AUTH_VERIFY_PASSWORD]: "/auth/verify-password",
   [Endpoint.AUTH_REFRESH_TOKEN]: "/auth/refresh-token",
+  [Endpoint.USER_ME]: "/user",
 };
 const endpointPrefix: string = "/api";
 

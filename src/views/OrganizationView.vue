@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import MainFooter from "@/components/home/common/MainFooter.vue";
+import PageLayout from "@/components/home/common/PageLayout.vue";
 </script>
 
 <template>
-  <main-footer />
+  <page-layout/>
 </template>

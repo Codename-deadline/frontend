@@ -5,11 +5,14 @@
     "ru": "Русский"
   },
   "actions": {
-    "back": "Back"
+    "back": "Back",
+    "page-reload": "Please perform a page reload"
   },
   "errors": {
     "error": "Error",
+    "critical-error": "Critical error",
     "unknown-error": "Unknown error",
+    "failed-to-fetch-user": "Failed to fetch user data.",
     "api": {
       "timeout": "Request timed out.",
       "no-network": "Failed to establish internet connection.",

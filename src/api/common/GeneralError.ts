@@ -2,7 +2,7 @@ import z from "zod";
 
 export const GeneralErrorSchema = z.object({
   detail: z.string().readonly().optional(),
-  params: z.object().optional(),
+  params: z.looseObject({}).optional(),
   code: z.string(),
 });
 

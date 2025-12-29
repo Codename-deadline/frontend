@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import MainFooter from "@/components/home/common/MainFooter.vue";
+import GlobalFooter from "@/components/home/common/GlobalFooter.vue";
 </script>
 
 <template>
-  <main-footer />
+  <global-footer/>
 </template>

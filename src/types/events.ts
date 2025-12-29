@@ -1,3 +1,6 @@
 export type Events = {
-  resetAuthProgress?: null;
+  resetAuthProgress: undefined;
+  signUpCompleted: undefined;
+  failedToRefreshToken: undefined;
+  accessTokenExpired: undefined;
 };

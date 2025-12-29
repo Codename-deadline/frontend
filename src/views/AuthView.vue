@@ -20,10 +20,7 @@ const _handleMethodSelected = (method: AuthMethod, isSignIn: boolean) => {
 
 <template>
   <div class="w-full h-lvh flex items-center justify-center">
-    <AuthSelection
-      v-if="!selectedMethod"
-      @method-selected="_handleMethodSelected"
-    />
-    <AuthForm v-else :method="selectedMethod" :isSignIn="isSignInSelected" />
+    <AuthSelection v-if="!selectedMethod" @method-selected="_handleMethodSelected"/>
+    <AuthForm v-else :method="selectedMethod" :isSignIn="isSignInSelected"/>
   </div>
 </template>

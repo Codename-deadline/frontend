@@ -19,7 +19,7 @@ const _updateMethod = () => {
   <n-button @click="_updateMethod" type="info" size="large">
     <template #icon>
       <Icon>
-        <component :is="icon" />
+        <component :is="icon"/>
       </Icon>
     </template>
     <span class="capitalize">{{ method.valueOf().toLowerCase() }}</span>

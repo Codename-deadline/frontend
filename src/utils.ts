@@ -1,14 +1,8 @@
 import type { NotificationApiInjection } from "naive-ui/es/notification/src/NotificationProvider";
 import { capitalize } from "vue";
 import type { Router } from "vue-router";
-import type { TokenPair } from "@/api/schemas/auth/common/TokenPair";
 import { GeneralErrorSchema } from "./api/common/GeneralError";
 import type { ApiError, AuthMethod, FieldError, FormErrors } from "./types/api";
-
-export const storeTokenPair = (tokenPair: TokenPair) => {
-  localStorage.setItem("accessToken", tokenPair.accessToken);
-  localStorage.setItem("refreshToken", tokenPair.refreshToken);
-};
 
 export const redirectToOTP = (router: Router, otpId: string, authMethod: AuthMethod) => {
   router.push({
@@ -53,6 +47,8 @@ export const displayApiError = (safeT: any, notification: NotificationApiInjecti
         console.error("Failed to display error data");
         break;
       }
+      console.log(parsed.data.params);
+      console.log(parsed.data.params ?? {});
       errorMessageContent = safeT(`errors.api.${parsed.data.code}`, parsed.data.params ?? {});
       break;
     }

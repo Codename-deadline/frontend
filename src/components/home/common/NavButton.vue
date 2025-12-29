@@ -35,12 +35,12 @@ const themeVars = useThemeVars();
 
 <style scoped>
 .nav-button__active {
-  background-color: v-bind('themeVars.infoColorPressed');
-  color: v-bind('themeVars.baseColor')
+  background-color: v-bind("themeVars.infoColorPressed");
+  color: v-bind("themeVars.baseColor");
 }
 
 .nav-button:hover {
-  background-color: v-bind('themeVars.infoColorHover');
-  color: v-bind('themeVars.baseColor')
+  background-color: v-bind("themeVars.infoColorHover");
+  color: v-bind("themeVars.baseColor");
 }
 </style>

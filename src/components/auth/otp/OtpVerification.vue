@@ -2,17 +2,18 @@
 import { NForm, NFormItem, NInputOtp } from "naive-ui";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
 import * as apiAuth from "@/api/auth";
 import { useApi } from "@/composables/useApi";
+import emitter from "@/plugins/emitter";
 import type { AuthMethod } from "@/types/api";
-import { displayApiError, displayFormErrors, storeTokenPair } from "@/utils";
+import { displayApiError, displayFormErrors } from "@/utils";
 import BaseAuthForm from "../common/BaseAuthForm.vue";
+import { useTokenStore } from "@/stores/TokenStore";
 
 // biome-ignore lint/correctness/noUnusedVariables: Biome does not yet check <template>
 const { t } = useI18n();
 const { makeRequest } = useApi();
-const router = useRouter(); // TODO: Move to OtpView?
+const tokenStore = useTokenStore();
 
 const props = defineProps<{
   otpId: string;
@@ -50,8 +51,8 @@ const _submit = async () => {
       console.error("Token pair is missing");
       return;
     }
-    storeTokenPair(tokenPair);
-    router.push({ path: "/" });
+    tokenStore.updateTokens(tokenPair);
+    emitter.emit("signUpCompleted");
   }
 };
 </script>
@@ -71,5 +72,4 @@ const _submit = async () => {
       </n-form-item>
     </n-form>
   </BaseAuthForm>
-
 </template>

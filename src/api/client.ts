@@ -11,22 +11,13 @@ export const client = createSafeFetch({
     retries: 2,
     baseDelayMs: 500,
   },
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("accessToken") ?? localStorage.getItem("refreshToken")}`,
+  },
   interceptors: {
-    onRequest: (_, init) => {
-      const headers = new Headers(init.headers);
-      const token: string = localStorage.getItem("accessToken") ?? localStorage.getItem("refreshToken") ?? "";
-      if (token) {
-        headers.append("Authorization", `Bearer ${token}`);
-      }
-    },
     onError: async (error: NormalizedError) => {
-      if (error.name !== "HttpError") return;
+      if (error.name !== "HttpError" || error.status === 401) return;
 
-      if (error.status === 401) {
-        if (window.location.href.includes("auth")) return;
-        localStorage.removeItem("accessToken");
-        return;
-      }
       const parsed = GeneralErrorSchema.safeParse(error.body);
       if (parsed.success) {
         console.error(`[API]: Code: ${parsed.data.code}, details: ${parsed.data.detail ?? "none"}`);

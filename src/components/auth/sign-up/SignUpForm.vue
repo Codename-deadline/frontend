@@ -59,27 +59,16 @@ const _submit = async () => {
     descriptionSelector="auth.sign-up.description"
   >
     <n-form-item :label="t(`auth.sign-up.fields.identifier.${authMethod.toLowerCase()}`)">
-      <n-input v-model:value="_registrationData.identifier" placeholder="Enter your identifier" />
+      <n-input v-model:value="_registrationData.identifier" placeholder="Enter your identifier"/>
     </n-form-item>
     <n-form-item :label="t('auth.sign-up.fields.username')">
-      <n-input
-        v-model:value="_registrationData.username"
-        type="text"
-        placeholder="Enter your username"
-      />
+      <n-input v-model:value="_registrationData.username" type="text" placeholder="Enter your username"/>
     </n-form-item>
     <n-form-item :label="t('auth.sign-up.fields.fullName')">
-      <n-input
-        v-model:value="_registrationData.fullName"
-        type="text"
-        placeholder="Enter your full name"
-      />
+      <n-input v-model:value="_registrationData.fullName" type="text" placeholder="Enter your full name"/>
     </n-form-item>
     <n-form-item :label="t('auth.sign-up.fields.language')">
-      <n-select
-        v-model:value="_registrationData.language"
-        :options="languageOptions"
-      />
+      <n-select v-model:value="_registrationData.language" :options="languageOptions"/>
     </n-form-item>
   </BaseAuthForm>
 </template>

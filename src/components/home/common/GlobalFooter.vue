@@ -12,9 +12,6 @@ const redirectToSection = (section: MainSection) => {
 
 <template>
   <div class="w-screen absolute bottom-0">
-    <nav-bar
-      :default-section="route.path.split('/')[1] as MainSection"
-      @section-selected="redirectToSection"
-    />
+    <nav-bar :default-section="route.path.split('/')[1] as MainSection" @section-selected="redirectToSection"/>
   </div>
 </template>

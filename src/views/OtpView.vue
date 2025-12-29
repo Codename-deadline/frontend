@@ -30,16 +30,7 @@ const _updatePasswordRequestId = (requestId: string) => {
 
 <template>
   <div class="w-full h-lvh flex items-center justify-center">
-    <PasswordVerification
-      v-if="passwordRequestId"
-      :request-id="passwordRequestId"
-      :auth-method="authMethod"
-    />
-    <OtpVerification
-      v-else
-      @password-required="_updatePasswordRequestId"
-      :otp-id="otpId"
-      :auth-method="authMethod"
-    />
+    <PasswordVerification v-if="passwordRequestId" :request-id="passwordRequestId" :auth-method="authMethod"/>
+    <OtpVerification v-else @password-required="_updatePasswordRequestId" :otp-id="otpId" :auth-method="authMethod"/>
   </div>
 </template>

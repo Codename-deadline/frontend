@@ -10,6 +10,6 @@ const props = defineProps<{
 </script>
 
 <template>
-  <SignInForm v-if="isSignIn" :method="method" />
-  <SignUpForm v-else :method="method" />
+  <SignInForm v-if="isSignIn" :method="method"/>
+  <SignUpForm v-else :method="method"/>
 </template>
