@@ -8,9 +8,11 @@ import {
   NNotificationProvider,
   ruRU,
   useOsTheme,
+  useThemeVars,
 } from "naive-ui";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute, useRouter } from "vue-router";
 import GlobalEventHandler from "./GlobalEventHandler.vue";
 import { useTokenStore } from "./stores/TokenStore";
 import { useUserStore } from "./stores/UserStore";
@@ -51,6 +53,14 @@ watch(
 
 const tokenStore = useTokenStore();
 tokenStore.initialize();
+
+const route = useRoute();
+const router = useRouter();
+if (route.path.includes("auth") && userStore.isAvailable) {
+  router.push({ path: "/" });
+}
+
+const themeVars = useThemeVars();
 </script>
 
 <template>
@@ -62,3 +72,9 @@ tokenStore.initialize();
     </n-notification-provider>
   </n-config-provider>
 </template>
+
+<style>
+.description {
+  color: v-bind('themeVars.textColor3')
+}
+</style>

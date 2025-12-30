@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import AuthForm from "@/components/auth/AuthForm.vue";
 import AuthSelection from "@/components/auth/AuthSelection.vue";
 import emitter from "@/plugins/emitter";
-import type { AuthMethod } from "@/types/api";
-import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/UserStore";
+import type { AuthMethod } from "@/types/api";
 
 const selectedMethod = ref<AuthMethod>();
 const isSignInSelected = ref<boolean>(true);

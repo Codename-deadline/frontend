@@ -131,5 +131,19 @@
       "invitations": "Invites"
     }
   },
-  "organizations": {}
+  "organization": {
+    "scope": {
+      "personal": "Personal",
+      "public": "Public",
+      "private": "Private"
+    },
+    "role": {
+      "admin": "Admin",
+      "member": "Member",
+      "owner": "Owner"
+    },
+    "new": "Create organization",
+    "header": "Organizations",
+    "description": "Manage your teams and projects"
+  }
 }

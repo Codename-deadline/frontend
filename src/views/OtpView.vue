@@ -4,8 +4,8 @@ import { useRoute, useRouter } from "vue-router";
 import OtpVerification from "@/components/auth/otp/OtpVerification.vue";
 import PasswordVerification from "@/components/auth/otp/PasswordVerification.vue";
 import emitter from "@/plugins/emitter";
-import { AuthMethod } from "@/types/api";
 import { useUserStore } from "@/stores/UserStore";
+import { AuthMethod } from "@/types/api";
 
 const route = useRoute();
 const router = useRouter();
