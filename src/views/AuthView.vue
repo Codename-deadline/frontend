@@ -4,6 +4,8 @@ import AuthForm from "@/components/auth/AuthForm.vue";
 import AuthSelection from "@/components/auth/AuthSelection.vue";
 import emitter from "@/plugins/emitter";
 import type { AuthMethod } from "@/types/api";
+import { useRoute, useRouter } from "vue-router";
+import { useUserStore } from "@/stores/UserStore";
 
 const selectedMethod = ref<AuthMethod>();
 const isSignInSelected = ref<boolean>(true);
@@ -16,6 +18,13 @@ const _handleMethodSelected = (method: AuthMethod, isSignIn: boolean) => {
   selectedMethod.value = method;
   isSignInSelected.value = isSignIn;
 };
+
+const route = useRoute();
+const router = useRouter();
+const userStore = useUserStore();
+if (route.path.includes("auth") && userStore.isAvailable) {
+  router.push({ path: "/" });
+}
 </script>
 
 <template>

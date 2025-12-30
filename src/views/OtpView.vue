@@ -5,6 +5,7 @@ import OtpVerification from "@/components/auth/otp/OtpVerification.vue";
 import PasswordVerification from "@/components/auth/otp/PasswordVerification.vue";
 import emitter from "@/plugins/emitter";
 import { AuthMethod } from "@/types/api";
+import { useUserStore } from "@/stores/UserStore";
 
 const route = useRoute();
 const router = useRouter();
@@ -26,6 +27,11 @@ emitter.on("resetAuthProgress", () => {
 const _updatePasswordRequestId = (requestId: string) => {
   passwordRequestId.value = requestId;
 };
+
+const userStore = useUserStore();
+if (route.path.includes("auth") && userStore.isAvailable) {
+  router.push({ path: "/" });
+}
 </script>
 
 <template>
