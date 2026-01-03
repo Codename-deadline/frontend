@@ -39,7 +39,7 @@ const emit = defineEmits<(e: "back") => void>();
         <CalendarAlt />
       </Icon>
       <div class="flex flex-col items-center justify-center space-y-4">
-        <h1 class="mb-0">
+        <h1 class="mb-0 max-sm:text-3xl">
           {{ headerSelector ? t(headerSelector) : APP_NAME }}
         </h1>
         <div v-if="descriptionSelector" class="text-center text-gray-500">
