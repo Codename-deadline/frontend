@@ -18,56 +18,83 @@ const endpoints = {
   USER_ME: {
     path: "/user",
   },
+  USER_MY_ORGANIZATIONS: {
+    path: "/user/organization-member",
+    queryParams: {} as { page: number },
+  },
   ORGANIZATION_GET: {
     path: "/organization/{orgId}",
-    params: {} as { orgId: number },
+    pathParams: {} as { orgId: number },
   },
   ORGANIZATION_CREATE: {
     path: "/organization",
-    params: {} as { orgId: number },
+    pathParams: {} as { orgId: number },
   },
   ORGANIZATION_DELETE: {
     path: "/organization/{orgId}",
-    params: {} as { orgId: number },
+    pathParams: {} as { orgId: number },
   },
   ORGANIZATION_PATCH: {
     path: "/organization/{orgId}",
-    params: {} as { orgId: number },
+    pathParams: {} as { orgId: number },
   },
   ORGANIZATION_MEMBERS: {
     path: "/organization/{orgId}/members",
-    params: {} as { orgId: number },
+    pathParams: {} as { orgId: number },
   },
   ORGANIZATION_REMOVE_MEMBER: {
     path: "/organization/{orgId}/members/{memberId}",
-    params: {} as { orgId: number; memberId: number },
+    pathParams: {} as { orgId: number; memberId: number },
   },
 } as const;
 
-export type EndpointSpec<PathParams = void> = {
-  path: string;
-  params?: PathParams;
-};
+export type EndpointSpec<K extends EndpointKey> =
+  {
+    path: string;
+  }
+  & (PathParams<K> extends never
+      ? Record<string, never>
+      : { pathParams: PathParams<K> })
+  & (QueryParams<K> extends never
+      ? Record<string, never>
+      : { queryParams: QueryParams<K> });
 
 type EndpointKey = keyof typeof endpoints;
 
-type PathParams<K extends EndpointKey> = (typeof endpoints)[K] extends { params: infer P } ? P : undefined;
+type PathParams<K extends EndpointKey> = (typeof endpoints)[K] extends { readonly pathParams: infer P } ? P : never;
+type QueryParams<K extends EndpointKey> = (typeof endpoints)[K] extends { readonly queryParams: infer Q } ? Q : never;
 
-const buildPath = (path: string, params?: Record<string, string | number>): string => {
-  if (!params) return `${endpointPrefix}${path}`;
+const buildPath = (path: string, pathParams?: Record<string, string | number>): string => {
+  if (!pathParams) return `${endpointPrefix}${path}`;
 
   let result = path;
-  for (const [key, value] of Object.entries(params)) {
+  for (const [key, value] of Object.entries(pathParams)) {
     result = result.replace(`{${key}}`, encodeURIComponent(String(value)));
   }
 
   return `${endpointPrefix}${result}`;
 };
 
+const buildQuery = (query?: Record<string, string | number>): string => {
+  if (!query) return "";
+
+  const pathParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    pathParams.append(key, String(value));
+  }
+  return `?${pathParams.toString()}`;
+};
+
 export const getEndpoint = <K extends EndpointKey>(
   key: K,
-  ...args: PathParams<K> extends void ? [] : [params: PathParams<K>]
+  options?: {
+      pathParams?: PathParams<K>;
+      queryParams?: QueryParams<K>;
+    }
 ): string => {
   const spec = endpoints[key];
-  return buildPath(spec.path, args[0] as Record<string, string | number>);
+
+  const path = buildPath(spec.path, options?.pathParams as Record<string, string | number>);
+  const query = buildQuery(options?.queryParams as Record<string, string | number>);
+  return `${path}${query}`;
 };

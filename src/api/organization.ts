@@ -1,15 +1,19 @@
 import { client } from "./client";
 import { getEndpoint } from "./endpoints";
 import { EmptySchema } from "./schemas/common/Empty";
-import type { OrganizationResponse } from "./schemas/organization/common/OrganizationDataResponse";
+import type { Organization } from "./schemas/organization/common/Organization";
 import { validateAndRequest } from "./utils";
 
 export const create = async (organizationId: number) =>
   validateAndRequest(EmptySchema, {}, (validated) =>
-    client.get<OrganizationResponse>(getEndpoint("ORGANIZATION_GET", { orgId: organizationId }), validated),
+    client.get<Organization>(getEndpoint("ORGANIZATION_GET", {
+      pathParams: { orgId: organizationId }
+    }), validated),
   );
 
-export const get = async (organizationId: number) =>
+export const getById = async (organizationId: number) =>
   validateAndRequest(EmptySchema, {}, (validated) =>
-    client.get<OrganizationResponse>(getEndpoint("ORGANIZATION_CREATE", { orgId: organizationId }), validated),
+    client.get<Organization>(getEndpoint("ORGANIZATION_CREATE", {
+      pathParams: { orgId: organizationId }
+    }), validated),
   );

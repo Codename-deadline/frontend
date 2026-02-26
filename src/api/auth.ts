@@ -21,7 +21,7 @@ export const signUp = (data: SignUpRequest) =>
 
 export const signIn = async (data: SignInRequest) =>
   validateAndRequest(SignInRequestSchema, data, (validated) =>
-    client.post(getEndpoint("AUTH_REFRESH_TOKEN"), validated, {
+    client.post(getEndpoint("AUTH_SIGN_IN"), validated, {
       validate: validateWith(SignInResponseSchema),
     }),
   );

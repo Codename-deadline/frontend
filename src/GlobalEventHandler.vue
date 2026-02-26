@@ -19,7 +19,6 @@ const router = useRouter();
 
 const fetchUser = async () => {
   if (!tokenStore.refreshToken) {
-    console.log("dsa");
     router.push({ path: "/auth" });
     return;
   }
@@ -48,7 +47,8 @@ onMounted(async () => {
 });
 
 emitter.on("failedToRefreshToken", () => {
-  if (env.VITE_NO_AUTH_REDIRECT.toLowerCase() === "true") {
+  console.log("Failed to refresh token");
+  if (env.VITE_NO_AUTH_REDIRECT?.toLowerCase() === "true") {
     console.warn("[DEV]: Auth redirect disabled");
     return;
   }

@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { OrganizationStats } from "@/api/schemas/organization/common/OrganizationStats";
+import type { OrganizationType } from "@/api/schemas/organization/common/OrganizationType";
 import { Cog, Globe, Lock, UserFriends } from "@vicons/fa";
 import { NButton, NCard, NDivider, NIconWrapper, NTag } from "naive-ui";
 import { useI18n } from "vue-i18n";
-import type { OrganizationType } from "@/api/schemas/organization/common/OrganizationType";
 
 const { t } = useI18n();
 
@@ -10,6 +11,7 @@ const props = defineProps<{
   title: string;
   scope: OrganizationType;
   role: string;
+  stats: OrganizationStats;
 }>();
 </script>
 
@@ -54,10 +56,10 @@ const props = defineProps<{
         <icon class="mr-2" size="16">
           <UserFriends />
         </icon>
-        8 members
+        {{stats.members}} members
       </div>
       <div>
-        3 threads
+        {{stats.threads}} threads
       </div>
     </footer>
   </n-card>
