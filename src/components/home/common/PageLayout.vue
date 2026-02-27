@@ -11,7 +11,6 @@ const {
   wrapperProps,
   virtualItems,
   loading,
-  hasMore,
 } = useInfiniteVirtualList<Organization>(
   "organizations",
   (page: number) => getOrganizations(page), {
