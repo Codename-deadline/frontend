@@ -47,8 +47,7 @@ export const displayApiError = (safeT: any, notification: NotificationApiInjecti
         console.error("Failed to display error data");
         break;
       }
-      console.log(parsed.data.params);
-      console.log(parsed.data.params ?? {});
+      console.error(parsed.data);
       errorMessageContent = safeT(`errors.api.${parsed.data.code}`, parsed.data.params ?? {});
       break;
     }

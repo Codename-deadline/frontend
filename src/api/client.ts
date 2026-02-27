@@ -1,5 +1,6 @@
 import { createSafeFetch, type NormalizedError } from "@asouei/safe-fetch";
 import { GeneralErrorSchema } from "@/api/common/GeneralError";
+import { useTokenStore } from "@/stores/TokenStore";
 
 const env = import.meta.env;
 
@@ -15,6 +16,15 @@ export const client = createSafeFetch({
     Authorization: `Bearer ${localStorage.getItem("accessToken") ?? localStorage.getItem("refreshToken")}`,
   },
   interceptors: {
+    onRequest: (url: RequestInfo, init: RequestInit & { url: string }) => {
+      const store = useTokenStore();
+
+      const headers = new Headers(init.headers);
+      headers.set('Authorization', `Bearer ${store.accessToken ?? store.refreshToken}`);
+      init.headers = headers;
+
+      return { input: url, init };
+    },
     onError: async (error: NormalizedError) => {
       if (error.name !== "HttpError" || error.status === 401) return;
 

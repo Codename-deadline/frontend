@@ -16,7 +16,6 @@ export function useApi() {
   const tokenStore = useTokenStore();
 
   const safeT = (key: string, options: Record<string, unknown>) => {
-    console.log(options);
     return te(key) ? t(key, options) : undefined;
   };
 
