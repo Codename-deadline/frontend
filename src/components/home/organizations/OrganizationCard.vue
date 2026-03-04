@@ -25,7 +25,7 @@ const props = defineProps<{
           </Icon>
         </n-icon-wrapper>
 
-        <div >
+        <div>
           <div class="flex space-x-3!">
             <n-button text>
               <template #icon>
@@ -36,7 +36,6 @@ const props = defineProps<{
             </n-button>
             <n-tag round :bordered="false" size="small">{{ t(`organization.role.${role.toLowerCase()}`) }}</n-tag>
           </div>
-
         </div>
       </div>
       <div class="mt-3">
@@ -59,6 +58,9 @@ const props = defineProps<{
         {{stats.members}} members
       </div>
       <div>
+        <icon class="mr-2" size="16">
+          <UserFriends />
+        </icon>
         {{stats.threads}} threads
       </div>
     </footer>

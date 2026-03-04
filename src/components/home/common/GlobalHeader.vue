@@ -23,7 +23,7 @@ Object.values(Language).forEach((languageUpperCase: string) => {
 
 <template>
   <header class="w-full border-b">
-    <div class="flex justify-between px-32 py-4">
+    <div class="flex justify-between py-4 layout-dynamic-padding">
       <h1 class="text-2xl">{{ APP_NAME }}</h1>
       <div class="flex items-center space-x-4!">
         <n-dropdown trigger="click" placement="bottom" :options="languageOptions" @select="updateLanguage">

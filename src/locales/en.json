@@ -6,6 +6,7 @@
   },
   "actions": {
     "back": "Back",
+    "create": "Create",
     "page-reload": "Please perform a page reload"
   },
   "errors": {
@@ -142,7 +143,6 @@
       "member": "Member",
       "owner": "Owner"
     },
-    "new": "Create organization",
     "header": "Organizations",
     "description": "Manage your teams and projects"
   }

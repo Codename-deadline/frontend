@@ -1,5 +1,5 @@
 import { useInfiniteScroll, useVirtualList } from "@vueuse/core";
-import { computed } from "vue";
+import { computed, type ComputedRef } from "vue";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
 import { type ListType, useInfiniteListStore } from "@/stores/InfiniteListStore";
 import type { SafeApiCall } from "@/types/api";
@@ -10,6 +10,7 @@ export function useInfiniteVirtualList<T>(
   type: ListType,
   fetcher: (page: number) => Promise<SafeApiCall<PagedResponse<T>>>,
   options: {
+    itemsPerRow: ComputedRef<number>;
     itemHeight: number;
     distance?: number;
   },
@@ -26,12 +27,24 @@ export function useInfiniteVirtualList<T>(
     store.loadMore<T>(type, fetcherClosure);
   }
 
-  const items = computed(() => store.stateMap[type].items);
-  const virtual = useVirtualList(items, {
-    itemHeight: options.itemHeight,
-  });
+  const items = computed<T[]>(() => store.stateMap[type].items as T[]);
+  const rows = computed(() => {
+    const result: T[][] = []
+    for (let i = 0; i < items.value.length; i += options.itemsPerRow.value) {
+      result.push(items.value.slice(i, i + options.itemsPerRow.value))
+    }
+    return result
+  })
 
-  useInfiniteScroll(window, () => store.loadMore<T>(type, fetcherClosure), { distance });
+  const virtual = useVirtualList(rows, {
+    itemHeight: options.itemHeight,
+  })
+
+  useInfiniteScroll(
+    virtual.containerProps.ref,
+    () => store.loadMore<T>(type, fetcherClosure),
+    { distance }
+  )
 
   return {
     containerProps: virtual.containerProps,
@@ -39,12 +52,10 @@ export function useInfiniteVirtualList<T>(
     virtualItems: virtual.list,
     scrollTo: virtual.scrollTo,
 
-    // state
     loading: computed(() => store.stateMap[type].loading),
     hasMore: computed(() => store.stateMap[type].hasMore),
 
-    // actions
     loadMore: () => store.loadMore<T>(type, fetcherClosure),
     reset: () => store.reset(type),
-  };
+  }
 }

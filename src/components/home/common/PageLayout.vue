@@ -1,10 +1,26 @@
 <script setup lang="ts">
-import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
-import GlobalFooter from "./GlobalFooter.vue";
-import GlobalHeader from "./GlobalHeader.vue";
 import type { Organization } from "@/api/schemas/organization/common/Organization";
 import { getOrganizations } from "@/api/user";
 import OrganizationCard from "@/components/home/organizations/OrganizationCard.vue";
+import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
+import { useWindowSize } from '@vueuse/core';
+import GlobalFooter from "./GlobalFooter.vue";
+import GlobalHeader from "./GlobalHeader.vue";
+import { computed } from "vue";
+
+const props = defineProps<{
+  itemHeight: number;
+  distance?: number;
+}>();
+
+const { width } = useWindowSize();
+// These values are linked to the CSS below
+// grid grid-cols-1... needs to be adjusted on change
+const itemsPerRow = computed<number>(() => {
+  if (width.value >= 1280) return 3;
+  if (width.value >= 640) return 2;
+  return 1;
+});
 
 const {
   containerProps,
@@ -14,49 +30,38 @@ const {
 } = useInfiniteVirtualList<Organization>(
   "organizations",
   (page: number) => getOrganizations(page), {
-    itemHeight: 75
+    itemsPerRow,
+    itemHeight: props.itemHeight,
+    distance: props.distance
   }
 )
 </script>
 
 <template>
   <global-header class="mt"/>
-  <div class="mt-8 px-32">
+  <div class="mt-8 layout-dynamic-padding">
     <slot name="header"/>
-    <div class="mt-6 grid grid-cols-3 gap-4">
-      <!-- <slot name="body"/> -->
-      <organization-card
-        v-for="item in virtualItems"
-        :key="item.data.id"
-        :title="item.data.title"
-        :scope="item.data.type"
-        role="owner"
-        :stats="item.data.stats"
-      />
-        <div
-        v-bind="containerProps"
-        class="overflow-y-auto"
-      >
-        <div v-bind="wrapperProps">
-           <!-- <organization-card
-            v-for="item in virtualItems"
-            :key="item.id"
-            :title="item.data.title"
-            :scope="item.data.type"
-            role="test"
-            :stats="item.data.stats"
-          /> -->
-          <!-- <div
-            v-for="item in virtualItems"
-            :key="item.index"
-            :style="{ height: '70px', borderBottom: '1px solid #eee', padding: '12px' }"
+    <div class="mt-6">
+      <div v-bind="containerProps" class="overflow-y-auto max-h-[72.5vh]">
+        <div v-bind="wrapperProps" class="space-y-4">
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
+            v-for="row in virtualItems"
+            :key="row.index"
           >
-            {{ item.data.title }}
-          </div> -->
-        </div>
+            <organization-card
+              v-for="item in row.data"
+              :key="item.id"
+              :title="item.title"
+              :scope="item.type"
+              role="owner"
+              :stats="item.stats"
+            />
+          </div>
+          </div>
       </div>
     </div>
-    <div class="flex h-full justify-center items-center">
+    <div class="flex justiftems-starty-center items-center">
       <div v-if="loading" style="text-align:center; padding: 16px;">
         Loading...
       </div>
@@ -64,3 +69,11 @@ const {
   </div>
   <global-footer/>
 </template>
+
+<style>
+@reference "@/styles.css";
+
+.layout-dynamic-padding {
+  @apply px-6 lg:px-24 2xl:px-32
+}
+</style>
