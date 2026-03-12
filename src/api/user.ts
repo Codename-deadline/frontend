@@ -2,7 +2,7 @@ import { client } from "./client";
 import { getEndpoint } from "./endpoints";
 import { EmptySchema } from "./schemas/common/Empty";
 import { type User, UserSchema } from "./schemas/common/User";
-import { type PagedOrganization, PagedOrganizationSchema } from "./schemas/organization/common/Organization";
+import { type PagedOrganizationWithRole, PagedOrganizationWithRoleSchema } from "./schemas/organization/common/Organization";
 import { validateAndRequest, validateWith } from "./utils";
 
 export const getMe = async () =>
@@ -14,9 +14,9 @@ export const getMe = async () =>
 
 export const getOrganizations = async (page: number) =>
   validateAndRequest(EmptySchema, {}, () =>
-    client.get<PagedOrganization>(getEndpoint("USER_MY_ORGANIZATIONS", {
+    client.get<PagedOrganizationWithRole>(getEndpoint("USER_MY_ORGANIZATIONS", {
       queryParams: { page }
     }), {
-      validate: validateWith(PagedOrganizationSchema)
+      validate: validateWith(PagedOrganizationWithRoleSchema)
     })
   );

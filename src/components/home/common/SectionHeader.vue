@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import { tScopePrefix } from "@/locales/utils";
+import type { ScopeType } from "@/types/ScopeType";
 import { Plus } from "@vicons/fa";
 import { Icon } from "@vicons/utils";
 import { NButton } from "naive-ui";
 import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
-  headerSelector: string;
-  descriptionSelector: string;
-  buttonSelector: string;
+  scope: ScopeType;
+  buttonAction: string;
 }>();
 
 const { t } = useI18n();
@@ -16,8 +17,8 @@ const { t } = useI18n();
 <template>
   <header class="flex w-full justify-between items-center">
     <div>
-      <h2>{{ t(headerSelector) }}</h2>
-      <div class="description">{{ t(descriptionSelector) }}</div>
+      <h2>{{ t(tScopePrefix(scope, "header")) }}</h2>
+      <div class="description">{{ t(tScopePrefix(scope, "description")) }}</div>
     </div>
     <div>
       <n-button type="info" class="rounded-lg!">
@@ -26,7 +27,7 @@ const { t } = useI18n();
           <Plus/>
         </Icon>
         </template>
-        {{ t(buttonSelector) }}
+        {{ t(`actions.${buttonAction}`) }}
       </n-button>
     </div>
   </header>

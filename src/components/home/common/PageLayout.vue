@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import type { Organization } from "@/api/schemas/organization/common/Organization";
+import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
 import { getOrganizations } from "@/api/user";
 import OrganizationCard from "@/components/home/organizations/OrganizationCard.vue";
 import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
 import { useWindowSize } from '@vueuse/core';
+import { computed } from "vue";
 import GlobalFooter from "./GlobalFooter.vue";
 import GlobalHeader from "./GlobalHeader.vue";
-import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
   itemHeight: number;
   distance?: number;
 }>();
-
+const { t } = useI18n();
 const { width } = useWindowSize();
 // These values are linked to the CSS below
 // grid grid-cols-1... needs to be adjusted on change
@@ -27,7 +28,7 @@ const {
   wrapperProps,
   virtualItems,
   loading,
-} = useInfiniteVirtualList<Organization>(
+} = useInfiniteVirtualList<OrganizationWithRole>(
   "organizations",
   (page: number) => getOrganizations(page), {
     itemsPerRow,
@@ -49,21 +50,19 @@ const {
             v-for="row in virtualItems"
             :key="row.index"
           >
-            <organization-card
+             <organization-card
+              @edit="console.log(`edit org ${item.id}`)"
               v-for="item in row.data"
               :key="item.id"
-              :title="item.title"
-              :scope="item.type"
-              role="owner"
-              :stats="item.stats"
+              :organization="item"
             />
           </div>
-          </div>
+        </div>
       </div>
     </div>
     <div class="flex justiftems-starty-center items-center">
       <div v-if="loading" style="text-align:center; padding: 16px;">
-        Loading...
+        {{ t(`state.loading`) }}
       </div>
     </div>
   </div>

@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import PageLayout from "@/components/home/common/PageLayout.vue";
 import SectionHeader from "@/components/home/common/SectionHeader.vue";
-
+import { CARD_HEIGHT_PIXELS, PRELOAD_DISTANCE_PIXELS } from "@/constants/virtualList";
 </script>
 
 <template>
-  <page-layout :item-height="210.2" :distance="400"">
-    <template #header>
+  <page-layout :item-height="CARD_HEIGHT_PIXELS" :distance="PRELOAD_DISTANCE_PIXELS">
+     <template #header>
       <section-header
-        header-selector="organization.header"
-        description-selector="organization.description"
-        button-selector="actions.create"
+        scope="organization"
+        button-action="create"
       />
     </template>
   </page-layout>

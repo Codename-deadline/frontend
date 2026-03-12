@@ -19,7 +19,7 @@ const endpoints = {
     path: "/user",
   },
   USER_MY_ORGANIZATIONS: {
-    path: "/user/organization-member",
+    path: "/organization",
     queryParams: {} as { page: number },
   },
   ORGANIZATION_GET: {

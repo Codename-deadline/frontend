@@ -1,8 +1,10 @@
 {
-  "back": "Back",
   "language": {
     "en": "English",
     "ru": "Русский"
+  },
+  "state": {
+    "loading": "Loading..."
   },
   "actions": {
     "back": "Back",
@@ -132,18 +134,28 @@
       "invitations": "Invites"
     }
   },
-  "organization": {
-    "scope": {
-      "personal": "Personal",
-      "public": "Public",
-      "private": "Private"
+  "scopes": {
+    "common": {
+      "members": "members",
+      "unknown": "Unknown"
     },
-    "role": {
-      "admin": "Admin",
-      "member": "Member",
-      "owner": "Owner"
+    "organization": {
+      "type": {
+        "personal": "Personal",
+        "public": "Public",
+        "private": "Private"
+      },
+      "role": {
+        "admin": "Admin",
+        "member": "Member",
+        "owner": "Owner"
+      },
+      "header": "Organizations",
+      "description": "Manage your teams and projects"
     },
-    "header": "Organizations",
-    "description": "Manage your teams and projects"
+    "thread": {
+      "header": "Threads"
+    },
+    "deadline": {}
   }
 }

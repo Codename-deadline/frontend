@@ -1,7 +1,7 @@
 import type { NotificationApiInjection } from "naive-ui/es/notification/src/NotificationProvider";
 import { capitalize } from "vue";
 import type { Router } from "vue-router";
-import { GeneralErrorSchema } from "./api/common/GeneralError";
+import { GeneralErrorSchema } from "@/api/common/GeneralError";
 import type { ApiError, AuthMethod, FieldError, FormErrors } from "./types/api";
 
 export const redirectToOTP = (router: Router, otpId: string, authMethod: AuthMethod) => {
