@@ -48,16 +48,10 @@ const endpoints = {
   },
 } as const;
 
-export type EndpointSpec<K extends EndpointKey> =
-  {
-    path: string;
-  }
-  & (PathParams<K> extends never
-      ? Record<string, never>
-      : { pathParams: PathParams<K> })
-  & (QueryParams<K> extends never
-      ? Record<string, never>
-      : { queryParams: QueryParams<K> });
+export type EndpointSpec<K extends EndpointKey> = {
+  path: string;
+} & (PathParams<K> extends never ? Record<string, never> : { pathParams: PathParams<K> }) &
+  (QueryParams<K> extends never ? Record<string, never> : { queryParams: QueryParams<K> });
 
 type EndpointKey = keyof typeof endpoints;
 
@@ -88,9 +82,9 @@ const buildQuery = (query?: Record<string, string | number>): string => {
 export const getEndpoint = <K extends EndpointKey>(
   key: K,
   options?: {
-      pathParams?: PathParams<K>;
-      queryParams?: QueryParams<K>;
-    }
+    pathParams?: PathParams<K>;
+    queryParams?: QueryParams<K>;
+  },
 ): string => {
   const spec = endpoints[key];
 

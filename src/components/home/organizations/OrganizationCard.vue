@@ -12,15 +12,15 @@ const props = defineProps<{
   organization: OrganizationWithRole;
 }>();
 const emit = defineEmits<{
-  edit: [id: number]
+  edit: [id: number];
 }>();
 
 // TODO: Extract
-const hasAnyEditPermission = computed<boolean>(
-  () => Object.values(props.organization.permissions).reduce(
-    (accumulator: boolean, curValue: boolean) => accumulator ||= curValue,
-    false
-  )
+const hasAnyEditPermission = computed<boolean>(() =>
+  Object.values(props.organization.permissions).reduce(
+    (accumulator: boolean, curValue: boolean) => (accumulator ||= curValue),
+    false,
+  ),
 );
 </script>
 

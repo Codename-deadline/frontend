@@ -20,7 +20,7 @@ export const client = createSafeFetch({
       const store = useTokenStore();
 
       const headers = new Headers(init.headers);
-      headers.set('Authorization', `Bearer ${store.accessToken ?? store.refreshToken}`);
+      headers.set("Authorization", `Bearer ${store.accessToken ?? store.refreshToken}`);
       init.headers = headers;
 
       return { input: url, init };

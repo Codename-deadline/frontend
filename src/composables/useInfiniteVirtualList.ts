@@ -29,22 +29,18 @@ export function useInfiniteVirtualList<T>(
 
   const items = computed<T[]>(() => store.stateMap[type].items as T[]);
   const rows = computed(() => {
-    const result: T[][] = []
+    const result: T[][] = [];
     for (let i = 0; i < items.value.length; i += options.itemsPerRow.value) {
-      result.push(items.value.slice(i, i + options.itemsPerRow.value))
+      result.push(items.value.slice(i, i + options.itemsPerRow.value));
     }
-    return result
-  })
+    return result;
+  });
 
   const virtual = useVirtualList(rows, {
     itemHeight: options.itemHeight,
-  })
+  });
 
-  useInfiniteScroll(
-    virtual.containerProps.ref,
-    () => store.loadMore<T>(type, fetcherClosure),
-    { distance }
-  )
+  useInfiniteScroll(virtual.containerProps.ref, () => store.loadMore<T>(type, fetcherClosure), { distance });
 
   return {
     containerProps: virtual.containerProps,
@@ -57,5 +53,5 @@ export function useInfiniteVirtualList<T>(
 
     loadMore: () => store.loadMore<T>(type, fetcherClosure),
     reset: () => store.reset(type),
-  }
+  };
 }

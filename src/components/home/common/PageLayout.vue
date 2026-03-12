@@ -3,7 +3,7 @@ import type { OrganizationWithRole } from "@/api/schemas/organization/common/Org
 import { getOrganizations } from "@/api/user";
 import OrganizationCard from "@/components/home/organizations/OrganizationCard.vue";
 import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
-import { useWindowSize } from '@vueuse/core';
+import { useWindowSize } from "@vueuse/core";
 import { computed } from "vue";
 import GlobalFooter from "./GlobalFooter.vue";
 import GlobalHeader from "./GlobalHeader.vue";
@@ -23,19 +23,15 @@ const itemsPerRow = computed<number>(() => {
   return 1;
 });
 
-const {
-  containerProps,
-  wrapperProps,
-  virtualItems,
-  loading,
-} = useInfiniteVirtualList<OrganizationWithRole>(
+const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtualList<OrganizationWithRole>(
   "organizations",
-  (page: number) => getOrganizations(page), {
+  (page: number) => getOrganizations(page),
+  {
     itemsPerRow,
     itemHeight: props.itemHeight,
-    distance: props.distance
-  }
-)
+    distance: props.distance,
+  },
+);
 </script>
 
 <template>

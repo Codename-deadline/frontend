@@ -6,7 +6,6 @@ import type { JWT } from "@/api/schemas/common/JWT";
 export const useTokenStore = defineStore(
   "tokens",
   () => {
-
     const accessToken = ref<JWT | null>(null);
     const refreshToken = ref<JWT | null>(null);
 
@@ -32,5 +31,5 @@ export const useTokenStore = defineStore(
       key: "token-store",
       storage: localStorage,
     },
-  }
+  },
 );

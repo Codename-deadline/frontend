@@ -6,14 +6,20 @@ import { validateAndRequest } from "./utils";
 
 export const create = async (organizationId: number) =>
   validateAndRequest(EmptySchema, {}, (validated) =>
-    client.get<Organization>(getEndpoint("ORGANIZATION_GET", {
-      pathParams: { orgId: organizationId }
-    }), validated),
+    client.get<Organization>(
+      getEndpoint("ORGANIZATION_GET", {
+        pathParams: { orgId: organizationId },
+      }),
+      validated,
+    ),
   );
 
 export const getById = async (organizationId: number) =>
   validateAndRequest(EmptySchema, {}, (validated) =>
-    client.get<Organization>(getEndpoint("ORGANIZATION_CREATE", {
-      pathParams: { orgId: organizationId }
-    }), validated),
+    client.get<Organization>(
+      getEndpoint("ORGANIZATION_CREATE", {
+        pathParams: { orgId: organizationId },
+      }),
+      validated,
+    ),
   );

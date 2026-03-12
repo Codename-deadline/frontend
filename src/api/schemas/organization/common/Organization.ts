@@ -13,17 +13,16 @@ export const OrganizationSchema = z.object({
   type: OrganizationTypeSchema,
   createdAt: IsoUtcDateSchema,
   stats: OrganizationStatsSchema,
-  permissions: OrganizationPermissionsSchema
+  permissions: OrganizationPermissionsSchema,
 });
 
 export const PagedOrganizationSchema = pagedResponseSchema(OrganizationSchema);
 export type Organization = z.infer<typeof OrganizationSchema>;
 export type PagedOrganization = z.infer<typeof PagedOrganizationSchema>;
 
-
 export const OrganizationWithRoleSchema = OrganizationSchema.extend({
-  role: OrganizationRoleSchema
-})
+  role: OrganizationRoleSchema,
+});
 
 export const PagedOrganizationWithRoleSchema = pagedResponseSchema(OrganizationWithRoleSchema);
 export type OrganizationWithRole = z.infer<typeof OrganizationWithRoleSchema>;

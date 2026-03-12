@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import {
-    darkTheme,
-    enUS,
-    type GlobalThemeOverrides,
-    NConfigProvider,
-    NGlobalStyle,
-    NNotificationProvider,
-    ruRU,
-    useOsTheme,
-    useThemeVars,
+  darkTheme,
+  enUS,
+  type GlobalThemeOverrides,
+  NConfigProvider,
+  NGlobalStyle,
+  NNotificationProvider,
+  ruRU,
+  useOsTheme,
+  useThemeVars,
 } from "naive-ui";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";

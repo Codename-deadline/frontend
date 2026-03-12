@@ -21,29 +21,26 @@ export const useInfiniteListStore = defineStore("infiniteList", () => {
     deadlines: { items: [], page: 0, loading: false, hasMore: true },
   });
 
-  async function loadMore<T>(
-    type: ListType,
-    fetcher: (page: number) => Promise<OperationResult<PagedResponse<T>>>
-  ) {
+  async function loadMore<T>(type: ListType, fetcher: (page: number) => Promise<OperationResult<PagedResponse<T>>>) {
     const state: InfiniteListState<T> = stateMap.value[type] as InfiniteListState<T>;
 
-    if (state.loading || !state.hasMore) return
+    if (state.loading || !state.hasMore) return;
 
-    state.loading = true
+    state.loading = true;
 
     try {
-      const result = await fetcher(state.page)
-      if (!result.ok) return
+      const result = await fetcher(state.page);
+      if (!result.ok) return;
 
-      state.items.push(...result.data.data)
+      state.items.push(...result.data.data);
 
       if (state.page >= result.data.totalPages - 1) {
-        state.hasMore = false
+        state.hasMore = false;
       } else {
-        state.page++
+        state.page++;
       }
     } finally {
-      state.loading = false
+      state.loading = false;
     }
   }
 
