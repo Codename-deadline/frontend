@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { useWindowSize } from "@vueuse/core";
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
 import { getOrganizations } from "@/api/user";
 import OrganizationCard from "@/components/home/organizations/OrganizationCard.vue";
 import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
-import { useWindowSize } from "@vueuse/core";
-import { computed } from "vue";
 import GlobalFooter from "./GlobalFooter.vue";
 import GlobalHeader from "./GlobalHeader.vue";
-import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
   itemHeight: number;

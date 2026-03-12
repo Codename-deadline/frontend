@@ -1,5 +1,5 @@
 import { useInfiniteScroll, useVirtualList } from "@vueuse/core";
-import { computed, type ComputedRef } from "vue";
+import { type ComputedRef, computed } from "vue";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
 import { type ListType, useInfiniteListStore } from "@/stores/InfiniteListStore";
 import type { SafeApiCall } from "@/types/api";

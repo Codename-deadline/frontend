@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useThemeVars } from "naive-ui";
-import { type Component, toRef } from "vue";
+import type { Component } from "vue";
 import { useI18n } from "vue-i18n";
 import type { MainSection } from "@/types/navigation";
 
@@ -14,7 +14,6 @@ const props = defineProps<{
 const emit = defineEmits<(e: "click", id: MainSection) => void>();
 
 const { t } = useI18n();
-const isActive = toRef(() => props.isActive);
 const themeVars = useThemeVars();
 </script>
 

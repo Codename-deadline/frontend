@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
-import { tScopePrefix, extractRoleFromString } from "@/locales/utils";
 import { Cog, Globe, Lock, UserFriends, UserLock } from "@vicons/fa";
 import { NButton, NCard, NDivider, NIconWrapper, NTag } from "naive-ui";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
+import { extractRoleFromString, tScopePrefix } from "@/locales/utils";
 
 const { t } = useI18n();
 

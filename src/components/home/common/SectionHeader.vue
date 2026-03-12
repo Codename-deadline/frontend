@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { tScopePrefix } from "@/locales/utils";
-import type { ScopeType } from "@/types/ScopeType";
 import { Plus } from "@vicons/fa";
 import { Icon } from "@vicons/utils";
 import { NButton } from "naive-ui";
 import { useI18n } from "vue-i18n";
+import { tScopePrefix } from "@/locales/utils";
+import type { ScopeType } from "@/types/ScopeType";
 
 const props = defineProps<{
   scope: ScopeType;
