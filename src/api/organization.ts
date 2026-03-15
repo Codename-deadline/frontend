@@ -1,24 +1,25 @@
 import { client } from "./client";
+import type { PagedResponse } from "./common/PaginationResponse";
 import { getEndpoint } from "./endpoints";
 import { EmptySchema } from "./schemas/common/Empty";
-import type { Organization } from "./schemas/organization/common/Organization";
+import type { OrganizationMember } from "./schemas/organization/Member";
+import {
+  type PatchOrganizationRequest,
+  PatchOrganizationRequestSchema,
+} from "./schemas/organization/patch/PatchOrganizationRequest";
 import { validateAndRequest } from "./utils";
 
-export const create = async (organizationId: number) =>
-  validateAndRequest(EmptySchema, {}, (validated) =>
-    client.get<Organization>(
-      getEndpoint("ORGANIZATION_GET", {
-        pathParams: { orgId: organizationId },
-      }),
-      validated,
-    ),
+export const patch = async (organizationId: number, data: PatchOrganizationRequest) =>
+  validateAndRequest(PatchOrganizationRequestSchema, data, (validated) =>
+    client.patch(getEndpoint("ORGANIZATION_PATCH", { pathParams: { orgId: organizationId } }), validated),
   );
 
-export const getById = async (organizationId: number) =>
+export const getMembers = async (organizationId: number, page: number) =>
   validateAndRequest(EmptySchema, {}, (validated) =>
-    client.get<Organization>(
-      getEndpoint("ORGANIZATION_CREATE", {
+    client.get<PagedResponse<OrganizationMember>>(
+      getEndpoint("ORGANIZATION_MEMBERS", {
         pathParams: { orgId: organizationId },
+        queryParams: { page },
       }),
       validated,
     ),

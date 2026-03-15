@@ -16,6 +16,8 @@
     "critical-error": "Critical error",
     "unknown-error": "Unknown error",
     "failed-to-fetch-user": "Failed to fetch user data.",
+    "failed-to-fetch-metadata-versions": "Failed to fetch metadata versions.",
+    "failed-to-fetch-metadata": "Failed to fetch metadata.",
     "api": {
       "timeout": "Request timed out.",
       "no-network": "Failed to establish internet connection.",

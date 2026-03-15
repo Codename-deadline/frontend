@@ -1,5 +1,5 @@
 import z from "zod";
 
-export const OrganizationRoleSchema = z.enum(["ORG_MEMBER", "ORG_ADMIN", "ORG_OWNER"]);
+export const OrganizationRoleSchema = z.string().regex(/^ORG_[A-Z]+$/);
 
 export type OrganizationRole = z.infer<typeof OrganizationRoleSchema>;

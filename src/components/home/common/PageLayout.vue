@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useWindowSize } from "@vueuse/core";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
 import { getOrganizations } from "@/api/user";
+import EditOrganizationDialog from "@/components/home/organizations/EditOrganizationDialog.vue";
 import OrganizationCard from "@/components/home/organizations/OrganizationCard.vue";
 import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
 import GlobalFooter from "./GlobalFooter.vue";
@@ -22,6 +23,9 @@ const itemsPerRow = computed<number>(() => {
   if (width.value >= 640) return 2;
   return 1;
 });
+
+const objectIdToEdit = ref<any>(null);
+const isEditing = computed(() => objectIdToEdit.value !== null)
 
 const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtualList<OrganizationWithRole>(
   "organizations",
@@ -47,7 +51,7 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
             :key="row.index"
           >
              <organization-card
-              @edit="console.log(`edit org ${item.id}`)"
+              @edit="objectIdToEdit = item"
               v-for="item in row.data"
               :key="item.id"
               :organization="item"
@@ -62,6 +66,30 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
       </div>
     </div>
   </div>
+  <Transition
+    enter-active-class="transition duration-200 ease-out"
+    enter-from-class="opacity-0"
+    enter-to-class="opacity-100 backdrop-blur-sm"
+    leave-active-class="transition duration-150 ease-in"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
+  >
+    <div
+      v-if="isEditing"
+      class="fixed inset-0 z-50 flex items-center justify-center"
+    >
+      <div
+        class="absolute inset-0 bg-black/30 backdrop-blur-sm"
+        @click="objectIdToEdit = null"
+      />
+
+      <edit-organization-dialog
+        class="relative min-w-1/3! w-fit! h-fit! rounded-xl!"
+        :entity="objectIdToEdit"
+        @close="objectIdToEdit = null"
+      />
+    </div>
+  </Transition>
   <global-footer/>
 </template>
 
@@ -69,6 +97,6 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
 @reference "@/styles.css";
 
 .layout-dynamic-padding {
-  @apply px-6 lg:px-24 2xl:px-32
+  @apply px-6 lg:px-24 2xl:px-32;
 }
 </style>

@@ -19,6 +19,7 @@ const themeVars = useThemeVars();
 
 <template>
   <button
+    type="button"
     @click="emit('click', section)"
     class="rounded-lg ease-out duration-200 nav-button hover:cursor-pointer p-2"
     :class="{ 'nav-button__active': isActive }"

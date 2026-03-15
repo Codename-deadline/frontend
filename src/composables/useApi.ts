@@ -8,6 +8,7 @@ import emitter from "@/plugins/emitter";
 import { useTokenStore } from "@/stores/TokenStore";
 import type { ApiError, FormErrors, SafeApiCall } from "@/types/api";
 import type { OperationResult } from "@/types/OperationResult";
+import { displayApiError as DAE, displayFormErrors } from "@/utils";
 
 export function useApi() {
   const { t, te } = useI18n();
@@ -43,8 +44,12 @@ export function useApi() {
 
   const makeRequest = async <T>(
     request: () => Promise<SafeApiCall<T>>,
-    displayValidationError: (t: any, notification: NotificationApiInjection, error: FormErrors) => void,
-    displayApiError: (t: any, notification: NotificationApiInjection, error: ApiError) => void,
+    displayValidationError: (
+      t: any,
+      notification: NotificationApiInjection,
+      error: FormErrors,
+    ) => void = displayFormErrors,
+    displayApiError: (t: any, notification: NotificationApiInjection, error: ApiError) => void = DAE,
   ): Promise<OperationResult<T>> => {
     const res = await request();
     if (res.ok) return { ok: true, data: res.data };

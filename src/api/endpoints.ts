@@ -41,10 +41,19 @@ const endpoints = {
   ORGANIZATION_MEMBERS: {
     path: "/organization/{orgId}/members",
     pathParams: {} as { orgId: number },
+    queryParams: {} as { page: number },
   },
   ORGANIZATION_REMOVE_MEMBER: {
     path: "/organization/{orgId}/members/{memberId}",
     pathParams: {} as { orgId: number; memberId: number },
+  },
+  ROLES_METADATA: {
+    path: "/role",
+    pathParams: {} as never,
+  },
+  METADATA_GET: {
+    path: "/metadata",
+    pathParams: {} as never,
   },
 } as const;
 

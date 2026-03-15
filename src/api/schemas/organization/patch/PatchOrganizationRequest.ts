@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const PatchOrganizationRequestSchema = z
-  .object({
+  .strictObject({
     title: z.string(),
     description: z.string(),
   })

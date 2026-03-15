@@ -1,5 +1,5 @@
 import type { OrganizationRole } from "@/api/schemas/organization/common/OrganizationRole";
-import type { ScopeType } from "@/types/ScopeType";
+import type { ScopeType } from "@/types/scope";
 
 export const extractRoleFromString = (scope: ScopeType, roleString: OrganizationRole) => {
   const roleSplit: string[] = roleString.toLowerCase().split("_");
