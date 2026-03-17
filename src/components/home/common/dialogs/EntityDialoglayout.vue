@@ -2,7 +2,7 @@
 import { NCard, NTabs } from 'naive-ui';
 
 defineProps<{
-  title: string
+  title: string;
 }>()
 
 const emit = defineEmits<{

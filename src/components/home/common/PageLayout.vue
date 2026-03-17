@@ -24,8 +24,8 @@ const itemsPerRow = computed<number>(() => {
   return 1;
 });
 
-const objectIdToEdit = ref<any>(null);
-const isEditing = computed(() => objectIdToEdit.value !== null)
+const objectToEdit = ref<any>(null);
+const isEditing = computed(() => objectToEdit.value !== null)
 
 const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtualList<OrganizationWithRole>(
   "organizations",
@@ -51,7 +51,7 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
             :key="row.index"
           >
              <organization-card
-              @edit="objectIdToEdit = item"
+              @edit="objectToEdit = item"
               v-for="item in row.data"
               :key="item.id"
               :organization="item"
@@ -80,13 +80,13 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
     >
       <div
         class="absolute inset-0 bg-black/30 backdrop-blur-sm"
-        @click="objectIdToEdit = null"
+        @click="objectToEdit = null"
       />
 
       <edit-organization-dialog
         class="relative min-w-1/3! w-fit! h-fit! rounded-xl!"
-        :entity="objectIdToEdit"
-        @close="objectIdToEdit = null"
+        :entity="objectToEdit"
+        @close="objectToEdit = null"
       />
     </div>
   </Transition>

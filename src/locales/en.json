@@ -9,7 +9,15 @@
   "actions": {
     "back": "Back",
     "create": "Create",
-    "page-reload": "Please perform a page reload"
+    "invite": "Invite",
+    "delete": "Delete",
+    "save": "Save",
+    "page-reload": "Please perform a page reload",
+    "confirmation": "Confirm {action}",
+    "to-confirm": {
+      "remove-member": "removing this member",
+      "delete-entity": "deleting this {entity}"
+    }
   },
   "errors": {
     "error": "Error",
@@ -137,11 +145,31 @@
     }
   },
   "scopes": {
+    "toasts": {
+      "member-removed": "Member removed",
+      "member-invited": "Member invited",
+      "role-assigned": "Role assigned",
+      "entity-created": "{entity} created",
+      "entity-updated": "{entity} updated",
+      "entity-deleted": "{entity} deleted"
+    },
     "common": {
-      "members": "members",
-      "unknown": "Unknown"
+      "members": "Members",
+      "unknown": "Unknown",
+      "form-sections": {
+        "settings": "Settings",
+        "invitations": "Invitations"
+      },
+      "form-labels": {
+        "title": "Title",
+        "description": "Description",
+        "username": "Username",
+        "fullName": "Full name",
+        "language": "Language"
+      }
     },
     "organization": {
+      "name": "Organization",
       "type": {
         "personal": "Personal",
         "public": "Public",
@@ -156,6 +184,7 @@
       "description": "Manage your teams and projects"
     },
     "thread": {
+      "name": "Thread",
       "header": "Threads"
     },
     "deadline": {}

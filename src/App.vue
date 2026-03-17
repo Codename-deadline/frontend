@@ -5,6 +5,7 @@ import {
   type GlobalThemeOverrides,
   NConfigProvider,
   NGlobalStyle,
+  NMessageProvider,
   NNotificationProvider,
   ruRU,
   useOsTheme,
@@ -63,8 +64,10 @@ const themeVars = useThemeVars();
   <n-config-provider :theme="_theme" :theme-overrides="_themeOverrides" :locale="_currentLocale">
     <n-global-style/>
     <n-notification-provider :max="3">
-      <RouterView/>
-      <GlobalEventHandler />
+      <n-message-provider>
+        <RouterView/>
+        <GlobalEventHandler />
+      </n-message-provider>
     </n-notification-provider>
   </n-config-provider>
 </template>

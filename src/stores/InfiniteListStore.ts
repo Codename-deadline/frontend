@@ -44,9 +44,15 @@ export const useInfiniteListStore = defineStore("infiniteList", () => {
     }
   }
 
+  function removeItem<T>(type: ListType, itemId: number) {
+    const state: InfiniteListState<T> = stateMap.value[type] as InfiniteListState<T>;
+    // Every entity in the list has an `id` property
+    state.items = state.items.filter((i) => (i as { id: number }).id !== itemId);
+  }
+
   function reset(type: ListType) {
     stateMap.value[type] = { items: [], page: 1, loading: false, hasMore: true };
   }
 
-  return { stateMap, loadMore, reset };
+  return { stateMap, loadMore, removeItem, reset };
 });

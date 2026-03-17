@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { NAvatar, NButton, NDropdown, NPagination } from 'naive-ui';
+import { TrashAlt } from '@vicons/fa';
+import { NAvatar, NButton, NDropdown, NPagination, NPopconfirm, useThemeVars } from 'naive-ui';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { MemberWithRole } from '@/api/schemas/common/Member';
@@ -7,6 +8,7 @@ import type { RolesMetadata } from '@/api/schemas/roles/metadata';
 import { extractRoleFromString } from '@/locales/utils';
 import { useMetadataStore } from '@/stores/MetadataStore';
 import type { AnyRole, ScopeType } from '@/types/scope';
+import { isRoleInScope } from '@/utils';
 
 const props = defineProps<{
   members: MemberWithRole[];
@@ -14,12 +16,15 @@ const props = defineProps<{
   totalPages: number;
   canManageRoles: boolean;
   myRole: AnyRole;
-  roleScope: ScopeType;
+  scopeType: ScopeType;
 }>();
 const emit = defineEmits<{
-  loadMore: [page: number]
+  loadMore: [page: number],
+  updateRole: [member: MemberWithRole, newRole: AnyRole],
+  removeMember: [member: MemberWithRole]
 }>();
 const { t } = useI18n();
+const themeVars = useThemeVars();
 
 // IMPORTANT: UI pages are 1-indexed, but api pages are 0-indexed
 const currentPage = ref<number>(1);
@@ -42,15 +47,15 @@ if (!rolesMetadata) {
 
 const userRoleIdx: number = rolesMetadata.roles.indexOf(props.myRole);
 const getRoleOptions = (memberRole: AnyRole) => {
-  const buildLabel = (role: AnyRole) => t(extractRoleFromString(props.roleScope, role));
+  const buildLabel = (role: AnyRole) => t(extractRoleFromString(props.scopeType, role));
   const canUserAssignY = (roleX: AnyRole) => {
     const xIdx: number = rolesMetadata.roles.indexOf(roleX);
     // It is guaranteed that the matrix contains all roles and is quadratic NxN.
     return rolesMetadata.matrix[userRoleIdx]![xIdx];
   }
 
-  const roleOptions: { label: string; value: string }[] = [{
-    label: buildLabel(memberRole), value: memberRole
+  const roleOptions: { label: string; key: string }[] = [{
+    label: buildLabel(memberRole), key: memberRole
   }];
   // If one cannot assign role X it means that the current role is <= X
   // Therefore no actions are available
@@ -60,8 +65,10 @@ const getRoleOptions = (memberRole: AnyRole) => {
 
   for (let i = 0; i < rolesMetadata.roles.length; ++i) {
     const currentRole: AnyRole = rolesMetadata.roles[i]!;
+    if (!isRoleInScope(currentRole, props.scopeType)) continue;
+
     if (rolesMetadata.matrix[userRoleIdx]![i] && currentRole !== memberRole) {
-      roleOptions.push({ label: buildLabel(currentRole), value: currentRole });
+      roleOptions.push({ label: buildLabel(currentRole), key: currentRole });
     }
   }
   return roleOptions;
@@ -73,11 +80,11 @@ const getAvatarText = (fullname: string) => {
 </script>
 
 <template>
-  <div class="max-h-1/3 mt-1 overflow-y-auto">
+  <div class="max-h-1/3 mt-2 space-y-2">
     <div
       v-for="member in membersToRender"
       :key="member.user.id"
-      class="flex items-center border rounded-lg p-2 space-x-3"
+      class="flex items-center member-border rounded-lg p-2 space-x-3"
     >
       <n-avatar round>{{ getAvatarText(member.user.fullName) }}</n-avatar>
       <div class="flex flex-1 justify-between items-center">
@@ -85,11 +92,33 @@ const getAvatarText = (fullname: string) => {
           <span>{{ member.user.fullName }}</span>
           <span class="text-sm description">@{{ member.user.username }}</span>
         </div>
-        <n-dropdown trigger="click" :options="getRoleOptions(member.role)">
-          <n-button :disabled="!canManageRoles" class="rounded-lg! capitalize" size="small">
-            {{ t(extractRoleFromString(roleScope, member.role)) }}
-          </n-button>
-        </n-dropdown>
+        <div class="flex items-center space-x-2!">
+          <n-dropdown
+            @select="(newRole: AnyRole) => emit('updateRole', member, newRole)"
+            :options="getRoleOptions(member.role)"
+            trigger="click"
+          >
+            <n-button :disabled="!canManageRoles" class="rounded-lg! capitalize" size="small">
+              {{ t(extractRoleFromString(scopeType, member.role)) }}
+            </n-button>
+          </n-dropdown>
+          <n-popconfirm
+            v-if="canManageRoles"
+            @positive-click="() => emit('removeMember', member)"
+            class="rounded-lg!"
+          >
+            <template #trigger>
+              <n-button class="rounded-lg!" size="small" type="error" ghost>
+                <template #icon>
+                  <Icon :size="16">
+                    <TrashAlt />
+                  </Icon>
+                </template>
+              </n-button>
+            </template>
+            {{ t('actions.confirmation', { action: t('actions.to-confirm.remove-member') }) }}
+          </n-popconfirm>
+        </div>
       </div>
     </div>
     <div class="flex justify-center">
@@ -97,3 +126,10 @@ const getAvatarText = (fullname: string) => {
     </div>
   </div>
 </template>
+
+<style lang="css" scoped>
+.member-border {
+  border-width: 1px;
+  border-color: v-bind('themeVars.borderColor');
+}
+</style>

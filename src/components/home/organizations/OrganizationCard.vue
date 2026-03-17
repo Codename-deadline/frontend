@@ -66,7 +66,7 @@ const hasAnyEditPermission = computed<boolean>(() =>
         <icon class="mr-2" size="16">
           <UserFriends />
         </icon>
-        {{organization.stats.members}} {{ t('scopes.common.members') }}
+        {{organization.stats.members}} {{ t('scopes.common.members').toLowerCase() }}
       </div>
       <div>
         {{organization.stats.threads}} {{ t(tScopePrefix("thread", "header")).toLowerCase() }}

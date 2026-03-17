@@ -43,13 +43,29 @@ const endpoints = {
     pathParams: {} as { orgId: number },
     queryParams: {} as { page: number },
   },
+  ORGANIZATION_INVITE_MEMBER: {
+    path: "/organization/{orgId}/invitation",
+    pathParams: {} as { orgId: number },
+  },
   ORGANIZATION_REMOVE_MEMBER: {
-    path: "/organization/{orgId}/members/{memberId}",
-    pathParams: {} as { orgId: number; memberId: number },
+    path: "/organization/{orgId}/members/{username}",
+    pathParams: {} as { orgId: number, username: string },
   },
   ROLES_METADATA: {
-    path: "/role",
+    path: "/roles/metadata",
     pathParams: {} as never,
+  },
+  ROLES_CHANGE_ORGANIZATION: {
+    path: "/roles/organization/{orgId}",
+    pathParams: {} as { orgId: number }
+  },
+  ROLES_CHANGE_THREAD: {
+    path: "/roles/thread/{threadId}",
+    pathParams: {} as { threadId: number }
+  },
+  ROLES_CHANGE_DEADLINE: {
+    path: "/roles/deadline/{deadlineId}",
+    pathParams: {} as { deadlineId: number }
   },
   METADATA_GET: {
     path: "/metadata",

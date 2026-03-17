@@ -3,6 +3,10 @@ import { capitalize } from "vue";
 import type { Router } from "vue-router";
 import { GeneralErrorSchema } from "@/api/common/GeneralError";
 import type { ApiError, AuthMethod, FieldError, FormErrors } from "./types/api";
+import type { ScopeType } from "./types/scope";
+import { OrganizationRoleSchema } from "./api/schemas/organization/common/OrganizationRole";
+import { ThreadRoleSchema } from "./api/schemas/thread/common/ThreadRole";
+import { DeadlineRoleSchema } from "./api/schemas/deadline/common/DeadlineRole";
 
 export const redirectToOTP = (router: Router, otpId: string, authMethod: AuthMethod) => {
   router.push({
@@ -14,12 +18,24 @@ export const redirectToOTP = (router: Router, otpId: string, authMethod: AuthMet
   });
 };
 
+export const isRoleInScope = (role: string, scopeType: ScopeType): boolean => {
+  switch (scopeType) {
+    case "organization":
+      return OrganizationRoleSchema.safeParse(role).success;
+    case "thread":
+      return ThreadRoleSchema.safeParse(role).success;
+    case "deadline":
+      return DeadlineRoleSchema.safeParse(role).success;
+  }
+};
+
 export const displayFormErrors = (t: any, notification: NotificationApiInjection, errors: FormErrors) => {
   const buildRow = (index: number, error: FieldError) => {
     const params = {
       field: capitalize(error.field),
       ...(error.params ?? {}),
     };
+    // TODO: errors.form.invalid-type
     return `${index}. ${t(`errors.form.${error.code.replace("_", "-")}`, params)}\n`;
   };
 
@@ -27,6 +43,7 @@ export const displayFormErrors = (t: any, notification: NotificationApiInjection
   errors.forEach((error, index) => {
     notificationBody += buildRow(index + 1, error);
   });
+  console.error(errors);
 
   notification.error({
     title: t("errors.form.invalid-input"),

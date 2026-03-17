@@ -1,12 +1,12 @@
 import z from "zod";
 import { OrganizationTypeSchema } from "@/api/schemas/organization/common/OrganizationType";
-import { InvitationSchema } from "../../invitation/Invitation";
+import { OrganizationInvitationSchema } from "../Invitation";
 
 export const CreateOrganizationRequestSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   type: OrganizationTypeSchema,
-  usersToInvite: z.array(InvitationSchema),
+  usersToInvite: z.array(OrganizationInvitationSchema),
 });
 
 export type CreateOrganizationRequest = z.infer<typeof CreateOrganizationRequestSchema>;
