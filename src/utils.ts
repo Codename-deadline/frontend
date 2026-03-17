@@ -2,11 +2,11 @@ import type { NotificationApiInjection } from "naive-ui/es/notification/src/Noti
 import { capitalize } from "vue";
 import type { Router } from "vue-router";
 import { GeneralErrorSchema } from "@/api/common/GeneralError";
-import type { ApiError, AuthMethod, FieldError, FormErrors } from "./types/api";
-import type { ScopeType } from "./types/scope";
+import { DeadlineRoleSchema } from "./api/schemas/deadline/common/DeadlineRole";
 import { OrganizationRoleSchema } from "./api/schemas/organization/common/OrganizationRole";
 import { ThreadRoleSchema } from "./api/schemas/thread/common/ThreadRole";
-import { DeadlineRoleSchema } from "./api/schemas/deadline/common/DeadlineRole";
+import type { ApiError, AuthMethod, FieldError, FormErrors } from "./types/api";
+import type { ScopeType } from "./types/scope";
 
 export const redirectToOTP = (router: Router, otpId: string, authMethod: AuthMethod) => {
   router.push({

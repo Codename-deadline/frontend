@@ -2,10 +2,19 @@ import { client } from "@/api/client";
 import { getEndpoint } from "@/api/endpoints";
 import { EmptySchema } from "@/api/schemas/common/Empty";
 import { type RolesMetadata, RolesMetadataSchema } from "./schemas/roles/metadata";
-import { type ChangeOrganizationRoleRequest, ChangeOrganizationRoleRequestSchema } from "./schemas/roles/requests/ChangeOrganizationRoleRequest";
+import {
+  type ChangeDeadlineRoleRequest,
+  ChangeDeadlineRoleRequestSchema,
+} from "./schemas/roles/requests/ChangeDeadlineRoleRequest";
+import {
+  type ChangeOrganizationRoleRequest,
+  ChangeOrganizationRoleRequestSchema,
+} from "./schemas/roles/requests/ChangeOrganizationRoleRequest";
+import {
+  type ChangeThreadRoleRequest,
+  ChangeThreadRoleRequestSchema,
+} from "./schemas/roles/requests/ChangeThreadRoleRequest";
 import { validateAndRequest, validateWith } from "./utils";
-import { ChangeThreadRoleRequestSchema, type ChangeThreadRoleRequest } from "./schemas/roles/requests/ChangeThreadRoleRequest";
-import { ChangeDeadlineRoleRequestSchema, type ChangeDeadlineRoleRequest } from "./schemas/roles/requests/ChangeDeadlineRoleRequest";
 
 export const getRolesMetadata = async () =>
   validateAndRequest(EmptySchema, {}, () =>

@@ -2,11 +2,11 @@ import { client } from "./client";
 import type { PagedResponse } from "./common/PaginationResponse";
 import { getEndpoint } from "./endpoints";
 import { EmptySchema } from "./schemas/common/Empty";
-import { OrganizationInvitationSchema, type OrganizationInvitation } from "./schemas/organization/Invitation";
+import { type OrganizationInvitation, OrganizationInvitationSchema } from "./schemas/organization/Invitation";
 import type { OrganizationMember } from "./schemas/organization/Member";
 import {
-  PatchOrganizationRequestSchema,
   type PatchOrganizationRequest,
+  PatchOrganizationRequestSchema,
 } from "./schemas/organization/patch/PatchOrganizationRequest";
 import { validateAndRequest } from "./utils";
 
@@ -33,17 +33,14 @@ export const getOrganizationMembers = async (organizationId: number, page: numbe
 
 export const inviteMemberToOrganization = async (organizationId: number, data: OrganizationInvitation) =>
   validateAndRequest(OrganizationInvitationSchema, data, (validated) =>
-    client.post(
-      getEndpoint("ORGANIZATION_INVITE_MEMBER", { pathParams: { orgId: organizationId } }),
-      validated,
-    ),
+    client.post(getEndpoint("ORGANIZATION_INVITE_MEMBER", { pathParams: { orgId: organizationId } }), validated),
   );
 
 export const removeOrganizationMember = async (organizationId: number, username: string) =>
   validateAndRequest(EmptySchema, {}, (validated) =>
     client.delete(
       getEndpoint("ORGANIZATION_REMOVE_MEMBER", {
-        pathParams: { orgId: organizationId, username: username }
+        pathParams: { orgId: organizationId, username: username },
       }),
       validated,
     ),
