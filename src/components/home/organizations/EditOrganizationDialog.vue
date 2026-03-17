@@ -105,6 +105,7 @@ const handleMemberRoleUpdate = async (request: ChangeOrganizationRoleRequest) =>
   return changeOrganizationMemberRole(props.entity.id, request);
 };
 const handleMemberRemoval = async (username: string) => {
+  --props.entity.stats.members;
   return removeOrganizationMember(props.entity.id, username);
 };
 </script>
