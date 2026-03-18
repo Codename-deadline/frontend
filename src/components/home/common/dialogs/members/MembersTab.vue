@@ -6,14 +6,13 @@ import type { PagedResponse } from '@/api/common/PaginationResponse';
 import type { MemberWithRole } from '@/api/schemas/common/Member';
 import { useApi } from '@/composables/useApi';
 import type { SafeApiCall } from '@/types/api';
-import type { AnyRole, ScopeType } from '@/types/scope';
+import type { AnyRole } from '@/types/scope';
 import MemberManager from './MemberManager.vue';
 
 const props = defineProps<{
   fetcher: (page: number) => Promise<SafeApiCall<PagedResponse<MemberWithRole>>>;
   updateMemberRole: (request: { subjectUsername: string; newRole: AnyRole }) => Promise<SafeApiCall<unknown>>;
   removeMember: (username: string) => Promise<SafeApiCall<unknown>>;
-  scopeType: ScopeType;
   membersStats: number;
   canManageRoles: boolean;
   myRole: AnyRole;
@@ -47,6 +46,7 @@ const handleRemoveMember = async (member: MemberWithRole) => {
   if (!res.ok) return;
 
   members.value = members.value.filter(m => m.user.username !== member.user.username);
+  // TODO: Decrement total pages if members.value.length % pageSize === 0
   message.success(t("scopes.toasts.member-removed"));
 };
 
@@ -63,11 +63,9 @@ onMounted(async () => {
       @updateRole="handleRoleUpdate"
       @removeMember="handleRemoveMember"
       :members="members"
-      :page-size="10"
       :total-pages="totalPages"
       :can-manage-roles="canManageRoles"
       :my-role="myRole"
-      :scope-type="scopeType"
     />
   </div>
 </template>

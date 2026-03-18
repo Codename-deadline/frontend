@@ -41,7 +41,7 @@ const endpoints = {
   ORGANIZATION_MEMBERS: {
     path: "/organization/{orgId}/members",
     pathParams: {} as { orgId: number },
-    queryParams: {} as { page: number },
+    queryParams: {} as { page: number; size: number },
   },
   ORGANIZATION_INVITE_MEMBER: {
     path: "/organization/{orgId}/invitation",

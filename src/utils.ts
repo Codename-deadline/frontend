@@ -1,5 +1,5 @@
 import type { NotificationApiInjection } from "naive-ui/es/notification/src/NotificationProvider";
-import { capitalize } from "vue";
+import { capitalize, type InjectionKey, inject } from "vue";
 import type { Router } from "vue-router";
 import { GeneralErrorSchema } from "@/api/common/GeneralError";
 import { DeadlineRoleSchema } from "./api/schemas/deadline/common/DeadlineRole";
@@ -87,4 +87,12 @@ export const displayApiError = (safeT: any, notification: NotificationApiInjecti
     content: errorMessageContent ?? safeT("errors.unknown-error"),
     duration: 3500,
   });
+};
+
+export const injectOrThrow = <T>(key: InjectionKey<T>): T => {
+  const value = inject(key);
+  if (!value) {
+    throw new Error(`injectOrThrow: Unable to inject value for key ${String(key)}`);
+  }
+  return value;
 };

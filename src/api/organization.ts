@@ -20,12 +20,12 @@ export const patchOrganization = async (organizationId: number, data: PatchOrgan
     client.patch(getEndpoint("ORGANIZATION_PATCH", { pathParams: { orgId: organizationId } }), validated),
   );
 
-export const getOrganizationMembers = async (organizationId: number, page: number) =>
+export const getOrganizationMembers = async (organizationId: number, page: number, size: number) =>
   validateAndRequest(EmptySchema, {}, (validated) =>
     client.get<PagedResponse<OrganizationMember>>(
       getEndpoint("ORGANIZATION_MEMBERS", {
         pathParams: { orgId: organizationId },
-        queryParams: { page },
+        queryParams: { page, size },
       }),
       validated,
     ),

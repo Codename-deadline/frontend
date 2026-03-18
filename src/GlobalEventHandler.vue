@@ -67,7 +67,6 @@ const refetchOutdatedMetadata = async () => {
   }
 };
 
-
 onMounted(async () => {
   await refetchOutdatedMetadata();
   if (userStore.isAvailable) return;

@@ -9,7 +9,6 @@
   "actions": {
     "back": "Back",
     "create": "Create",
-    "invite": "Invite",
     "delete": "Delete",
     "save": "Save",
     "page-reload": "Please perform a page reload",

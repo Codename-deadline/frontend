@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import { TrashAlt } from '@vicons/fa';
-import { NAvatar, NButton, NDropdown, NPagination, NPopconfirm, useThemeVars } from 'naive-ui';
+import { NAvatar, NButton, NPagination, NPopconfirm, NSkeleton, useThemeVars } from 'naive-ui';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { MemberWithRole } from '@/api/schemas/common/Member';
+import type { User } from '@/api/schemas/common/User';
 import type { RolesMetadata } from '@/api/schemas/roles/metadata';
-import { extractRoleFromString } from '@/locales/utils';
+import { PAGE_SIZE_KEY, USER_KEY } from '@/constants/providerKeys';
 import { useMetadataStore } from '@/stores/MetadataStore';
 import type { AnyRole, ScopeType } from '@/types/scope';
-import { isRoleInScope } from '@/utils';
+import { injectOrThrow } from '@/utils';
+import RoleDropdown from '../RoleDropdown.vue';
 
 const props = defineProps<{
   members: MemberWithRole[];
-  pageSize: number;
   totalPages: number;
   canManageRoles: boolean;
   myRole: AnyRole;
-  scopeType: ScopeType;
 }>();
 const emit = defineEmits<{
   loadMore: [page: number],
@@ -26,18 +26,24 @@ const emit = defineEmits<{
 const { t } = useI18n();
 const themeVars = useThemeVars();
 
+const pageSize = injectOrThrow<number>(PAGE_SIZE_KEY);
+const user = injectOrThrow<User>(USER_KEY);
+
 // IMPORTANT: UI pages are 1-indexed, but api pages are 0-indexed
 const currentPage = ref<number>(1);
 watch(currentPage, (value) => {
   if (value > props.totalPages) return;
   // Members are loaded in batches, the page cannot be partially loaded
   // Therefore, if at least one member of the page is already loaded, we conclude that there are no more
-  if (props.members.length > props.pageSize * (value - 1)) return;
+  if (props.members.length > pageSize * (value - 1)) return;
   emit('loadMore', value - 1);
 })
-const membersToRender = computed(
-  () => props.members.slice((currentPage.value - 1) * props.pageSize, (currentPage.value) * props.pageSize)
+
+const membersToRender = computed<MemberWithRole[]>(
+  () => props.members.slice((currentPage.value - 1) * pageSize, (currentPage.value) * pageSize)
 );
+const placeholdersToRender = computed<number>(() => pageSize - membersToRender.value.length);
+const isLoading = computed<boolean>(() => membersToRender.value.length === 0);
 
 const metadataStore = useMetadataStore();
 const rolesMetadata: RolesMetadata | undefined = metadataStore.metadata.roles?.value;
@@ -46,32 +52,10 @@ if (!rolesMetadata) {
 }
 
 const userRoleIdx: number = rolesMetadata.roles.indexOf(props.myRole);
-const getRoleOptions = (memberRole: AnyRole) => {
-  const buildLabel = (role: AnyRole) => t(extractRoleFromString(props.scopeType, role));
-  const canUserAssignY = (roleX: AnyRole) => {
-    const xIdx: number = rolesMetadata.roles.indexOf(roleX);
-    // It is guaranteed that the matrix contains all roles and is quadratic NxN.
-    return rolesMetadata.matrix[userRoleIdx]![xIdx];
-  }
-
-  const roleOptions: { label: string; key: string }[] = [{
-    label: buildLabel(memberRole), key: memberRole
-  }];
-  // If one cannot assign role X it means that the current role is <= X
-  // Therefore no actions are available
-  if (!canUserAssignY(memberRole)) {
-    return roleOptions;
-  }
-
-  for (let i = 0; i < rolesMetadata.roles.length; ++i) {
-    const currentRole: AnyRole = rolesMetadata.roles[i]!;
-    if (!isRoleInScope(currentRole, props.scopeType)) continue;
-
-    if (rolesMetadata.matrix[userRoleIdx]![i] && currentRole !== memberRole) {
-      roleOptions.push({ label: buildLabel(currentRole), key: currentRole });
-    }
-  }
-  return roleOptions;
+const canUserAssignY = (roleX: AnyRole, _: ScopeType) => {
+  const xIdx: number = rolesMetadata.roles.indexOf(roleX);
+  // It is guaranteed that the matrix contains all roles and is quadratic NxN.
+  return rolesMetadata.matrix[userRoleIdx]![xIdx];
 }
 
 const getAvatarText = (fullname: string) => {
@@ -80,10 +64,9 @@ const getAvatarText = (fullname: string) => {
 </script>
 
 <template>
-  <div class="max-h-1/3 mt-2 space-y-2">
+  <div class="mt-2 space-y-2">
     <div
-      v-for="member in membersToRender"
-      :key="member.user.id"
+      v-for="member in membersToRender" :key="member.user.id"
       class="flex items-center member-border rounded-lg p-2 space-x-3"
     >
       <n-avatar round>{{ getAvatarText(member.user.fullName) }}</n-avatar>
@@ -92,16 +75,13 @@ const getAvatarText = (fullname: string) => {
           <span>{{ member.user.fullName }}</span>
           <span class="text-sm description">@{{ member.user.username }}</span>
         </div>
-        <div class="flex items-center space-x-2!">
-          <n-dropdown
-            @select="(newRole: AnyRole) => emit('updateRole', member, newRole)"
-            :options="getRoleOptions(member.role)"
-            trigger="click"
-          >
-            <n-button :disabled="!canManageRoles" class="rounded-lg! capitalize" size="small">
-              {{ t(extractRoleFromString(scopeType, member.role)) }}
-            </n-button>
-          </n-dropdown>
+        <div v-if="user.id !== member.user.id" class="flex items-center space-x-2!">
+          <RoleDropdown
+            @select="(role) => emit('updateRole', member, role)"
+            :button-role="member.role"
+            :filter="canUserAssignY"
+            :disabled="!canManageRoles"
+          />
           <n-popconfirm
             v-if="canManageRoles"
             @positive-click="() => emit('removeMember', member)"
@@ -121,9 +101,12 @@ const getAvatarText = (fullname: string) => {
         </div>
       </div>
     </div>
-    <div class="flex justify-center">
-      <n-pagination class="mt-3" v-model:page="currentPage" :page-count="totalPages" />
+    <div v-for="i in placeholdersToRender" :key="i" class="min-w-75 h-[60.4px]">
+      <n-skeleton v-if="isLoading" height="100%" width="100%" :sharp="false" />
     </div>
+  </div>
+  <div class="flex justify-center">
+    <n-pagination class="mt-3" v-model:page="currentPage" :page-count="totalPages" />
   </div>
 </template>
 

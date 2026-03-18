@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import {
-  darkTheme,
-  enUS,
-  type GlobalThemeOverrides,
-  NConfigProvider,
-  NGlobalStyle,
-  NMessageProvider,
-  NNotificationProvider,
-  ruRU,
-  useOsTheme,
-  useThemeVars,
+    darkTheme,
+    enUS,
+    type GlobalThemeOverrides,
+    NConfigProvider,
+    NGlobalStyle,
+    NMessageProvider,
+    NNotificationProvider,
+    ruRU,
+    useOsTheme,
+    useThemeVars,
 } from "naive-ui";
-import { computed, ref, watch } from "vue";
+import { computed, provide, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
+import { USER_KEY } from "./constants/providerKeys";
 import GlobalEventHandler from "./GlobalEventHandler.vue";
 import { useUserStore } from "./stores/UserStore";
 import { Language } from "./types/Language";
@@ -50,6 +51,7 @@ watch(
     }
   },
 );
+provide(USER_KEY, userStore.user);
 
 const route = useRoute();
 const router = useRouter();
