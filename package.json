@@ -31,7 +31,7 @@
     "autoprefixer": "^10.4.27",
     "naive-ui": "^2.44.1",
     "patch-package": "^8.0.1",
-    "tailwindcss": "^4.1.7",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vfonts": "^0.0.3",
     "vue-tsc": "^3.2.6"
