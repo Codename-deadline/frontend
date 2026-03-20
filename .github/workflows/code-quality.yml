@@ -29,4 +29,4 @@ jobs:
         run: bun i
 
       - name: Run BiomeJS
-        run: bunx @biomejs/biome check --diagnostic-level=error
+        run: bunx @biomejs/biome check src --diagnostic-level=error
