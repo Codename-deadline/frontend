@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "postinstall": "patch-package",
     "format": "bunx @biomejs/biome format src --write",
-    "lint": "bunx @biomejs/biome check src --diagnostic-level=error"
+    "lint": "bunx @biomejs/biome check src --diagnostic-level=error",
+    "prepare": "husky"
   },
   "dependencies": {
     "@asouei/safe-fetch": "^1.0.0",
@@ -31,6 +32,7 @@
     "@vitejs/plugin-vue": "^6.0.5",
     "@vue/tsconfig": "^0.9.0",
     "autoprefixer": "^10.4.27",
+    "husky": "^9.1.7",
     "naive-ui": "^2.44.1",
     "patch-package": "^8.0.1",
     "tailwindcss": "^4.2.2",
