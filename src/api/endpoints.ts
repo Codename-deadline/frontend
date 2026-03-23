@@ -22,6 +22,10 @@ const endpoints = {
     path: "/organization",
     queryParams: {} as { page: number },
   },
+  USER_USERNAME_HINTS: {
+    path: "/user/hints",
+    queryParams: {} as { startsWith: string },
+  },
   ORGANIZATION_GET: {
     path: "/organization/{orgId}",
     pathParams: {} as { orgId: number },

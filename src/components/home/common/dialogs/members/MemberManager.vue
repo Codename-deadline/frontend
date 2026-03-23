@@ -6,11 +6,11 @@ import { useI18n } from 'vue-i18n';
 import type { MemberWithRole } from '@/api/schemas/common/Member';
 import type { User } from '@/api/schemas/common/User';
 import type { RolesMetadata } from '@/api/schemas/roles/metadata';
+import RoleDropdown from '@/components/home/common/forms/RoleDropdown.vue';
 import { PAGE_SIZE_KEY, USER_KEY } from '@/constants/providerKeys';
 import { useMetadataStore } from '@/stores/MetadataStore';
 import type { AnyRole, ScopeType } from '@/types/scope';
 import { injectOrThrow } from '@/utils';
-import RoleDropdown from '../RoleDropdown.vue';
 
 const props = defineProps<{
   members: MemberWithRole[];

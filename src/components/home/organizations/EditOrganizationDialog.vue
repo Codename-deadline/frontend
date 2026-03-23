@@ -10,7 +10,8 @@ import type { OrganizationRole } from '@/api/schemas/organization/common/Organiz
 import type { ChangeOrganizationRoleRequest } from '@/api/schemas/roles/requests/ChangeOrganizationRoleRequest';
 import EntityDialoglayout from '@/components/home/common/dialogs/EntityDialoglayout.vue';
 import MembersTab from '@/components/home/common/dialogs/members/MembersTab.vue';
-import RoleDropdown from '@/components/home/common/dialogs/RoleDropdown.vue';
+import RoleDropdown from '@/components/home/common/forms/RoleDropdown.vue';
+import UsernameInput from '@/components/home/common/forms/UsernameInput.vue';
 import { useApi } from '@/composables/useApi';
 import { DEFAULT_MEMBERS_PAGE_SIZE } from '@/constants/defaults';
 import { PAGE_SIZE_KEY, SCOPE_TYPE_KEY } from '@/constants/providerKeys';
@@ -87,7 +88,7 @@ const handleInvitationSubmission = async (e: MouseEvent) => {
     }
 
     const res = await makeRequest(() => inviteMemberToOrganization(props.entity.id, {
-      username: invitationFormModel.value.usernameToInvite,
+      username: invitationFormModel.value.usernameToInvite.trim().replace('@', ''),
       role: invitationFormModel.value.role
     }))
     if (!res.ok) return;
@@ -174,8 +175,8 @@ const handleMemberRemoval = async (username: string) => {
     <n-tab-pane v-if="entity.permissions.invite" name="invites" :tab="t('scopes.common.form-sections.invitations')">
       <n-form ref="invitationFormRef" :model="invitationFormModel" :rules="invitationFormRules">
         <n-form-item :label="t('scopes.common.form-labels.username')" path="usernameToInvite">
-          <div class="flex space-x-1!">
-            <n-input class="rounded-lg!" v-model:value="invitationFormModel.usernameToInvite" />
+          <div class="flex space-x-1! flex-1">
+            <UsernameInput v-model="invitationFormModel.usernameToInvite" />
             <RoleDropdown
               @select="(role: OrganizationRole) => invitationFormModel.role = role"
               :button-role="invitationFormModel.role"

@@ -1,3 +1,4 @@
+import z from "zod";
 import { client } from "./client";
 import { getEndpoint } from "./endpoints";
 import { EmptySchema } from "./schemas/common/Empty";
@@ -23,6 +24,18 @@ export const getOrganizations = async (page: number) =>
       }),
       {
         validate: validateWith(PagedOrganizationWithRoleSchema),
+      },
+    ),
+  );
+
+export const getUsersWithUsernameStartingWith = async (startsWith: string) =>
+  validateAndRequest(EmptySchema, {}, () =>
+    client.get<string[]>(
+      getEndpoint("USER_USERNAME_HINTS", {
+        queryParams: { startsWith },
+      }),
+      {
+        validate: validateWith(z.array(z.string())),
       },
     ),
   );
