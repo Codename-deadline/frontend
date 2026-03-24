@@ -49,7 +49,7 @@ const hasAnyEditPermission = computed<boolean>(() =>
         </div>
       </div>
       <div class="mt-3">
-        <h3>{{ organization.title }}</h3>
+        <h3 class="overflow-x-scroll whitespace-nowrap">{{ organization.title }}</h3>
         <div class="flex items-center description">
           <icon class="mr-2">
             <Globe v-if="organization.type === 'PUBLIC'" />

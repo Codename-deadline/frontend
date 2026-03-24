@@ -2,13 +2,25 @@ import { client } from "./client";
 import type { PagedResponse } from "./common/PaginationResponse";
 import { getEndpoint } from "./endpoints";
 import { EmptySchema } from "./schemas/common/Empty";
+import {
+  type CreateOrganizationRequest,
+  CreateOrganizationRequestSchema,
+} from "./schemas/organization/create/CreateOrganizationRequest";
+import { CreateOrganizationResponseSchema } from "./schemas/organization/create/CreateOrganizationResponse";
 import { type OrganizationInvitation, OrganizationInvitationSchema } from "./schemas/organization/Invitation";
 import type { OrganizationMember } from "./schemas/organization/Member";
 import {
   type PatchOrganizationRequest,
   PatchOrganizationRequestSchema,
 } from "./schemas/organization/patch/PatchOrganizationRequest";
-import { validateAndRequest } from "./utils";
+import { validateAndRequest, validateWith } from "./utils";
+
+export const createOrganization = async (request: CreateOrganizationRequest) =>
+  validateAndRequest(CreateOrganizationRequestSchema, request, (validated) =>
+    client.post(getEndpoint("ORGANIZATION_CREATE"), validated, {
+      validate: validateWith(CreateOrganizationResponseSchema),
+    }),
+  );
 
 export const deleteOrganization = async (organizationId: number) =>
   validateAndRequest(EmptySchema, {}, (validated) =>

@@ -164,7 +164,9 @@
         "description": "Description",
         "username": "Username",
         "fullName": "Full name",
-        "language": "Language"
+        "language": "Language",
+        "invitations": "Invitations",
+        "visibility": "Visibility"
       }
     },
     "organization": {
@@ -179,6 +181,7 @@
         "member": "Member",
         "owner": "Owner"
       },
+      "no-invitations": "No invitations added yet",
       "header": "Organizations",
       "description": "Manage your teams and projects"
     },

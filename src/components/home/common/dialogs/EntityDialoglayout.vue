@@ -1,17 +1,28 @@
 <script setup lang="ts">
 import { NCard, NTabs } from 'naive-ui';
+import { provide } from 'vue';
+import { DEFAULT_MEMBERS_PAGE_SIZE } from '@/constants/defaults';
+import { PAGE_SIZE_KEY, SCOPE_TYPE_KEY } from '@/constants/providerKeys';
+import emitter from '@/plugins/emitter';
+import type { ScopeType } from '@/types/scope';
 
-defineProps<{
-  title: string;
-}>()
+const props = withDefaults(
+  defineProps<{
+    scopeType: ScopeType;
+    title: string;
+    usersToLoad?: number;
+  }>(),
+  {
+    usersToLoad: DEFAULT_MEMBERS_PAGE_SIZE,
+  }
+);
 
-const emit = defineEmits<{
-  close: []
-}>()
+provide(PAGE_SIZE_KEY, props.usersToLoad);
+provide(SCOPE_TYPE_KEY, props.scopeType);
 </script>
 
 <template>
-  <n-card :title="title" closable @close="emit('close')">
+  <n-card :title="title" closable @close="emitter.emit('closeEditEntityDialog')">
     <n-tabs justify-content="space-evenly">
       <slot />
     </n-tabs>

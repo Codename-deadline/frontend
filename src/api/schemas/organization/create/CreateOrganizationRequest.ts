@@ -6,7 +6,7 @@ export const CreateOrganizationRequestSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   type: OrganizationTypeSchema,
-  usersToInvite: z.array(OrganizationInvitationSchema),
+  invitations: z.array(OrganizationInvitationSchema),
 });
 
 export type CreateOrganizationRequest = z.infer<typeof CreateOrganizationRequestSchema>;

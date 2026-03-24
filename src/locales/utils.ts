@@ -7,6 +7,13 @@ export const extractRoleFromString = (scope: ScopeType, roleString: Organization
   return `scopes.${scope}.role.${roleSplit[1]}`;
 };
 
+// TODO: Remove tScopePrefix
 export const tScopePrefix = (scope: ScopeType, suffix: string) => {
   return `scopes.${scope}.${suffix}`;
+};
+
+export const tEntity = (t: any, scope: ScopeType, action: string) => {
+  return t(`scopes.toasts.entity-${action}`, {
+    entity: t(`scopes.${scope}.name`),
+  });
 };

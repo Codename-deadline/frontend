@@ -4,9 +4,11 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
 import { getOrganizations } from "@/api/user";
+import CreateOrganizationDialog from "@/components/home/organizations/CreateOrganizationDialog.vue";
 import EditOrganizationDialog from "@/components/home/organizations/EditOrganizationDialog.vue";
 import OrganizationCard from "@/components/home/organizations/OrganizationCard.vue";
 import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
+import emitter from "@/plugins/emitter";
 import GlobalFooter from "./GlobalFooter.vue";
 import GlobalHeader from "./GlobalHeader.vue";
 
@@ -25,7 +27,23 @@ const itemsPerRow = computed<number>(() => {
 });
 
 const objectToEdit = ref<any>(null);
-const isEditing = computed(() => objectToEdit.value !== null)
+const isCreatingEntity = ref<boolean>(false);
+const isDialogOpen = computed(() => objectToEdit.value !== null || isCreatingEntity.value)
+
+emitter.on("openCreateEntityDialog", () => {
+  isCreatingEntity.value = true;
+});
+emitter.on("closeCreateEntityDialog", () => {
+  isCreatingEntity.value = false;
+});
+emitter.on("closeEditEntityDialog", () => {
+  objectToEdit.value = null;
+});
+
+const closeAllDialogs = () => {
+  objectToEdit.value = null;
+  isCreatingEntity.value = false;
+};
 
 const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtualList<OrganizationWithRole>(
   "organizations",
@@ -75,18 +93,22 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
     leave-to-class="opacity-0"
   >
     <div
-      v-if="isEditing"
+      v-if="isDialogOpen"
       class="fixed inset-0 z-50 flex items-center justify-center"
     >
       <div
         class="absolute inset-0 bg-black/30 backdrop-blur-sm"
-        @click="objectToEdit = null"
+        @click="closeAllDialogs"
       />
 
       <edit-organization-dialog
+        v-if="objectToEdit"
         class="relative min-w-1/3! w-fit! h-fit! rounded-xl!"
         :entity="objectToEdit"
-        @close="objectToEdit = null"
+      />
+      <create-organization-dialog
+        v-if="isCreatingEntity"
+        class="relative min-w-1/3! w-fit! h-fit! rounded-xl!"
       />
     </div>
   </Transition>

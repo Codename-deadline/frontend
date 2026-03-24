@@ -6,7 +6,7 @@ import { CARD_HEIGHT_PIXELS, PRELOAD_DISTANCE_PIXELS } from "@/constants/virtual
 
 <template>
   <page-layout :item-height="CARD_HEIGHT_PIXELS" :distance="PRELOAD_DISTANCE_PIXELS">
-     <template #header>
+    <template #header>
       <section-header
         scope-type="organization"
         button-action="create"

@@ -1,0 +1,1 @@
+export const MAX_ORGANIZATION_CREATION_INVITATIONS: number = 10;
