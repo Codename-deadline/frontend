@@ -1,14 +1,12 @@
 import type { NotificationApiInjection } from "naive-ui/es/notification/src/NotificationProvider";
-import { capitalize } from "vue";
+import { capitalize, type InjectionKey, inject } from "vue";
 import type { Router } from "vue-router";
-import type { TokenPair } from "@/api/schemas/auth/common/TokenPair";
-import { GeneralErrorSchema } from "./api/common/GeneralError";
+import { GeneralErrorSchema } from "@/api/common/GeneralError";
+import { DeadlineRoleSchema } from "./api/schemas/deadline/common/DeadlineRole";
+import { OrganizationRoleSchema } from "./api/schemas/organization/common/OrganizationRole";
+import { ThreadRoleSchema } from "./api/schemas/thread/common/ThreadRole";
 import type { ApiError, AuthMethod, FieldError, FormErrors } from "./types/api";
-
-export const storeTokenPair = (tokenPair: TokenPair) => {
-  localStorage.setItem("accessToken", tokenPair.accessToken);
-  localStorage.setItem("refreshToken", tokenPair.refreshToken);
-};
+import type { ScopeType } from "./types/scope";
 
 export const redirectToOTP = (router: Router, otpId: string, authMethod: AuthMethod) => {
   router.push({
@@ -20,12 +18,24 @@ export const redirectToOTP = (router: Router, otpId: string, authMethod: AuthMet
   });
 };
 
+export const isRoleInScope = (role: string, scopeType: ScopeType): boolean => {
+  switch (scopeType) {
+    case "organization":
+      return OrganizationRoleSchema.safeParse(role).success;
+    case "thread":
+      return ThreadRoleSchema.safeParse(role).success;
+    case "deadline":
+      return DeadlineRoleSchema.safeParse(role).success;
+  }
+};
+
 export const displayFormErrors = (t: any, notification: NotificationApiInjection, errors: FormErrors) => {
   const buildRow = (index: number, error: FieldError) => {
     const params = {
       field: capitalize(error.field),
       ...(error.params ?? {}),
     };
+    // TODO: errors.form.invalid-type
     return `${index}. ${t(`errors.form.${error.code.replace("_", "-")}`, params)}\n`;
   };
 
@@ -33,6 +43,7 @@ export const displayFormErrors = (t: any, notification: NotificationApiInjection
   errors.forEach((error, index) => {
     notificationBody += buildRow(index + 1, error);
   });
+  console.error(errors);
 
   notification.error({
     title: t("errors.form.invalid-input"),
@@ -53,6 +64,7 @@ export const displayApiError = (safeT: any, notification: NotificationApiInjecti
         console.error("Failed to display error data");
         break;
       }
+      console.error(parsed.data);
       errorMessageContent = safeT(`errors.api.${parsed.data.code}`, parsed.data.params ?? {});
       break;
     }
@@ -75,4 +87,12 @@ export const displayApiError = (safeT: any, notification: NotificationApiInjecti
     content: errorMessageContent ?? safeT("errors.unknown-error"),
     duration: 3500,
   });
+};
+
+export const injectOrThrow = <T>(key: InjectionKey<T>): T => {
+  const value = inject(key);
+  if (!value) {
+    throw new Error(`injectOrThrow: Unable to inject value for key ${String(key)}`);
+  }
+  return value;
 };

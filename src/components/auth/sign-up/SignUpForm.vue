@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toRef } from "@vueuse/core";
-// biome-ignore lint/correctness/noUnusedImports: Biome does not yet check <template>
+// biome-ignore lint/correctness/noUnusedImports: Tags are written with kebab-case
 import { NFormItem, NInput, NSelect } from "naive-ui";
 import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -21,7 +21,7 @@ const props = defineProps<{
 }>();
 const authMethod: Ref<AuthMethod> = toRef(() => props.method);
 
-const _registrationData = ref<SignUpRequest>({
+const registrationData = ref<SignUpRequest>({
   identifier: "",
   channel: "",
   username: "",
@@ -40,9 +40,9 @@ Object.values(Language).forEach((language) => {
 const { makeRequest } = useApi();
 
 const _submit = async () => {
-  _registrationData.value.channel = authMethod.value.toUpperCase();
+  registrationData.value.channel = authMethod.value.toUpperCase();
 
-  const response = await makeRequest(() => apiAuth.signUp(_registrationData.value), displayFormErrors, displayApiError);
+  const response = await makeRequest(() => apiAuth.signUp(registrationData.value), displayFormErrors, displayApiError);
   if (!response.ok) return;
 
   redirectToOTP(router, response.data.otpId, authMethod.value);
@@ -59,27 +59,16 @@ const _submit = async () => {
     descriptionSelector="auth.sign-up.description"
   >
     <n-form-item :label="t(`auth.sign-up.fields.identifier.${authMethod.toLowerCase()}`)">
-      <n-input v-model:value="_registrationData.identifier" placeholder="Enter your identifier" />
+      <n-input v-model:value="registrationData.identifier" placeholder="Enter your identifier"/>
     </n-form-item>
     <n-form-item :label="t('auth.sign-up.fields.username')">
-      <n-input
-        v-model:value="_registrationData.username"
-        type="text"
-        placeholder="Enter your username"
-      />
+      <n-input v-model:value="registrationData.username" type="text" placeholder="Enter your username"/>
     </n-form-item>
     <n-form-item :label="t('auth.sign-up.fields.fullName')">
-      <n-input
-        v-model:value="_registrationData.fullName"
-        type="text"
-        placeholder="Enter your full name"
-      />
+      <n-input v-model:value="registrationData.fullName" type="text" placeholder="Enter your full name"/>
     </n-form-item>
     <n-form-item :label="t('auth.sign-up.fields.language')">
-      <n-select
-        v-model:value="_registrationData.language"
-        :options="languageOptions"
-      />
+      <n-select v-model:value="registrationData.language" :options="languageOptions"/>
     </n-form-item>
   </BaseAuthForm>
 </template>

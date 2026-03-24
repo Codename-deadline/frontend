@@ -2,17 +2,18 @@
 import { NForm, NFormItem, NInput } from "naive-ui";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
 import * as apiAuth from "@/api/auth";
 import { useApi } from "@/composables/useApi";
+import emitter from "@/plugins/emitter";
+import { useTokenStore } from "@/stores/TokenStore";
 import type { AuthMethod } from "@/types/api";
-import { displayApiError, displayFormErrors, storeTokenPair } from "@/utils";
+import { displayApiError, displayFormErrors } from "@/utils";
 import BaseAuthForm from "../common/BaseAuthForm.vue";
 
 // biome-ignore lint/correctness/noUnusedVariables: Biome does not yet check <template>
 const { t } = useI18n();
 const { makeRequest } = useApi();
-const router = useRouter(); // TODO: Move to OtpView?
+const tokenStore = useTokenStore();
 
 const props = defineProps<{
   requestId: string;
@@ -30,8 +31,8 @@ const _submit = async () => {
   );
   if (!response.ok) return;
 
-  storeTokenPair({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken });
-  router.push({ path: "/" });
+  tokenStore.updateTokens(response.data);
+  emitter.emit("signUpCompleted");
 };
 </script>
 

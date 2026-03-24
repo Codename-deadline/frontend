@@ -56,14 +56,10 @@ const _submit = async () => {
     descriptionSelector="auth.sign-in.description"
   >
     <n-form-item :label="t('auth.sign-in.fields.identifier.telegram')">
-      <n-input v-model:value="_signInData.identifier" placeholder="Enter your identifier" />
+      <n-input v-model:value="_signInData.identifier" placeholder="Enter your identifier"/>
     </n-form-item>
     <n-form-item :label="t('auth.sign-in.fields.username')">
-      <n-input
-        v-model:value="_signInData.username"
-        type="text"
-        placeholder="Enter your username"
-      />
+      <n-input v-model:value="_signInData.username" type="text" placeholder="Enter your username"/>
     </n-form-item>
   </BaseAuthForm>
 </template>

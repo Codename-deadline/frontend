@@ -1,22 +1,23 @@
 import { useNotification } from "naive-ui";
 import type { NotificationApiInjection } from "naive-ui/es/notification/src/NotificationProvider";
 import { useI18n } from "vue-i18n";
-import { type Router, useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { refreshToken as apiAuthRefreshToken } from "@/api/auth";
 import { parseZodError } from "@/api/utils";
+import emitter from "@/plugins/emitter";
+import { useTokenStore } from "@/stores/TokenStore";
 import type { ApiError, FormErrors, SafeApiCall } from "@/types/api";
 import type { OperationResult } from "@/types/OperationResult";
-import { storeTokenPair } from "@/utils";
+import { displayApiError as DAE, displayFormErrors } from "@/utils";
 
 export function useApi() {
   const { t, te } = useI18n();
   const notification = useNotification();
   const route = useRoute();
-  const router: Router = useRouter();
-  const env = import.meta.env;
+  const tokenStore = useTokenStore();
 
-  const safeT = (key: string, options?: Record<string, unknown>) => {
-    return te(key) ? t(key, options ?? {}) : undefined;
+  const safeT = (key: string, options: Record<string, unknown>) => {
+    return te(key) ? t(key, options) : undefined;
   };
 
   const shouldRefresh = (status?: number): boolean => {
@@ -25,22 +26,30 @@ export function useApi() {
   };
 
   const refreshToken = async (): Promise<boolean> => {
-    // client should already do this one error, but just in case
-    localStorage.removeItem("accessToken");
-    const refreshToken: string | null = localStorage.getItem("refreshToken");
+    tokenStore.invalidate({ access: true });
+    const refreshToken: string | null = tokenStore.refreshToken;
     if (!refreshToken) return false;
 
     const res = await apiAuthRefreshToken();
-    if (!res.ok) return false;
+    if (!res.ok) {
+      if (res.reason === "api" && res.error.error.name === "HttpError") {
+        tokenStore.invalidate({ refresh: true });
+      }
+      return false;
+    }
 
-    storeTokenPair(res.data);
+    tokenStore.updateTokens(res.data);
     return true;
   };
 
   const makeRequest = async <T>(
     request: () => Promise<SafeApiCall<T>>,
-    displayValidationError: (t: any, notification: NotificationApiInjection, error: FormErrors) => void,
-    displayApiError: (t: any, notification: NotificationApiInjection, error: ApiError) => void,
+    displayValidationError: (
+      t: any,
+      notification: NotificationApiInjection,
+      error: FormErrors,
+    ) => void = displayFormErrors,
+    displayApiError: (t: any, notification: NotificationApiInjection, error: ApiError) => void = DAE,
   ): Promise<OperationResult<T>> => {
     const res = await request();
     if (res.ok) return { ok: true, data: res.data };
@@ -54,14 +63,9 @@ export function useApi() {
       return { ok: false };
     }
 
-    // TODO: Think about removing router usage from the useApi
     const success = await refreshToken();
     if (!success) {
-      if (env.VITE_NO_AUTH_REDIRECT.toLowerCase() === "true") {
-        console.warn("[DEV]: Auth redirect disabled");
-        return { ok: false };
-      }
-      router.push({ path: "/auth" });
+      emitter.emit("failedToRefreshToken");
       return { ok: false };
     }
 

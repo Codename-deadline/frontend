@@ -1,23 +1,123 @@
-export enum Endpoint {
-  AUTH_SIGN_UP = 0,
-  AUTH_SIGN_IN = 1,
-  AUTH_VERIFY_OTP = 2,
-  AUTH_VERIFY_PASSWORD = 3,
-  AUTH_REFRESH_TOKEN = 4,
-}
-const endpoints: Record<Endpoint, string> = {
-  [Endpoint.AUTH_SIGN_UP]: "/auth/register-otp",
-  [Endpoint.AUTH_SIGN_IN]: "/auth/otp",
-  [Endpoint.AUTH_VERIFY_OTP]: "/auth/otp/verify",
-  [Endpoint.AUTH_VERIFY_PASSWORD]: "/auth/verify-password",
-  [Endpoint.AUTH_REFRESH_TOKEN]: "/auth/refresh-token",
-};
 const endpointPrefix: string = "/api";
+const endpoints = {
+  AUTH_SIGN_UP: {
+    path: "/auth/register-otp",
+  },
+  AUTH_SIGN_IN: {
+    path: "/auth/otp",
+  },
+  AUTH_VERIFY_OTP: {
+    path: "/auth/otp/verify",
+  },
+  AUTH_VERIFY_PASSWORD: {
+    path: "/auth/verify-password",
+  },
+  AUTH_REFRESH_TOKEN: {
+    path: "/auth/refresh-token",
+  },
+  USER_ME: {
+    path: "/user",
+  },
+  USER_MY_ORGANIZATIONS: {
+    path: "/organization",
+    queryParams: {} as { page: number },
+  },
+  USER_USERNAME_HINTS: {
+    path: "/user/hints",
+    queryParams: {} as { startsWith: string },
+  },
+  ORGANIZATION_GET: {
+    path: "/organization/{orgId}",
+    pathParams: {} as { orgId: number },
+  },
+  ORGANIZATION_CREATE: {
+    path: "/organization",
+    pathParams: {} as { orgId: number },
+  },
+  ORGANIZATION_DELETE: {
+    path: "/organization/{orgId}",
+    pathParams: {} as { orgId: number },
+  },
+  ORGANIZATION_PATCH: {
+    path: "/organization/{orgId}",
+    pathParams: {} as { orgId: number },
+  },
+  ORGANIZATION_MEMBERS: {
+    path: "/organization/{orgId}/members",
+    pathParams: {} as { orgId: number },
+    queryParams: {} as { page: number; size: number },
+  },
+  ORGANIZATION_INVITE_MEMBER: {
+    path: "/organization/{orgId}/invitation",
+    pathParams: {} as { orgId: number },
+  },
+  ORGANIZATION_REMOVE_MEMBER: {
+    path: "/organization/{orgId}/members/{username}",
+    pathParams: {} as { orgId: number; username: string },
+  },
+  ROLES_METADATA: {
+    path: "/roles/metadata",
+    pathParams: {} as never,
+  },
+  ROLES_CHANGE_ORGANIZATION: {
+    path: "/roles/organization/{orgId}",
+    pathParams: {} as { orgId: number },
+  },
+  ROLES_CHANGE_THREAD: {
+    path: "/roles/thread/{threadId}",
+    pathParams: {} as { threadId: number },
+  },
+  ROLES_CHANGE_DEADLINE: {
+    path: "/roles/deadline/{deadlineId}",
+    pathParams: {} as { deadlineId: number },
+  },
+  METADATA_GET: {
+    path: "/metadata",
+    pathParams: {} as never,
+  },
+} as const;
 
-const buildPath = (path: string): string => {
-  return `${endpointPrefix}${path}`;
+export type EndpointSpec<K extends EndpointKey> = {
+  path: string;
+} & (PathParams<K> extends never ? Record<string, never> : { pathParams: PathParams<K> }) &
+  (QueryParams<K> extends never ? Record<string, never> : { queryParams: QueryParams<K> });
+
+type EndpointKey = keyof typeof endpoints;
+
+type PathParams<K extends EndpointKey> = (typeof endpoints)[K] extends { readonly pathParams: infer P } ? P : never;
+type QueryParams<K extends EndpointKey> = (typeof endpoints)[K] extends { readonly queryParams: infer Q } ? Q : never;
+
+const buildPath = (path: string, pathParams?: Record<string, string | number>): string => {
+  if (!pathParams) return `${endpointPrefix}${path}`;
+
+  let result = path;
+  for (const [key, value] of Object.entries(pathParams)) {
+    result = result.replace(`{${key}}`, encodeURIComponent(String(value)));
+  }
+
+  return `${endpointPrefix}${result}`;
 };
 
-export const getEndpoint = (endpoint: Endpoint) => {
-  return buildPath(endpoints[endpoint] as string);
+const buildQuery = (query?: Record<string, string | number>): string => {
+  if (!query) return "";
+
+  const pathParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    pathParams.append(key, String(value));
+  }
+  return `?${pathParams.toString()}`;
+};
+
+export const getEndpoint = <K extends EndpointKey>(
+  key: K,
+  options?: {
+    pathParams?: PathParams<K>;
+    queryParams?: QueryParams<K>;
+  },
+): string => {
+  const spec = endpoints[key];
+
+  const path = buildPath(spec.path, options?.pathParams as Record<string, string | number>);
+  const query = buildQuery(options?.queryParams as Record<string, string | number>);
+  return `${path}${query}`;
 };

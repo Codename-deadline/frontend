@@ -1,14 +1,23 @@
 <script setup lang="ts">
 import {
-  darkTheme,
-  type GlobalThemeOverrides,
-  NConfigProvider,
-  NGlobalStyle,
-  NNotificationProvider,
-  ruRU,
-  useOsTheme,
+    darkTheme,
+    enUS,
+    type GlobalThemeOverrides,
+    NConfigProvider,
+    NGlobalStyle,
+    NMessageProvider,
+    NNotificationProvider,
+    ruRU,
+    useOsTheme,
+    useThemeVars,
 } from "naive-ui";
-import { computed } from "vue";
+import { computed, provide, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRoute, useRouter } from "vue-router";
+import { USER_KEY } from "./constants/providerKeys";
+import GlobalEventHandler from "./GlobalEventHandler.vue";
+import { useUserStore } from "./stores/UserStore";
+import { Language } from "./types/Language";
 
 const themeOverridesLight: GlobalThemeOverrides = {
   common: {
@@ -19,18 +28,54 @@ const themeOverridesLight: GlobalThemeOverrides = {
 const darkThemeOverrides: GlobalThemeOverrides = {};
 
 const osTheme = useOsTheme();
-
 const isDark = computed(() => osTheme.value === "dark");
 const _theme = computed(() => (isDark.value ? darkTheme : null));
 const _themeOverrides = computed(() => (isDark.value ? darkThemeOverrides : themeOverridesLight));
-const _locale = computed(() => ruRU);
+
+const userStore = useUserStore();
+const { locale } = useI18n();
+const _currentLocale = ref(enUS);
+watch(
+  () => userStore.user?.language,
+  (newLanguage: Language | undefined) => {
+    if (!newLanguage) return;
+    locale.value = newLanguage.valueOf().toLowerCase();
+
+    switch (newLanguage) {
+      case Language.ENGLISH:
+        _currentLocale.value = enUS;
+        break;
+      case Language.RUSSIAN:
+        _currentLocale.value = ruRU;
+        break;
+    }
+  },
+);
+provide(USER_KEY, userStore.user);
+
+const route = useRoute();
+const router = useRouter();
+if (route.path.includes("auth") && userStore.isAvailable) {
+  router.push({ path: "/" });
+}
+
+const themeVars = useThemeVars();
 </script>
 
 <template>
-    <n-config-provider :theme="_theme" :theme-overrides="_themeOverrides" :locale="_locale">
-      <n-global-style />  
-      <n-notification-provider :max="3">
-        <RouterView />
-      </n-notification-provider>
-    </n-config-provider>
+  <n-config-provider :theme="_theme" :theme-overrides="_themeOverrides" :locale="_currentLocale">
+    <n-global-style/>
+    <n-notification-provider :max="3">
+      <n-message-provider>
+        <RouterView/>
+        <GlobalEventHandler />
+      </n-message-provider>
+    </n-notification-provider>
+  </n-config-provider>
 </template>
+
+<style>
+.description {
+  color: v-bind('themeVars.textColor3')
+}
+</style>

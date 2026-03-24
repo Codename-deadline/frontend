@@ -1,5 +1,5 @@
 import { client } from "./client";
-import { Endpoint, getEndpoint } from "./endpoints";
+import { getEndpoint } from "./endpoints";
 import { RefreshTokenRequestSchema } from "./schemas/auth/RefreshTokenRequest";
 import { RefreshTokenResponseSchema } from "./schemas/auth/RefreshTokenResponse";
 import { type SignInRequest, SignInRequestSchema } from "./schemas/auth/SignInRequest";
@@ -14,35 +14,35 @@ import { validateAndRequest, validateWith } from "./utils";
 
 export const signUp = (data: SignUpRequest) =>
   validateAndRequest(SignUpRequestSchema, data, (validated) =>
-    client.post(getEndpoint(Endpoint.AUTH_SIGN_UP), validated, {
+    client.post(getEndpoint("AUTH_SIGN_UP"), validated, {
       validate: validateWith(SignUpResponseSchema),
     }),
   );
 
 export const signIn = async (data: SignInRequest) =>
   validateAndRequest(SignInRequestSchema, data, (validated) =>
-    client.post(getEndpoint(Endpoint.AUTH_SIGN_IN), validated, {
+    client.post(getEndpoint("AUTH_SIGN_IN"), validated, {
       validate: validateWith(SignInResponseSchema),
     }),
   );
 
 export const verifyOtp = async (data: VerifyOtpRequest) =>
   validateAndRequest(VerifyOtpRequestSchema, data, (validated) =>
-    client.post(getEndpoint(Endpoint.AUTH_VERIFY_OTP), validated, {
+    client.post(getEndpoint("AUTH_VERIFY_OTP"), validated, {
       validate: validateWith(VerifyOtpResponseSchema),
     }),
   );
 
 export const verifyPassword = async (data: VerifyPasswordRequest) =>
   validateAndRequest(VerifyPasswordRequestSchema, data, (validated) =>
-    client.post(getEndpoint(Endpoint.AUTH_VERIFY_PASSWORD), validated, {
+    client.post(getEndpoint("AUTH_VERIFY_PASSWORD"), validated, {
       validate: validateWith(VerifyPasswordResponseSchema),
     }),
   );
 
 export const refreshToken = async () =>
   validateAndRequest(RefreshTokenRequestSchema, {}, (validated) =>
-    client.post(getEndpoint(Endpoint.AUTH_REFRESH_TOKEN), validated, {
+    client.post(getEndpoint("AUTH_REFRESH_TOKEN"), validated, {
       validate: validateWith(RefreshTokenResponseSchema),
     }),
   );

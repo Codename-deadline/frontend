@@ -8,6 +8,11 @@ export const validateWith =
   <T>(schema: z.ZodType<T>) =>
   (raw: unknown) => {
     const r = schema.safeParse(raw);
+    if (!r.success) {
+      console.error("Validation failed:");
+      console.error(raw);
+      console.error(r.error);
+    }
     return r.success ? { success: true as const, data: r.data } : { success: false as const, error: r.error };
   };
 

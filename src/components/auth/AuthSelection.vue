@@ -47,15 +47,15 @@ watch(currentMethod, (newMethod) => {
       <small class="flex justify-center mt-8">
         <div class="space-x-1" v-if="isSignIn">
           <span>{{ t("auth.sign-in.notRegistered") }}</span>
-          <n-button text size="tiny" @click="isSignIn = false">{{
-            t("auth.sign-up.action")
-          }}</n-button>
+          <n-button text size="tiny" @click="isSignIn = false">
+            {{ t("auth.sign-up.action") }}
+          </n-button>
         </div>
         <div class="space-x-1" v-else>
           <span>{{ t("auth.sign-up.alreadyRegistered") }}</span>
-          <n-button text tag="a" size="tiny" @click="isSignIn = true">{{
-            t("auth.sign-in.action")
-          }}</n-button>
+          <n-button text tag="a" size="tiny" @click="isSignIn = true">
+            {{ t("auth.sign-in.action") }}
+          </n-button>
         </div>
       </small>
     </template>

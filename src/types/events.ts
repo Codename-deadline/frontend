@@ -1,3 +1,8 @@
 export type Events = {
-  resetAuthProgress?: null;
+  resetAuthProgress: undefined;
+  signUpCompleted: undefined;
+  failedToRefreshToken: undefined;
+  closeEditEntityDialog: undefined;
+  openCreateEntityDialog: undefined;
+  closeCreateEntityDialog: undefined;
 };

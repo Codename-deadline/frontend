@@ -1,5 +1,6 @@
 import { Icon, IconConfigProvider } from "@vicons/utils";
 import { createPinia } from "pinia";
+import piniaPersist from "pinia-plugin-persistedstate";
 import { createApp } from "vue";
 import "./styles.css";
 
@@ -10,6 +11,7 @@ import App from "./App.vue";
 
 export const app = createApp(App);
 const pinia = createPinia();
+pinia.use(piniaPersist);
 
 const i18n = createI18n({
   legacy: false,
