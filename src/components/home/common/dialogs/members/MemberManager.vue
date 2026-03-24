@@ -57,6 +57,7 @@ const canUserAssignY = (roleX: AnyRole, _: ScopeType) => {
   // It is guaranteed that the matrix contains all roles and is quadratic NxN.
   return rolesMetadata.matrix[userRoleIdx]![xIdx];
 }
+const isMe = (member: MemberWithRole) => member.user.id === user.id;
 
 const getAvatarText = (fullname: string) => {
   return fullname.split(' ').map((n) => n.charAt(0).toUpperCase()).join('');
@@ -75,12 +76,12 @@ const getAvatarText = (fullname: string) => {
           <span>{{ member.user.fullName }}</span>
           <span class="text-sm description">@{{ member.user.username }}</span>
         </div>
-        <div v-if="user.id !== member.user.id" class="flex items-center space-x-2!">
+        <div class="flex items-center space-x-2!">
           <RoleDropdown
             @select="(role) => emit('updateRole', member, role)"
             :button-role="member.role"
             :filter="canUserAssignY"
-            :disabled="!canManageRoles"
+            :disabled="!canManageRoles || isMe(member)"
           />
           <n-popconfirm
             v-if="canManageRoles"
@@ -88,7 +89,7 @@ const getAvatarText = (fullname: string) => {
             class="rounded-lg!"
           >
             <template #trigger>
-              <n-button class="rounded-lg!" size="small" type="error" ghost>
+              <n-button v-show="!isMe(member)" class="rounded-lg!" size="small" type="error" ghost>
                 <template #icon>
                   <Icon :size="16">
                     <TrashAlt />

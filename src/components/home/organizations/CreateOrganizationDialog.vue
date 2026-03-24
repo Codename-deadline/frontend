@@ -4,7 +4,6 @@ import { type FormInst, type FormRules, NButton, NForm, NFormItem, NIcon, NInput
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { createOrganization } from '@/api/organization';
-import type { OrganizationWithRole } from '@/api/schemas/organization/common/Organization';
 import type { OrganizationType } from '@/api/schemas/organization/common/OrganizationType';
 import type { OrganizationInvitation } from '@/api/schemas/organization/Invitation';
 import EntityCreationDialogLayout from '@/components/home/common/dialogs/EntityCreationDialogLayout.vue';
@@ -13,12 +12,10 @@ import Step from '@/components/home/common/stepper/Step.vue';
 import { useApi } from '@/composables/useApi';
 import { tEntity, tScopePrefix } from '@/locales/utils';
 import emitter from '@/plugins/emitter';
-import { useInfiniteListStore } from '@/stores/InfiniteListStore';
 
 const { t } = useI18n();
 const { makeRequest } = useApi();
 const message = useMessage();
-const infiniteListStore = useInfiniteListStore();
 
 const invitationFormModel = ref<OrganizationInvitation[]>([]);
 
@@ -73,6 +70,7 @@ const handleOrganizationCreation = async () => {
   message.success(tEntity(t, "organization", "created"));
 
   emitter.emit("closeCreateEntityDialog");
+  // TODO: Load the created organization
 }
 
 // TODO: Unhardcode
