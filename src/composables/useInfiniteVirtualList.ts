@@ -6,7 +6,7 @@ import type { SafeApiCall } from "@/types/api";
 import { displayApiError, displayFormErrors } from "@/utils";
 import { useApi } from "./useApi";
 
-export function useInfiniteVirtualList<T>(
+export function useInfiniteVirtualList<T extends { id: number }>(
   type: ListType,
   fetcher: (page: number) => Promise<SafeApiCall<PagedResponse<T>>>,
   options: {
@@ -49,7 +49,7 @@ export function useInfiniteVirtualList<T>(
     scrollTo: virtual.scrollTo,
 
     loading: computed(() => store.stateMap[type].loading),
-    hasMore: computed(() => store.stateMap[type].hasMore),
+    hasMore: computed(() => store.hasMore(type)),
 
     loadMore: () => store.loadMore<T>(type, fetcherClosure),
     reset: () => store.reset(type),

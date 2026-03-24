@@ -1,42 +1,61 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
-import type { Organization } from "@/api/schemas/organization/common/Organization";
+import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
+import { DETAULT_ENTITIES_PAGE_SIZE as DEFAULT_ENTITIES_PAGE_SIZE } from "@/constants/defaults";
 import type { OperationResult } from "@/types/OperationResult";
 
 export type ListType = "organizations" | "threads" | "deadlines";
 
-interface InfiniteListState<T> {
+interface InfiniteListState<T extends { id: number }> {
   items: T[];
+  ids: Set<number>;
   page: number;
+  pageSize: number;
+  totalPages: number;
   loading: boolean;
-  hasMore: boolean;
 }
+
+// totalPages will be updated with the actual total pages from the server on first request
+const initialState = <T extends { id: number }>(pageSize: number): InfiniteListState<T> => ({
+  items: [],
+  ids: new Set(),
+  page: 0,
+  pageSize,
+  totalPages: Number.MAX_SAFE_INTEGER,
+  loading: false,
+});
 
 export const useInfiniteListStore = defineStore("infiniteList", () => {
   // TODO: Add deadlines and threads to type union
-  const stateMap = ref<Record<ListType, InfiniteListState<Organization>>>({
-    organizations: { items: [], page: 0, loading: false, hasMore: true },
-    threads: { items: [], page: 0, loading: false, hasMore: true },
-    deadlines: { items: [], page: 0, loading: false, hasMore: true },
+  const stateMap = ref<Record<ListType, InfiniteListState<OrganizationWithRole>>>({
+    organizations: initialState<OrganizationWithRole>(DEFAULT_ENTITIES_PAGE_SIZE),
+    threads: initialState(DEFAULT_ENTITIES_PAGE_SIZE),
+    deadlines: initialState(DEFAULT_ENTITIES_PAGE_SIZE),
   });
 
-  async function loadMore<T>(type: ListType, fetcher: (page: number) => Promise<OperationResult<PagedResponse<T>>>) {
+  async function loadMore<T extends { id: number }>(
+    type: ListType,
+    fetcher: (page: number) => Promise<OperationResult<PagedResponse<T>>>,
+  ) {
     const state: InfiniteListState<T> = stateMap.value[type] as InfiniteListState<T>;
 
-    if (state.loading || !state.hasMore) return;
-
+    if (state.loading || !hasMore(type)) return;
     state.loading = true;
 
     try {
-      const result = await fetcher(state.page);
-      if (!result.ok) return;
+      const res = await fetcher(state.page);
+      if (!res.ok) return;
 
-      state.items.push(...result.data.data);
+      for (const item of res.data.data) {
+        if (!state.ids.has(item.id)) {
+          state.items.push(item);
+          state.ids.add(item.id);
+        }
+      }
+      state.totalPages = res.data.totalPages;
 
-      if (state.page >= result.data.totalPages - 1) {
-        state.hasMore = false;
-      } else {
+      if (state.page < state.totalPages - 1) {
         state.page++;
       }
     } finally {
@@ -44,15 +63,34 @@ export const useInfiniteListStore = defineStore("infiniteList", () => {
     }
   }
 
-  function removeItem<T>(type: ListType, itemId: number) {
+  async function addOne<T extends { id: number }>(type: ListType, entity: T) {
     const state: InfiniteListState<T> = stateMap.value[type] as InfiniteListState<T>;
-    // Every entity in the list has an `id` property
-    state.items = state.items.filter((i) => (i as { id: number }).id !== itemId);
+
+    if (!state.ids.has(entity.id)) {
+      state.items.push(entity);
+      state.ids.add(entity.id);
+    }
+
+    if (state.page * state.pageSize < state.items.length) {
+      state.page++;
+      state.totalPages = Math.max(state.page, state.totalPages);
+    }
+  }
+
+  function hasMore<T extends { id: number }>(type: ListType): boolean {
+    const state: InfiniteListState<T> = stateMap.value[type] as InfiniteListState<T>;
+    return state.page < state.totalPages - 1;
+  }
+
+  function removeItem<T extends { id: number }>(type: ListType, itemId: number) {
+    const state: InfiniteListState<T> = stateMap.value[type] as InfiniteListState<T>;
+    state.items = state.items.filter((i) => i.id !== itemId);
+    state.ids.delete(itemId);
   }
 
   function reset(type: ListType) {
-    stateMap.value[type] = { items: [], page: 1, loading: false, hasMore: true };
+    stateMap.value[type] = initialState(DEFAULT_ENTITIES_PAGE_SIZE);
   }
 
-  return { stateMap, loadMore, removeItem, reset };
+  return { stateMap, loadMore, addOne, removeItem, hasMore, reset };
 });
