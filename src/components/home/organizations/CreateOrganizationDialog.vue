@@ -11,7 +11,7 @@ import EntityCreationDialogLayout from '@/components/home/common/dialogs/EntityC
 import DynamicUserInvitationInput from '@/components/home/common/forms/DynamicUserInvitationInput.vue';
 import Step from '@/components/home/common/stepper/Step.vue';
 import { useApi } from '@/composables/useApi';
-import { tEntity, tScopePrefix } from '@/locales/utils';
+import { tEntityToastAction, tFormError, tScopePrefix } from '@/locales/utils';
 import emitter from '@/plugins/emitter';
 import { useInfiniteListStore } from '@/stores/InfiniteListStore';
 
@@ -30,10 +30,10 @@ const organizationFormModel = ref<{
 }>({ title: "", description: "", visibility: "PRIVATE" });
 const organizationFormRules: FormRules = {
   title: [
-    { required: true, message: 'Title is required', trigger: ["input", "blur"] },
+    { required: true, message: tFormError(t, "title"), trigger: ["input", "blur"] },
   ],
   visibility: [
-    { required: true, message: 'Visibility is required', trigger: ["input", "blur"] },
+    { required: true, message: tFormError(t, "visibility"), trigger: ["input", "blur"] },
   ],
 }
 const validateOrganizationData = (nextStep: () => void) => {
@@ -70,7 +70,7 @@ const handleOrganizationCreation = async () => {
   }))
 
   if (!res.ok) return;
-  message.success(tEntity(t, "organization", "created"));
+  message.success(tEntityToastAction(t, "organization", "created"));
 
   emitter.emit("closeCreateEntityDialog");
 

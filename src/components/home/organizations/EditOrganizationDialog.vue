@@ -12,6 +12,7 @@ import MembersTab from '@/components/home/common/dialogs/members/MembersTab.vue'
 import UserInvitationInput from '@/components/home/common/forms/UserInvitationInput.vue';
 import { useApi } from '@/composables/useApi';
 import { DEFAULT_MEMBERS_PAGE_SIZE } from '@/constants/defaults';
+import { tEntityActionConfirmation, tEntityToastAction, tFormError } from '@/locales/utils';
 import emitter from '@/plugins/emitter';
 import { useInfiniteListStore } from '@/stores/InfiniteListStore';
 
@@ -53,9 +54,7 @@ const handleOrganizationPatch = async (e: MouseEvent) => {
 
     props.entity.title = patchFormModel.value.title;
     props.entity.description = patchFormModel.value.description;
-    message.success(t("scopes.toasts.entity-updated", {
-      entity: t("scopes.organization.name")
-    }));
+    message.success(tEntityToastAction(t, "organization", "updated"));
   })
 }
 
@@ -66,7 +65,7 @@ const invitationFormModel = ref<OrganizationInvitation>({
 });
 const invitationFormRules: FormRules = {
   username: [
-    { required: true, message: 'Username is required', trigger: ["input", "blur"] },
+    { required: true, message: tFormError(t, "username"), trigger: ["input", "blur"] },
   ]
 }
 const handleInvitationSubmission = async () => {
@@ -96,9 +95,7 @@ const handleOrganizationDelete = async (e: MouseEvent) => {
   infiniteListStore.removeItem<OrganizationWithRole>("organizations", props.entity.id);
 
   emitter.emit('closeEditEntityDialog');
-  message.success(t("scopes.toasts.entity-deleted", {
-    entity: t("scopes.organization.name")
-  }));
+  message.success(tEntityToastAction(t, "organization", "deleted"));
 }
 
 const handleLoadingMembers = (page: number) => {
@@ -145,11 +142,7 @@ const handleMemberRemoval = async (username: string) => {
             <template #trigger>
               <n-button :disabled="!entity.permissions.delete" class="rounded-lg!" type="error">{{ t('actions.delete') }}</n-button>
             </template>
-            {{ t('actions.confirmation', {
-              action: t('actions.to-confirm.delete-entity', {
-                entity: t('scopes.organization.name').toLowerCase()
-              })
-            }) }}
+            {{ tEntityActionConfirmation(t, "organization", "delete") }}
           </n-popconfirm>
           <div></div>
           <n-button @click="handleOrganizationPatch" class="rounded-lg!" type="info">{{ t('actions.save') }}</n-button>

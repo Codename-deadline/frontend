@@ -8,6 +8,7 @@ import type { User } from '@/api/schemas/common/User';
 import type { RolesMetadata } from '@/api/schemas/roles/metadata';
 import RoleDropdown from '@/components/home/common/forms/RoleDropdown.vue';
 import { PAGE_SIZE_KEY, USER_KEY } from '@/constants/providerKeys';
+import { tActionConfirmation } from '@/locales/utils';
 import { useMetadataStore } from '@/stores/MetadataStore';
 import type { AnyRole, ScopeType } from '@/types/scope';
 import { injectOrThrow } from '@/utils';
@@ -97,7 +98,7 @@ const getAvatarText = (fullname: string) => {
                 </template>
               </n-button>
             </template>
-            {{ t('actions.confirmation', { action: t('actions.to-confirm.remove-member') }) }}
+            {{ tActionConfirmation(t, 'remove-member') }}
           </n-popconfirm>
         </div>
       </div>
