@@ -1,16 +1,17 @@
 <script setup lang="ts">
+import { getOrganizations } from "@/api/user";
 import PageLayout from "@/components/home/common/PageLayout.vue";
-import SectionHeader from "@/components/home/common/SectionHeader.vue";
-import { CARD_HEIGHT_PIXELS, PRELOAD_DISTANCE_PIXELS } from "@/constants/virtualList";
+import CreateOrganizationDialog from "@/components/home/organizations/CreateOrganizationDialog.vue";
+import EditOrganizationDialog from "@/components/home/organizations/EditOrganizationDialog.vue";
+import OrganizationCard from "@/components/home/organizations/OrganizationCard.vue";
 </script>
 
 <template>
-  <page-layout :item-height="CARD_HEIGHT_PIXELS" :distance="PRELOAD_DISTANCE_PIXELS">
-    <template #header>
-      <section-header
-        scope-type="organization"
-        button-action="create"
-      />
-    </template>
-  </page-layout>
+  <page-layout
+    :entity-card-component="OrganizationCard"
+    :edit-dialog-component="EditOrganizationDialog"
+    :create-dialog-component="CreateOrganizationDialog"
+    :fetcher="getOrganizations"
+    scope-type="organization"
+  />
 </template>

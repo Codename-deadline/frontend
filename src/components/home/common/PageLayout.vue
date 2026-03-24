@@ -1,21 +1,35 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends {id: number}">
 import { useWindowSize } from "@vueuse/core";
+import type { Component } from "vue";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
-import { getOrganizations } from "@/api/user";
-import CreateOrganizationDialog from "@/components/home/organizations/CreateOrganizationDialog.vue";
-import EditOrganizationDialog from "@/components/home/organizations/EditOrganizationDialog.vue";
-import OrganizationCard from "@/components/home/organizations/OrganizationCard.vue";
+import type { PagedResponse } from "@/api/common/PaginationResponse";
 import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
+import { CARD_HEIGHT_PIXELS, PRELOAD_DISTANCE_PIXELS } from "@/constants/virtualList";
 import emitter from "@/plugins/emitter";
+import type { ListType } from "@/stores/InfiniteListStore";
+import type { SafeApiCall } from "@/types/api";
+import type { ScopeType } from "@/types/scope";
 import GlobalFooter from "./GlobalFooter.vue";
 import GlobalHeader from "./GlobalHeader.vue";
+import SectionHeader from "./SectionHeader.vue";
 
-const props = defineProps<{
-  itemHeight: number;
+
+const props = withDefaults(
+  defineProps<{
+  entityCardComponent: Component;
+  editDialogComponent: Component;
+  createDialogComponent: Component;
+  fetcher: (page: number) => Promise<SafeApiCall<PagedResponse<T>>>;
+  scopeType: ScopeType;
+  itemHeight?: number;
   distance?: number;
-}>();
+}>(),
+  {
+    itemHeight: CARD_HEIGHT_PIXELS,
+    distance: PRELOAD_DISTANCE_PIXELS,
+  },
+);
 const { t } = useI18n();
 const { width } = useWindowSize();
 // These values are linked to the CSS below
@@ -44,10 +58,20 @@ const closeAllDialogs = () => {
   objectToEdit.value = null;
   isCreatingEntity.value = false;
 };
+const scopeTypeToListType = (scopeType: ScopeType): ListType => {
+  switch (scopeType) {
+    case "organization":
+      return "organizations";
+    case "thread":
+      return "threads";
+    case "deadline":
+      return "deadlines";
+  }
+};
 
-const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtualList<OrganizationWithRole>(
-  "organizations",
-  (page: number) => getOrganizations(page),
+const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtualList(
+  scopeTypeToListType(props.scopeType),
+  (page: number) => props.fetcher(page),
   {
     itemsPerRow,
     itemHeight: props.itemHeight,
@@ -59,7 +83,10 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
 <template>
   <global-header class="mt"/>
   <div class="mt-8 layout-dynamic-padding">
-    <slot name="header"/>
+    <section-header
+      :scope-type="scopeType"
+      button-action="create"
+    />
     <div class="mt-6">
       <div v-bind="containerProps" class="overflow-y-auto max-h-[72.5vh]">
         <div v-bind="wrapperProps" class="space-y-4">
@@ -68,11 +95,12 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
             v-for="row in virtualItems"
             :key="row.index"
           >
-             <organization-card
+             <component
+              :is="props.entityCardComponent"
               @edit="objectToEdit = item"
               v-for="item in row.data"
               :key="item.id"
-              :organization="item"
+              :entity="item"
             />
           </div>
         </div>
@@ -101,12 +129,14 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
         @click="closeAllDialogs"
       />
 
-      <edit-organization-dialog
+      <component
+        :is="props.editDialogComponent"
         v-if="objectToEdit"
         class="relative min-w-1/3! w-fit! h-fit! rounded-xl!"
         :entity="objectToEdit"
       />
-      <create-organization-dialog
+      <component
+        :is="props.createDialogComponent"
         v-if="isCreatingEntity"
         class="relative min-w-1/3! w-fit! h-fit! rounded-xl!"
       />
