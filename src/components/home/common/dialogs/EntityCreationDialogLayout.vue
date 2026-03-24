@@ -4,7 +4,6 @@ import { capitalize, computed, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Stepper from '@/components/home/common/stepper/Stepper.vue';
 import { SCOPE_TYPE_KEY } from '@/constants/providerKeys';
-import { tScopePrefix } from '@/locales/utils';
 import emitter from '@/plugins/emitter';
 import type { ScopeType } from '@/types/scope';
 
@@ -14,7 +13,7 @@ const props = defineProps<{
 const { t } = useI18n();
 
 const title = computed(() =>
-  `${capitalize(t("actions.create"))} ${t(tScopePrefix(props.scopeType, 'name'))}`
+  `${capitalize(t("actions.create"))} ${t(`scopes.${props.scopeType}.name`)}`
 )
 
 provide(SCOPE_TYPE_KEY, props.scopeType);

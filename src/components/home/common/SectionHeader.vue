@@ -3,7 +3,6 @@ import { Plus } from "@vicons/fa";
 import { Icon } from "@vicons/utils";
 import { NButton } from "naive-ui";
 import { useI18n } from "vue-i18n";
-import { tScopePrefix } from "@/locales/utils";
 import emitter from "@/plugins/emitter";
 import type { ScopeType } from "@/types/scope";
 
@@ -18,8 +17,8 @@ const { t } = useI18n();
 <template>
   <header class="flex w-full justify-between items-center">
     <div>
-      <h2>{{ t(tScopePrefix(scopeType, "header")) }}</h2>
-      <div class="description">{{ t(tScopePrefix(scopeType, "description")) }}</div>
+      <h2>{{ t(`scopes.${scopeType}.header`) }}</h2>
+      <div class="description">{{ t(`scopes.${scopeType}.description`) }}</div>
     </div>
     <div>
       <n-button @click="emitter.emit('openCreateEntityDialog')" type="info" class="rounded-lg!">

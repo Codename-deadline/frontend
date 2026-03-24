@@ -11,7 +11,7 @@ import EntityCreationDialogLayout from '@/components/home/common/dialogs/EntityC
 import DynamicUserInvitationInput from '@/components/home/common/forms/DynamicUserInvitationInput.vue';
 import Step from '@/components/home/common/stepper/Step.vue';
 import { useApi } from '@/composables/useApi';
-import { tEntityToastAction, tFormError, tScopePrefix } from '@/locales/utils';
+import { tEntityToastAction, tFormError } from '@/locales/utils';
 import emitter from '@/plugins/emitter';
 import { useInfiniteListStore } from '@/stores/InfiniteListStore';
 
@@ -102,7 +102,7 @@ const organizationVisibilityOptions: { value: OrganizationType; label: string }[
   "PRIVATE", "PUBLIC", "PERSONAL"
 ].map(
   (type) => ({
-    value: type as OrganizationType, label: t(tScopePrefix("organization", `type.${type.toLowerCase()}`))
+    value: type as OrganizationType, label: t(`scopes.organization.type.${type.toLowerCase()}`)
   })
 );
 </script>

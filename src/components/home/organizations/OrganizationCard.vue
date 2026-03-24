@@ -4,7 +4,7 @@ import { NButton, NIconWrapper, NTag } from "naive-ui";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
-import { extractRoleFromString, tScopePrefix } from "@/locales/utils";
+import { extractRoleFromString } from "@/locales/utils";
 import EntityCard from "../common/EntityCard.vue";
 
 const { t } = useI18n();
@@ -57,7 +57,7 @@ const hasAnyEditPermission = computed<boolean>(() =>
             <UserLock v-else-if="entity.type === 'PERSONAL'" />
             <Lock v-else />
           </icon>
-          {{ t(tScopePrefix("organization", `type.${entity.type.toLowerCase()}`)) }}
+          {{ t(`scopes.organization.type.${entity.type.toLowerCase()}`) }}
         </div>
       </div>
     </template>
@@ -69,7 +69,7 @@ const hasAnyEditPermission = computed<boolean>(() =>
         {{entity.stats.members}} {{ t('scopes.common.members').toLowerCase() }}
       </div>
       <div>
-        {{entity.stats.threads}} {{ t(tScopePrefix("thread", "header")).toLowerCase() }}
+        {{entity.stats.threads}} {{ t('scopes.thread.header').toLowerCase() }}
       </div>
     </template>
   </EntityCard>

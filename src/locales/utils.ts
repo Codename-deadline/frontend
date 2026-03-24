@@ -7,11 +7,6 @@ export const extractRoleFromString = (scope: ScopeType, roleString: Organization
   return `scopes.${scope}.role.${roleSplit[1]}`;
 };
 
-// TODO: Remove tScopePrefix
-export const tScopePrefix = (scope: ScopeType, suffix: string) => {
-  return `scopes.${scope}.${suffix}`;
-};
-
 export const tActionConfirmation = (t: any, action: string) => {
   return t(`actions.confirmation`, {
     action: t(`actions.to-confirm.${action}`),
