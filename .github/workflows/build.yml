@@ -26,7 +26,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
-        run: bun i
+        run: bun i --no-save --frozen-lockfile
 
       - name: Build project
         run: bun run build
