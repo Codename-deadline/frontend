@@ -14,19 +14,19 @@
   },
   "dependencies": {
     "@asouei/safe-fetch": "^1.0.0",
-    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindcss/vite": "^4.2.4",
     "@vueuse/core": "^14.2.1",
     "mitt": "^3.0.1",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
-    "vite": "^8.0.8",
-    "vue": "^3.5.32",
-    "vue-i18n": "^11.3.2",
-    "vue-router": "^5.0.4",
-    "zod": "^4.3.6"
+    "vite": "^8.0.10",
+    "vue": "^3.5.33",
+    "vue-i18n": "^11.4.0",
+    "vue-router": "^5.0.6",
+    "zod": "^4.4.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.12",
+    "@biomejs/biome": "^2.4.13",
     "@types/node": "^25.6.0",
     "@vicons/fa": "^0.13.0",
     "@vicons/utils": "^0.1.4",
@@ -36,9 +36,9 @@
     "husky": "^9.1.7",
     "naive-ui": "^2.44.1",
     "patch-package": "^8.0.1",
-    "tailwindcss": "^4.2.2",
+    "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3",
     "vfonts": "^0.0.3",
-    "vue-tsc": "^3.2.6"
+    "vue-tsc": "^3.2.7"
   }
 }
