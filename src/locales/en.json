@@ -154,6 +154,7 @@
     },
     "common": {
       "members": "Members",
+      "assignees": "Assignees",
       "unknown": "Unknown",
       "form-sections": {
         "settings": "Settings",
@@ -190,8 +191,11 @@
     },
     "thread": {
       "name": "Thread",
-      "header": "Threads"
+      "header": "Threads",
+      "description": "Track project threads"
     },
-    "deadline": {}
+    "deadline": {
+      "header": "Deadlines"
+    }
   }
 }

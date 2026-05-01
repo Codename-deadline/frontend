@@ -14,6 +14,10 @@ import GlobalFooter from "./GlobalFooter.vue";
 import GlobalHeader from "./GlobalHeader.vue";
 import SectionHeader from "./SectionHeader.vue";
 
+const emit = defineEmits<{
+  cardClicked: [entityId: number]
+}>();
+
 
 const props = withDefaults(
   defineProps<{
@@ -97,6 +101,7 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
           >
              <component
               :is="props.entityCardComponent"
+              @click="emit('cardClicked', item.id)"
               @edit="objectToEdit = item"
               v-for="item in row.data"
               :key="item.id"

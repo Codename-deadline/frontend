@@ -92,6 +92,7 @@ const handleOrganizationCreation = async () => {
       delete: true,
       manageRoles: true,
       invite: true,
+      createThreads: true
     },
     role: "ORG_OWNER"
   })

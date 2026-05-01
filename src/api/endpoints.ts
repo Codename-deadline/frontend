@@ -55,6 +55,32 @@ const endpoints = {
     path: "/organization/{orgId}/members/{username}",
     pathParams: {} as { orgId: number; username: string },
   },
+  ORGANIZATION_THREADS: {
+    path: "/organization/{orgId}/threads",
+    pathParams: {} as { orgId: number },
+    queryParams: {} as { page: number },
+  },
+  THREAD_CREATE: {
+    path: "/organization/{orgId}/threads",
+    pathParams: {} as { orgId: number },
+  },
+  THREAD_DELETE: {
+    path: "/threads/{thrId}",
+    pathParams: {} as { thrId: number },
+  },
+  THREAD_PATCH: {
+    path: "/threads/{thrId}",
+    pathParams: {} as { thrId: number },
+  },
+  THREAD_ASSIGNEES: {
+    path: "/threads/{thrId}/assignees",
+    pathParams: {} as { thrId: number },
+    queryParams: {} as { page: number; size: number },
+  },
+  THREAD_REMOVE_ASSIGNEE: {
+    path: "/threads/{thrId}/assignees",
+    pathParams: {} as { thrId: number },
+  },
   ROLES_METADATA: {
     path: "/roles/metadata",
     pathParams: {} as never,

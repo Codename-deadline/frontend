@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
 import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
+import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
 import { DETAULT_ENTITIES_PAGE_SIZE as DEFAULT_ENTITIES_PAGE_SIZE } from "@/constants/defaults";
 import type { OperationResult } from "@/types/OperationResult";
 
@@ -28,9 +29,9 @@ const initialState = <T extends { id: number }>(pageSize: number): InfiniteListS
 
 export const useInfiniteListStore = defineStore("infiniteList", () => {
   // TODO: Add deadlines and threads to type union
-  const stateMap = ref<Record<ListType, InfiniteListState<OrganizationWithRole>>>({
+  const stateMap = ref<Record<ListType, InfiniteListState<OrganizationWithRole | ThreadWithRole>>>({
     organizations: initialState<OrganizationWithRole>(DEFAULT_ENTITIES_PAGE_SIZE),
-    threads: initialState(DEFAULT_ENTITIES_PAGE_SIZE),
+    threads: initialState<ThreadWithRole>(DEFAULT_ENTITIES_PAGE_SIZE),
     deadlines: initialState(DEFAULT_ENTITIES_PAGE_SIZE),
   });
 
