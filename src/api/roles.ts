@@ -28,12 +28,12 @@ export const changeOrganizationMemberRole = async (organizationId: number, reque
     client.post(getEndpoint("ROLES_CHANGE_ORGANIZATION", { pathParams: { orgId: organizationId } }), request),
   );
 
-export const changeThreadMemberRole = async (threadId: number, request: ChangeThreadRoleRequest) =>
+export const changeThreadAssigneeRole = async (threadId: number, request: ChangeThreadRoleRequest) =>
   validateAndRequest(ChangeThreadRoleRequestSchema, request, () =>
     client.post(getEndpoint("ROLES_CHANGE_THREAD", { pathParams: { threadId } }), request),
   );
 
-export const changeDeadlineMemberRole = async (deadlineId: number, request: ChangeDeadlineRoleRequest) =>
+export const changeDeadlineAssigneeRole = async (deadlineId: number, request: ChangeDeadlineRoleRequest) =>
   validateAndRequest(ChangeDeadlineRoleRequestSchema, request, () =>
     client.post(getEndpoint("ROLES_CHANGE_DEADLINE", { pathParams: { deadlineId } }), request),
   );

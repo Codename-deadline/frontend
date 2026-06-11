@@ -2,13 +2,13 @@ import z from "zod";
 import { paginationResponseSchema as pagedResponseSchema } from "@/api/common/PaginationResponse";
 import { IsoUtcDateSchema } from "@/api/schemas/common/IsoUtcDate";
 import { ThreadPermissionsSchema } from "./ThreadPermissions";
-import { ThreadRoleSchema } from "./ThreadRole";
+import { ThreadOrOrganizationRoleSchem as ThreadOrOrganizationRoleSchema, ThreadRoleSchema } from "./ThreadRole";
 import { ThreadStatsSchema } from "./ThreadStats";
 
 export const ThreadSchema = z.object({
   id: z.number(),
   title: z.string(),
-  description: z.string().nullable(),
+  description: z.string().optional(),
   organizationId: z.number(),
   createdAt: IsoUtcDateSchema,
   stats: ThreadStatsSchema,
@@ -21,6 +21,7 @@ export type PagedThread = z.infer<typeof PagedThreadSchema>;
 
 export const ThreadWithRoleSchema = ThreadSchema.extend({
   role: ThreadRoleSchema.nullable(),
+  globalRole: ThreadOrOrganizationRoleSchema.optional(),
 });
 
 export const PagedThreadWithRoleSchema = pagedResponseSchema(ThreadWithRoleSchema);

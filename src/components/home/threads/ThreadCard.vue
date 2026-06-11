@@ -5,6 +5,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
 import type { ThreadStats } from "@/api/schemas/thread/common/ThreadStats";
+import { extractRoleFromString } from "@/locales/utils";
 import EntityCard from "../common/EntityCard.vue";
 
 const { t } = useI18n();
@@ -37,7 +38,7 @@ const calculateCompletionPercentage = (stats: ThreadStats): number => {
         <div class="flex items-center space-x-3">
           <h3 class="overflow-x-auto whitespace-nowrap">{{ entity.title }}</h3>
           <n-tag v-if="entity.role" round :bordered="false" size="small">
-            {{ t("scopes.thread.assigned") }}
+            {{ t(extractRoleFromString('thread', entity.role)) }}
           </n-tag>
         </div>
         <div class="flex space-x-3">
@@ -65,7 +66,7 @@ const calculateCompletionPercentage = (stats: ThreadStats): number => {
         <!-- TODO: Use naive-ui colors -->
         <div class="w-full bg-blue-200 h-2 rounded-xl my-2 overflow-hidden">
           <div
-            :style="{ width: calculateCompletionPercentage(entity.stats) + '%' }"
+            :style="{ width: `${calculateCompletionPercentage(entity.stats)}%` }"
             class="bg-blue-500 r-100 h-full transition-[width] ease-out duration-200"
           ></div>
         </div>

@@ -59,7 +59,9 @@
         "invalid-role": "The invitation contains an invalid role.",
         "personal-org": "You cannot invite users to a personal organization.",
         "already-org-member": "The user is already a member of this organization.",
-        "already-answered": "This invitation has already been responded to."
+        "already-answered": "This invitation has already been responded to.",
+        "not-org-member": "User must be an organization member to proceed.",
+        "self-invite": "Cannot invite yourself."
       },
       "organization": {
         "not-found": "The organization was not found."
@@ -194,7 +196,11 @@
       "header": "Threads",
       "description": "Track project threads",
       "no-assignees": "No assignees yet",
-      "assigned": "Assigned",
+      "role": {
+        "admin": "Admin",
+        "assignee": "Assignee",
+        "owner": "Owner"
+      },
       "x-of-total-deadlines-done": "{done} of {total} deadlines done "
     },
     "deadline": {

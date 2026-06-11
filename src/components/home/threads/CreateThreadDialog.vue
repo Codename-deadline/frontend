@@ -93,7 +93,7 @@ const handleThreadCreation = async () => {
       manageAssignees: true,
       update: true
     },
-    role: "THR_ASSIGNEE"
+    role: "THR_OWNER"
   })
 }
 </script>

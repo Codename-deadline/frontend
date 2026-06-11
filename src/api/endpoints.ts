@@ -77,9 +77,13 @@ const endpoints = {
     pathParams: {} as { thrId: number },
     queryParams: {} as { page: number; size: number },
   },
-  THREAD_REMOVE_ASSIGNEE: {
+  THREAD_ADD_ASSIGNEE: {
     path: "/threads/{thrId}/assignees",
     pathParams: {} as { thrId: number },
+  },
+  THREAD_REMOVE_ASSIGNEE: {
+    path: "/threads/{thrId}/assignees/{username}",
+    pathParams: {} as { thrId: number; username: string },
   },
   ROLES_METADATA: {
     path: "/roles/metadata",

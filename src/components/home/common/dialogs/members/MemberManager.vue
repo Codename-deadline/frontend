@@ -54,6 +54,11 @@ if (!rolesMetadata) {
 
 const userRoleIdx: number = rolesMetadata.roles.indexOf(props.myRole);
 const canUserAssignY = (roleX: AnyRole, _: ScopeType) => {
+  // TODO: This is an ownership transfer and requires different logic
+  // Not implemented yet
+  if (roleX.toLowerCase().includes("owner"))
+    return false;
+    
   const xIdx: number = rolesMetadata.roles.indexOf(roleX);
   // It is guaranteed that the matrix contains all roles and is quadratic NxN.
   return rolesMetadata.matrix[userRoleIdx]![xIdx];

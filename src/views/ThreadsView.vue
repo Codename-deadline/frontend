@@ -2,8 +2,8 @@
 import { useRoute } from 'vue-router';
 import { getOrganizationThreads } from '@/api/thread';
 import PageLayout from '@/components/home/common/PageLayout.vue';
-import EditOrganizationDialog from '@/components/home/organizations/EditOrganizationDialog.vue';
 import CreateThreadDialog from '@/components/home/threads/CreateThreadDialog.vue';
+import EditThreadDialog from '@/components/home/threads/EditThreadDialog.vue';
 import ThreadCard from '@/components/home/threads/ThreadCard.vue';
 
 const route = useRoute();
@@ -17,7 +17,7 @@ if (Number.isInteger(Number(route.query.orgId))) {
 <template>
   <page-layout
     :entity-card-component="ThreadCard"
-    :edit-dialog-component="EditOrganizationDialog"
+    :edit-dialog-component="EditThreadDialog"
     :create-dialog-component="CreateThreadDialog"
     :fetcher="threadFetcher"
     scope-type="thread"
