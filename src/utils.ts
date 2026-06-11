@@ -96,3 +96,28 @@ export const injectOrThrow = <T>(key: InjectionKey<T>): T => {
   }
   return value;
 };
+
+/**
+ * Deduplicates a list of invitations.
+ * Removes all '@' from the usernames in the process.
+ *
+ * @param invitations - an array of invitations with possible duplicates
+ * @returns an array of invitations with no duplicates
+ */
+export const deduplicateInvitationsByUsername = <T extends { username: string; role: string }>(invitations: T[]) => {
+  // Deduplicate invitations by username
+  const normalizedInvitations = invitations.map((invitation) => {
+    return { ...invitation, username: invitation.username.trim().replace("@", "") };
+  });
+
+  const uniqueUsernames: Set<string> = new Set();
+  const uniqueInvitations: T[] = [];
+  for (const invitation of normalizedInvitations) {
+    if (!uniqueUsernames.has(invitation.username)) {
+      uniqueUsernames.add(invitation.username);
+      uniqueInvitations.push(invitation);
+    }
+  }
+
+  return uniqueInvitations;
+};

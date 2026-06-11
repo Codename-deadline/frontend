@@ -192,7 +192,10 @@
     "thread": {
       "name": "Thread",
       "header": "Threads",
-      "description": "Track project threads"
+      "description": "Track project threads",
+      "no-assignees": "No assignees yet",
+      "assigned": "Assigned",
+      "x-of-total-deadlines-done": "{done} of {total} deadlines done "
     },
     "deadline": {
       "header": "Deadlines"

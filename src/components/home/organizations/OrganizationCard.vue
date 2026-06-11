@@ -36,7 +36,7 @@ const hasAnyEditPermission = computed<boolean>(() =>
         </n-icon-wrapper>
         <div>
           <div class="flex space-x-3!">
-            <n-button v-if="hasAnyEditPermission" @click="emit('edit', entity.id)" text>
+            <n-button v-if="hasAnyEditPermission" @click.stop="emit('edit', entity.id)" text>
               <template #icon>
                 <icon>
                   <Cog/>

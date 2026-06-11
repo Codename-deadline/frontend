@@ -2,14 +2,14 @@
 import { useRoute } from 'vue-router';
 import { getOrganizationThreads } from '@/api/thread';
 import PageLayout from '@/components/home/common/PageLayout.vue';
-import CreateOrganizationDialog from '@/components/home/organizations/CreateOrganizationDialog.vue';
 import EditOrganizationDialog from '@/components/home/organizations/EditOrganizationDialog.vue';
+import CreateThreadDialog from '@/components/home/threads/CreateThreadDialog.vue';
 import ThreadCard from '@/components/home/threads/ThreadCard.vue';
 
 const route = useRoute();
 // TODO: Fetch user threads by default
 let threadFetcher = (page: number) => getOrganizationThreads(1, page);
-if (Number.isInteger(route.query.orgId)) {
+if (Number.isInteger(Number(route.query.orgId))) {
   threadFetcher = (page: number) => getOrganizationThreads(Number(route.query.orgId), page)
 }
 </script>
@@ -18,8 +18,8 @@ if (Number.isInteger(route.query.orgId)) {
   <page-layout
     :entity-card-component="ThreadCard"
     :edit-dialog-component="EditOrganizationDialog"
-    :create-dialog-component="CreateOrganizationDialog"
-    :fetcher="threadFetcher!"
+    :create-dialog-component="CreateThreadDialog"
+    :fetcher="threadFetcher"
     scope-type="thread"
   />
 </template>
