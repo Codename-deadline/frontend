@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Cog, UserFriends } from "@vicons/fa";
-import { NButton, NIconWrapper, NTag } from "naive-ui";
+import { NButton, NTag } from "naive-ui";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
