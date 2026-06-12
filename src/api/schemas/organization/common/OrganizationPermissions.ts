@@ -5,6 +5,7 @@ export const OrganizationPermissionsSchema = z.object({
   delete: z.boolean(),
   manageRoles: z.boolean(),
   invite: z.boolean(),
+  createThreads: z.boolean(),
 });
 
 export type OrganizationPermissions = z.infer<typeof OrganizationPermissionsSchema>;

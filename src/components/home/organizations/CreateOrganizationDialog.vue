@@ -14,6 +14,7 @@ import { useApi } from '@/composables/useApi';
 import { tEntityToastAction, tFormError } from '@/locales/utils';
 import emitter from '@/plugins/emitter';
 import { useInfiniteListStore } from '@/stores/InfiniteListStore';
+import { deduplicateInvitationsByUsername } from '@/utils';
 
 const { t } = useI18n();
 const { makeRequest } = useApi();
@@ -48,19 +49,7 @@ const validateOrganizationData = (nextStep: () => void) => {
 }
 
 const handleOrganizationCreation = async () => {
-  // Deduplicate invitations by username
-  const normalizedInvitations = invitationFormModel.value.map((invitation) => {
-    return { ...invitation, username: invitation.username.trim().replace('@', '') };
-  });
-
-  const uniqueUsernames: Set<string> = new Set();
-  const uniqueInvitations: OrganizationInvitation[] = [];
-  for (const invitation of normalizedInvitations) {
-    if (!uniqueUsernames.has(invitation.username)) {
-      uniqueUsernames.add(invitation.username);
-      uniqueInvitations.push(invitation);
-    }
-  }
+  const uniqueInvitations: OrganizationInvitation[] = deduplicateInvitationsByUsername(invitationFormModel.value);
 
   const res = await makeRequest(() => createOrganization({
     title: organizationFormModel.value.title,
@@ -92,6 +81,7 @@ const handleOrganizationCreation = async () => {
       delete: true,
       manageRoles: true,
       invite: true,
+      createThreads: true
     },
     role: "ORG_OWNER"
   })
