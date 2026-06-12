@@ -14,13 +14,9 @@ const redirectToSection = (section: MainSection) => {
   // removing an entity selection if it was present
   switch (section) {
     case MainSection.ORGANIZATIONS:
-      currentScopeStore.exitScope("organization");
-      break;
     case MainSection.THREADS:
-      currentScopeStore.exitScope("thread");
-      break;
     case MainSection.DEADLINES:
-      currentScopeStore.exitScope("deadline");
+      currentScopeStore.$reset();
       break;
     default:
       break;
