@@ -4,7 +4,8 @@
     "ru": "Русский"
   },
   "state": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "no-entities-found": "No {entity} found"
   },
   "actions": {
     "back": "Back",
@@ -177,6 +178,7 @@
     },
     "organization": {
       "name": "Organization",
+      "header": "Organizations",
       "type": {
         "personal": "Personal",
         "public": "Public",
@@ -188,7 +190,6 @@
         "owner": "Owner"
       },
       "no-invitations": "No invitations added yet",
-      "header": "Organizations",
       "description": "Manage your teams and projects"
     },
     "thread": {

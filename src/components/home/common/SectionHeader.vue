@@ -9,19 +9,25 @@ import type { ScopeType } from "@/types/scope";
 const props = defineProps<{
   scopeType: ScopeType;
   buttonAction: string;
+  showCreateButton: boolean
 }>();
 
 const { t } = useI18n();
 </script>
 
 <template>
-  <header class="flex w-full justify-between items-center">
+  <header class="flex flex-col w-full sm:flex-row sm:justify-between sm:items-center">
     <div>
       <h2>{{ t(`scopes.${scopeType}.header`) }}</h2>
       <div class="description">{{ t(`scopes.${scopeType}.description`) }}</div>
     </div>
-    <div>
-      <n-button @click="emitter.emit('openCreateEntityDialog')" type="info" class="rounded-lg!">
+    <div class="mt-3 sm:mt-0">
+      <n-button
+        v-if="showCreateButton"
+        @click="emitter.emit('openCreateEntityDialog')"
+        type="info"
+        class="rounded-lg! w-full! sm:w-fit"
+      >
         <template #icon>
         <Icon>
           <Plus/>

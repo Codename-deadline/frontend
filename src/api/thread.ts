@@ -23,6 +23,18 @@ export const getOrganizationThreads = async (orgId: number, page: number) =>
     ),
   );
 
+export const getMyThreads = async (page: number) =>
+  validateAndRequest(EmptySchema, {}, () =>
+    client.get<PagedThreadWithRole>(
+      getEndpoint("THREAD_GET_MY", {
+        queryParams: { page },
+      }),
+      {
+        validate: validateWith(PagedThreadWithRoleSchema),
+      },
+    ),
+  );
+
 export const createThread = async (orgId: number, request: CreateThreadRequest) =>
   validateAndRequest(CreateThreadRequestSchema, request, (validated) =>
     client.post(getEndpoint("THREAD_CREATE", { pathParams: { orgId } }), validated, {

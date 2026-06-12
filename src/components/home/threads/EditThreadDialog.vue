@@ -79,7 +79,6 @@ const handleInvitationSubmission = async () => {
       return;
     }
 
-    console.log(invitationFormModel.value.role);
     const res = await makeRequest(() => addThreadAssignee(props.entity.id, {
       username: invitationFormModel.value.username.trim().replace('@', ''),
       role: invitationFormModel.value.role

@@ -64,6 +64,10 @@ const endpoints = {
     path: "/organization/{orgId}/threads",
     pathParams: {} as { orgId: number },
   },
+  THREAD_GET_MY: {
+    path: "/threads/me",
+    queryParams: {} as { page: number },
+  },
   THREAD_DELETE: {
     path: "/threads/{thrId}",
     pathParams: {} as { thrId: number },

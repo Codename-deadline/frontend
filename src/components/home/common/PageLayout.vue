@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="T extends {id: number}">
 import { useWindowSize } from "@vueuse/core";
+import { NSkeleton } from "naive-ui";
 import type { Component } from "vue";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
 import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
@@ -21,15 +22,19 @@ const emit = defineEmits<{
 
 const props = withDefaults(
   defineProps<{
-  entityCardComponent: Component;
-  editDialogComponent: Component;
-  createDialogComponent: Component;
-  fetcher: (page: number) => Promise<SafeApiCall<PagedResponse<T>>>;
-  scopeType: ScopeType;
-  itemHeight?: number;
-  distance?: number;
-}>(),
+    entityCardComponent: Component;
+    editDialogComponent: Component;
+    createDialogComponent: Component;
+    fetcher: (page: number) => Promise<SafeApiCall<PagedResponse<T>>>;
+    scopeType: ScopeType;
+    showCreateButton?: boolean;
+    reset?: boolean;
+    itemHeight?: number;
+    distance?: number;
+  }>(),
   {
+    showCreateButton: true,
+    reset: false,
     itemHeight: CARD_HEIGHT_PIXELS,
     distance: PRELOAD_DISTANCE_PIXELS,
   },
@@ -42,6 +47,13 @@ const itemsPerRow = computed<number>(() => {
   if (width.value >= 1280) return 3;
   if (width.value >= 640) return 2;
   return 1;
+});
+const cardHeight = computed<number>(() => {
+  switch (props.scopeType) {
+    case "organization": return 208;
+    case "thread": return 176
+    case "deadline": return 176 // TODO
+  }
 });
 
 const objectToEdit = ref<any>(null);
@@ -73,7 +85,7 @@ const scopeTypeToListType = (scopeType: ScopeType): ListType => {
   }
 };
 
-const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtualList(
+const { containerProps, wrapperProps, virtualItems, loading, reset } = useInfiniteVirtualList(
   scopeTypeToListType(props.scopeType),
   (page: number) => props.fetcher(page),
   {
@@ -82,6 +94,10 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
     distance: props.distance,
   },
 );
+
+watch(() => props.reset, (value) => {
+  if (value) reset();
+}, { immediate: true });
 </script>
 
 <template>
@@ -89,6 +105,7 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
   <div class="mt-8 layout-dynamic-padding">
     <section-header
       :scope-type="scopeType"
+      :show-create-button="showCreateButton"
       button-action="create"
     />
     <div class="mt-6">
@@ -99,7 +116,7 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
             v-for="row in virtualItems"
             :key="row.index"
           >
-             <component
+            <component
               :is="props.entityCardComponent"
               @click="emit('cardClicked', item.id)"
               @edit="objectToEdit = item"
@@ -111,10 +128,15 @@ const { containerProps, wrapperProps, virtualItems, loading } = useInfiniteVirtu
         </div>
       </div>
     </div>
-    <div class="flex justiftems-starty-center items-center">
-      <div v-if="loading" style="text-align:center; padding: 16px;">
-        {{ t(`state.loading`) }}
+    <div>
+      <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${cardHeight}px`">
+          <n-skeleton height="100%" width="100%" :sharp="false" />
+        </div>
       </div>
+      <div v-else-if="virtualItems.length === 0" class="w-full flex flex-col justify-center items-center description">
+        {{ t("state.no-entities-found", { entity: t(`scopes.${scopeType}.header`).toLowerCase() }) }}
+      </div> 
     </div>
   </div>
   <Transition
