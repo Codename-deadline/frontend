@@ -62,7 +62,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
     organizationId: organizationId,
     createdAt: new Date().toUTCString(),
     stats: {
-      assignees: 1, // TODO: Adjust based on number of assignees. Consider returning from the backend
+      assignees: response.assignees,
       deadlines: 0,
       completedDeadlines: 0,
     },
