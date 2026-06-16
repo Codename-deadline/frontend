@@ -60,8 +60,8 @@ const _submit = async () => {
 <template>
   <BaseAuthForm
     @submit="_submit"
-    :isSignIn="true"
-    :authMethod="authMethod"
+    :is-sign-in="true"
+    :auth-method="authMethod"
     button-selector="auth.otp.action"
     header-selector="auth.otp.header"
     description-selector="auth.otp.description"

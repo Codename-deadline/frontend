@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Language as LanguageIcon, User } from "@vicons/fa";
+import { User } from "@vicons/fa";
 import { NButton, NDropdown, useThemeVars } from "naive-ui";
 import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
 import { useI18n } from "vue-i18n";

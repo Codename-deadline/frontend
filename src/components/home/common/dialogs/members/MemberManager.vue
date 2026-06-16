@@ -17,7 +17,7 @@ const props = defineProps<{
   members: MemberWithRole[];
   totalPages: number;
   canManageRoles: boolean;
-  myRole: AnyRole;
+  myRole?: AnyRole;
 }>();
 const emit = defineEmits<{
   loadMore: [page: number],
@@ -52,8 +52,10 @@ if (!rolesMetadata) {
   throw new Error("MemberManager: Unable to retrieve roles metadata");
 }
 
-const userRoleIdx: number = rolesMetadata.roles.indexOf(props.myRole);
-const canUserAssignY = (roleX: AnyRole, _: ScopeType) => {
+const userRoleIdx: number = rolesMetadata.roles.indexOf(props.myRole ?? "_INVALID_ROLE_");
+const canUserAssignY = (roleX: AnyRole, _: ScopeType): boolean => {
+  if (userRoleIdx < 0)
+    return false;
   // TODO: This is an ownership transfer and requires different logic
   // Not implemented yet
   if (roleX.toLowerCase().includes("owner"))
@@ -61,7 +63,7 @@ const canUserAssignY = (roleX: AnyRole, _: ScopeType) => {
     
   const xIdx: number = rolesMetadata.roles.indexOf(roleX);
   // It is guaranteed that the matrix contains all roles and is quadratic NxN.
-  return rolesMetadata.matrix[userRoleIdx]![xIdx];
+  return rolesMetadata.matrix[userRoleIdx]?.[xIdx] ?? false;
 }
 const isMe = (member: MemberWithRole) => member.user.id === user.id;
 

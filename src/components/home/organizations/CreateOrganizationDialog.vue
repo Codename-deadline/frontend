@@ -1,118 +1,96 @@
 <script setup lang="ts">
-import { ArrowLeft, ArrowRight } from '@vicons/fa';
-import { type FormInst, type FormRules, NButton, NForm, NFormItem, NIcon, NInput, NSelect, useMessage } from 'naive-ui';
-import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { createOrganization } from '@/api/organization';
-import type { OrganizationWithRole } from '@/api/schemas/organization/common/Organization';
-import type { OrganizationType } from '@/api/schemas/organization/common/OrganizationType';
-import type { OrganizationInvitation } from '@/api/schemas/organization/Invitation';
-import EntityCreationDialogLayout from '@/components/home/common/dialogs/EntityCreationDialogLayout.vue';
-import DynamicUserInvitationInput from '@/components/home/common/forms/DynamicUserInvitationInput.vue';
-import Step from '@/components/home/common/stepper/Step.vue';
-import { useApi } from '@/composables/useApi';
-import { tEntityToastAction, tFormError } from '@/locales/utils';
-import emitter from '@/plugins/emitter';
-import { useInfiniteListStore } from '@/stores/InfiniteListStore';
-import { deduplicateInvitationsByUsername } from '@/utils';
+import { ArrowLeft, ArrowRight } from "@vicons/fa";
+import { type FormInst, NButton, NForm, NFormItem, NIcon, NInput, NSelect } from "naive-ui";
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { createOrganization } from "@/api/organization";
+import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
+import type { OrganizationType } from "@/api/schemas/organization/common/OrganizationType";
+import EntityCreationDialogLayout from "@/components/home/common/dialogs/EntityCreationDialogLayout.vue";
+import DynamicUserInvitationInput from "@/components/home/common/forms/DynamicUserInvitationInput.vue";
+import Step from "@/components/home/common/stepper/Step.vue";
+import { useEntityCreate } from "@/composables/useEntityCreate";
+import { tFormError } from "@/locales/utils";
+
+interface OrgFormModel {
+  title: string;
+  description: string;
+  visibility: OrganizationType;
+}
 
 const { t } = useI18n();
-const { makeRequest } = useApi();
-const message = useMessage();
-const { addOne } = useInfiniteListStore();
 
-const invitationFormModel = ref<OrganizationInvitation[]>([]);
+const formRef = ref<FormInst | null>(null);
+const invitationFormRef = ref<FormInst | null>(null);
 
-const organizationFormRef = ref<FormInst | null>(null);
-const organizationFormModel = ref<{
-  title: string,
-  description: string,
-  visibility: OrganizationType
-}>({ title: "", description: "", visibility: "PRIVATE" });
-const organizationFormRules: FormRules = {
-  title: [
-    { required: true, message: tFormError(t, "title"), trigger: ["input", "blur"] },
-  ],
-  visibility: [
-    { required: true, message: tFormError(t, "visibility"), trigger: ["input", "blur"] },
-  ],
-}
-const validateOrganizationData = (nextStep: () => void) => {
-  organizationFormRef.value?.validate((errors) => {
-    if (errors) {
-      console.error(errors);
-      return;
-    }
+const organizationVisibilityOptions: { value: OrganizationType; label: string }[] = [
+  "PRIVATE",
+  "PUBLIC",
+  "PERSONAL",
+].map((type) => ({
+  value: type as OrganizationType,
+  label: t(`scopes.organization.type.${type.toLowerCase()}`),
+}));
 
-    nextStep();
-  })
-}
-
-const handleOrganizationCreation = async () => {
-  const uniqueInvitations: OrganizationInvitation[] = deduplicateInvitationsByUsername(invitationFormModel.value);
-
-  const res = await makeRequest(() => createOrganization({
-    title: organizationFormModel.value.title,
-    description: organizationFormModel.value.description,
-    type: organizationFormModel.value.visibility,
-    invitations: uniqueInvitations,
-  }))
-
-  if (!res.ok) return;
-  message.success(tEntityToastAction(t, "organization", "created"));
-
-  emitter.emit("closeCreateEntityDialog");
-
-  // All the mandatory data except for `createdAt` is known at this point
-  // Id was returned by the server the rest is known locally
-  // User is the owner of the organization at and has all the rights
-  addOne<OrganizationWithRole>("organizations", {
-    id: res.data.organizationId,
-    title: organizationFormModel.value.title,
-    description: organizationFormModel.value.description,
-    type: organizationFormModel.value.visibility,
+const { formModel, formRules, invitationFormModel, validateFormData, handleCreation } = useEntityCreate<
+  OrgFormModel,
+  OrganizationWithRole,
+  { organizationId: number }
+>({
+  scopeType: "organization",
+  listType: "organizations",
+  defaultInvitationRole: "ORG_MEMBER",
+  invitationPlaceholder: t("scopes.organization.no-invitations"),
+  formRef,
+  invitationFormRef,
+  initialFormModel: { title: "", description: "", visibility: "PRIVATE" },
+  extraFormRules: {
+    visibility: [
+      { required: true, message: tFormError(t, "visibility"), trigger: ["input", "blur"] },
+    ],
+  },
+  createApiCall: async (formData, invitations) =>
+    createOrganization({
+      title: formData.title,
+      description: formData.description,
+      type: formData.visibility,
+      invitations,
+    }),
+  buildEntity: (response, formData) => ({
+    id: response.organizationId,
+    title: formData.title,
+    description: formData.description,
+    type: formData.visibility,
     createdAt: new Date().toUTCString(),
-    stats: {
-      members: 1,
-      threads: 0
-    },
+    stats: { members: 1, threads: 0 },
     permissions: {
       update: true,
       delete: true,
       manageRoles: true,
       invite: true,
-      createThreads: true
+      createThreads: true,
     },
-    role: "ORG_OWNER"
-  })
-}
-
-// TODO: Unhardcode
-const organizationVisibilityOptions: { value: OrganizationType; label: string }[] = [
-  "PRIVATE", "PUBLIC", "PERSONAL"
-].map(
-  (type) => ({
-    value: type as OrganizationType, label: t(`scopes.organization.type.${type.toLowerCase()}`)
-  })
-);
+    role: "ORG_OWNER",
+  }),
+});
 </script>
 
 <template>
   <EntityCreationDialogLayout scope-type="organization">
     <Step title="Details" :value="1" v-slot="{ nextStep }">
-      <n-form ref="organizationFormRef" :model="organizationFormModel" :rules="organizationFormRules">
+      <n-form ref="formRef" :model="formModel" :rules="formRules">
         <n-form-item :label="t('scopes.common.form-labels.title')" path="title">
-          <n-input v-model:value="organizationFormModel.title" />
+          <n-input v-model:value="formModel.title" />
         </n-form-item>
         <n-form-item :label="t('scopes.common.form-labels.description')" path="description">
-          <n-input v-model:value="organizationFormModel.description" type="textarea"/>
+          <n-input v-model:value="formModel.description" type="textarea" />
         </n-form-item>
         <n-form-item :label="t('scopes.common.form-labels.visibility')" path="visibility">
-          <n-select v-model:value="organizationFormModel.visibility" :options="organizationVisibilityOptions" />
+          <n-select v-model:value="formModel.visibility" :options="organizationVisibilityOptions" />
         </n-form-item>
       </n-form>
       <div class="flex flex-1 justify-end">
-        <n-button role="button" @click="() => validateOrganizationData(nextStep!)">
+        <n-button role="button" @click="() => validateFormData(nextStep!)">
           <template #icon>
             <n-icon>
               <ArrowRight />
@@ -138,7 +116,9 @@ const organizationVisibilityOptions: { value: OrganizationType; label: string }[
             <ArrowLeft />
           </n-icon>
         </n-button>
-        <n-button role="button" @click="handleOrganizationCreation" type="info"> {{ t("actions.create") }} </n-button>
+        <n-button role="button" @click="handleCreation" type="info">
+          {{ t("actions.create") }}
+        </n-button>
       </div>
     </Step>
   </EntityCreationDialogLayout>

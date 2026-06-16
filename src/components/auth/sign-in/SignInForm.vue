@@ -49,11 +49,11 @@ const _submit = async () => {
 <template>
   <BaseAuthForm
     @submit="_submit"
-    :isSignIn="true"
-    :authMethod="authMethod"
-    buttonSelector="auth.sign-in.action"
-    headerSelector="auth.sign-in.header"
-    descriptionSelector="auth.sign-in.description"
+    :is-sign-in="true"
+    :auth-method="authMethod"
+    button-selector="auth.sign-in.action"
+    header-selector="auth.sign-in.header"
+    description-selector="auth.sign-in.description"
   >
     <n-form-item :label="t('auth.sign-in.fields.identifier.telegram')">
       <n-input v-model:value="_signInData.identifier" placeholder="Enter your identifier"/>

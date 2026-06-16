@@ -30,6 +30,6 @@ if (route.path.includes("auth") && userStore.isAvailable) {
 <template>
   <div class="w-full h-lvh flex items-center justify-center">
     <AuthSelection v-if="!selectedMethod" @method-selected="_handleMethodSelected"/>
-    <AuthForm v-else :method="selectedMethod" :isSignIn="isSignInSelected"/>
+    <AuthForm v-else :method="selectedMethod" :is-sign-in="isSignInSelected"/>
   </div>
 </template>

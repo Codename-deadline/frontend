@@ -52,11 +52,11 @@ const _submit = async () => {
 <template>
   <BaseAuthForm
     @submit="_submit"
-    :isSignIn="false"
-    :authMethod="authMethod"
-    buttonSelector="auth.sign-up.action"
-    headerSelector="auth.sign-up.header"
-    descriptionSelector="auth.sign-up.description"
+    :is-sign-in="false"
+    :auth-method="authMethod"
+    button-selector="auth.sign-up.action"
+    header-selector="auth.sign-up.header"
+    description-selector="auth.sign-up.description"
   >
     <n-form-item :label="t(`auth.sign-up.fields.identifier.${authMethod.toLowerCase()}`)">
       <n-input v-model:value="registrationData.identifier" placeholder="Enter your identifier"/>
