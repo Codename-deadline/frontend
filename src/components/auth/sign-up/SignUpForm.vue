@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { toRef } from "@vueuse/core";
-// biome-ignore lint/correctness/noUnusedImports: Tags are written with kebab-case
 import { NFormItem, NInput, NSelect } from "naive-ui";
 import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -39,7 +38,7 @@ Object.values(Language).forEach((language) => {
 
 const { makeRequest } = useApi();
 
-const _submit = async () => {
+const submitAuthForm = async () => {
   registrationData.value.channel = authMethod.value.toUpperCase();
 
   const response = await makeRequest(() => apiAuth.signUp(registrationData.value), displayFormErrors, displayApiError);
@@ -51,12 +50,12 @@ const _submit = async () => {
 
 <template>
   <BaseAuthForm
-    @submit="_submit"
-    :isSignIn="false"
-    :authMethod="authMethod"
-    buttonSelector="auth.sign-up.action"
-    headerSelector="auth.sign-up.header"
-    descriptionSelector="auth.sign-up.description"
+    @submit="submitAuthForm"
+    :is-sign-in="false"
+    :auth-method="authMethod"
+    button-selector="auth.sign-up.action"
+    header-selector="auth.sign-up.header"
+    description-selector="auth.sign-up.description"
   >
     <n-form-item :label="t(`auth.sign-up.fields.identifier.${authMethod.toLowerCase()}`)">
       <n-input v-model:value="registrationData.identifier" placeholder="Enter your identifier"/>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Cog, Globe, Lock, UserFriends, UserLock } from "@vicons/fa";
 import { NButton, NIconWrapper, NTag } from "naive-ui";
-import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
 import { extractRoleFromString } from "@/locales/utils";
+import { hasAnyEditPermission } from "@/utils/permissions";
 import EntityCard from "../common/EntityCard.vue";
 
 const { t } = useI18n();
@@ -15,14 +15,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   edit: [id: number];
 }>();
-
-// TODO: Extract
-const hasAnyEditPermission = computed<boolean>(() =>
-  Object.values(props.entity.permissions).reduce(
-    (accumulator: boolean, curValue: boolean) => (accumulator ||= curValue),
-    false,
-  ),
-);
 </script>
 
 <template>
@@ -36,7 +28,7 @@ const hasAnyEditPermission = computed<boolean>(() =>
         </n-icon-wrapper>
         <div>
           <div class="flex space-x-3!">
-            <n-button role="button" v-if="hasAnyEditPermission" @click.stop="emit('edit', entity.id)" text>
+            <n-button role="button" v-if="hasAnyEditPermission(entity.permissions)" @click.stop="emit('edit', entity.id)" text>
               <template #icon>
                 <icon>
                   <Cog/>

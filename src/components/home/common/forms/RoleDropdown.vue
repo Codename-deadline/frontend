@@ -34,7 +34,7 @@ const roles = computed(() => metadataStore.metadata.roles?.value.roles);
 
 const filteredRoles = computed(() => {
   const scopeFilteredRoles = roles.value?.filter((role) => isRoleInScope(role, scopeType)) ?? [];
-  const withCustomFilter = props.filter ? scopeFilteredRoles.filter((role) => props.filter!(role, scopeType)) : scopeFilteredRoles;
+  const withCustomFilter = props.filter ? scopeFilteredRoles.filter((role) => props.filter?.(role, scopeType)) : scopeFilteredRoles;
 
   return withCustomFilter.map((role) => ({
     label: t(extractRoleFromString(scopeType, role)), key: role

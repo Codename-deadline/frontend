@@ -10,7 +10,6 @@ import type { AuthMethod } from "@/types/api";
 import { displayApiError, displayFormErrors } from "@/utils";
 import BaseAuthForm from "../common/BaseAuthForm.vue";
 
-// biome-ignore lint/correctness/noUnusedVariables: Biome does not yet check <template>
 const { t } = useI18n();
 const { makeRequest } = useApi();
 const tokenStore = useTokenStore();
@@ -22,9 +21,9 @@ const props = defineProps<{
 const emit = defineEmits<(e: "password-required", requestId: string) => void>();
 
 const otp = ref<string[]>([]);
-const _onlyAllowNumber = (value: string) => !value || /^\d+$/.test(value);
+const onlyAllowNumber = (value: string) => !value || /^\d+$/.test(value);
 
-const _submit = async () => {
+const submitAuthForm = async () => {
   const otpCode: string = otp.value.join("");
 
   const response = await makeRequest(
@@ -59,16 +58,16 @@ const _submit = async () => {
 
 <template>
   <BaseAuthForm
-    @submit="_submit"
-    :isSignIn="true"
-    :authMethod="authMethod"
+    @submit="submitAuthForm"
+    :is-sign-in="true"
+    :auth-method="authMethod"
     button-selector="auth.otp.action"
     header-selector="auth.otp.header"
     description-selector="auth.otp.description"
   >
     <n-form class="flex! justify-center!">
       <n-form-item :label="t('auth.otp.fields.otp')">
-        <n-input-otp v-model:value="otp" :allow-input="_onlyAllowNumber" size="large"/>
+        <n-input-otp v-model:value="otp" :allow-input="onlyAllowNumber" size="large"/>
       </n-form-item>
     </n-form>
   </BaseAuthForm>

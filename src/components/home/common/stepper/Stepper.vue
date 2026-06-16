@@ -43,11 +43,11 @@ Fragment
   <div class="mt-4">
     <component
       :is="activeStep"
-      :nextStep="nextStep"
-      :prevStep="prevStep"
-      :changeStep="changeStep"
-      :isFirstStep="isFirstStep"
-      :isLastStep="isLastStep"
+      :next-step="nextStep"
+      :prev-step="prevStep"
+      :change-step="changeStep"
+      :is-first-step="isFirstStep"
+      :is-last-step="isLastStep"
     />
   </div>
 </template>

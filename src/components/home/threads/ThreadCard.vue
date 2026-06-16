@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Cog, UserFriends } from "@vicons/fa";
 import { NButton, NTag } from "naive-ui";
-import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
 import type { ThreadStats } from "@/api/schemas/thread/common/ThreadStats";
 import { extractRoleFromString } from "@/locales/utils";
+import { hasAnyEditPermission } from "@/utils/permissions";
 import EntityCard from "../common/EntityCard.vue";
 
 const { t } = useI18n();
@@ -16,14 +16,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   edit: [id: number];
 }>();
-
-// TODO: Extract
-const hasAnyEditPermission = computed<boolean>(() =>
-  Object.values(props.entity.permissions).reduce(
-    (accumulator: boolean, curValue: boolean) => (accumulator ||= curValue),
-    false,
-  ),
-);
 
 const calculateCompletionPercentage = (stats: ThreadStats): number => {
   if (stats.deadlines === 0) return 0;
@@ -42,7 +34,7 @@ const calculateCompletionPercentage = (stats: ThreadStats): number => {
           </n-tag>
         </div>
         <div class="flex space-x-3">
-          <n-button role="button" v-if="hasAnyEditPermission" @click.stop="emit('edit', entity.id)" text>
+          <n-button role="button" v-if="hasAnyEditPermission(entity.permissions)" @click.stop="emit('edit', entity.id)" text>
             <template #icon>
               <icon class="">
                 <Cog/>

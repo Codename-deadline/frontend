@@ -15,7 +15,7 @@ const props = defineProps<{
   removeMember: (username: string) => Promise<SafeApiCall<unknown>>;
   membersStats: number;
   canManageRoles: boolean;
-  myRole: AnyRole;
+  myRole?: AnyRole;
 }>();
 
 const members = ref<MemberWithRole[]>([]);

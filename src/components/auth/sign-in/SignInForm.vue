@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { toRef } from "@vueuse/core";
-// biome-ignore lint/correctness/noUnusedImports: Biome does not yet check <template>
 import { NFormItem, NInput } from "naive-ui";
 import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -22,7 +21,7 @@ const props = defineProps<{
 }>();
 const authMethod: Ref<AuthMethod> = toRef(() => props.method);
 
-const _signInData = ref<SignInRequest>({
+const signInData = ref<SignInRequest>({
   identifier: "",
   channel: "",
   username: "",
@@ -37,9 +36,9 @@ Object.values(Language).forEach((language) => {
 });
 
 const _submit = async () => {
-  _signInData.value.channel = authMethod.value.valueOf();
+  signInData.value.channel = authMethod.value.valueOf();
 
-  const response = await makeRequest(() => apiAuth.signIn(_signInData.value), displayFormErrors, displayApiError);
+  const response = await makeRequest(() => apiAuth.signIn(signInData.value), displayFormErrors, displayApiError);
   if (!response.ok) return;
 
   redirectToOTP(router, response.data.otpId, authMethod.value);
@@ -49,17 +48,17 @@ const _submit = async () => {
 <template>
   <BaseAuthForm
     @submit="_submit"
-    :isSignIn="true"
-    :authMethod="authMethod"
-    buttonSelector="auth.sign-in.action"
-    headerSelector="auth.sign-in.header"
-    descriptionSelector="auth.sign-in.description"
+    :is-sign-in="true"
+    :auth-method="authMethod"
+    button-selector="auth.sign-in.action"
+    header-selector="auth.sign-in.header"
+    description-selector="auth.sign-in.description"
   >
     <n-form-item :label="t('auth.sign-in.fields.identifier.telegram')">
-      <n-input v-model:value="_signInData.identifier" placeholder="Enter your identifier"/>
+      <n-input v-model:value="signInData.identifier" placeholder="Enter your identifier"/>
     </n-form-item>
     <n-form-item :label="t('auth.sign-in.fields.username')">
-      <n-input v-model:value="_signInData.username" type="text" placeholder="Enter your username"/>
+      <n-input v-model:value="signInData.username" type="text" placeholder="Enter your username"/>
     </n-form-item>
   </BaseAuthForm>
 </template>

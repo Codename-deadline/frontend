@@ -1,26 +1,17 @@
 <script setup lang="ts">
-import { ArrowLeft, ArrowRight } from '@vicons/fa';
-import { type FormInst, type FormRules, NButton, NForm, NFormItem, NIcon, NInput, useMessage } from 'naive-ui';
-import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
-import type { OrganizationInvitation } from '@/api/schemas/organization/Invitation';
-import type { ThreadWithRole } from '@/api/schemas/thread/common/Thread';
-import type { ThreadInvitation } from '@/api/schemas/thread/Invitation';
-import { createThread } from '@/api/thread';
-import EntityCreationDialogLayout from '@/components/home/common/dialogs/EntityCreationDialogLayout.vue';
-import DynamicUserInvitationInput from '@/components/home/common/forms/DynamicUserInvitationInput.vue';
-import Step from '@/components/home/common/stepper/Step.vue';
-import { useApi } from '@/composables/useApi';
-import { tEntityToastAction, tFormError } from '@/locales/utils';
-import emitter from '@/plugins/emitter';
-import { useInfiniteListStore } from '@/stores/InfiniteListStore';
-import { deduplicateInvitationsByUsername } from '@/utils';
-
-const { t } = useI18n();
-const { makeRequest } = useApi();
-const message = useMessage();
-const { addOne } = useInfiniteListStore();
+import { ArrowLeft, ArrowRight } from "@vicons/fa";
+import { type FormInst, NButton, NForm, NFormItem, NIcon, NInput } from "naive-ui";
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
+import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
+import type { CreateThreadResponse } from "@/api/schemas/thread/create/CreateThreadResponse";
+import { createThread } from "@/api/thread";
+import EntityCreationDialogLayout from "@/components/home/common/dialogs/EntityCreationDialogLayout.vue";
+import DynamicUserInvitationInput from "@/components/home/common/forms/DynamicUserInvitationInput.vue";
+import Step from "@/components/home/common/stepper/Step.vue";
+import { useEntityCreate } from "@/composables/useEntityCreate";
+import emitter from "@/plugins/emitter";
 
 // TODO: This can potentially be a global page state
 // As a thread view can be in two distinct states:
@@ -29,84 +20,72 @@ const { addOne } = useInfiniteListStore();
 const route = useRoute();
 
 const isOrgIdProvided = Number.isInteger(Number(route.query.orgId));
-const organizationId: number = isOrgIdProvided ? Number.parseInt(route.query.orgId as string, 10) : -1;
+const organizationId: number = isOrgIdProvided
+  ? Number.parseInt(route.query.orgId as string, 10)
+  : -1;
 if (!isOrgIdProvided) {
   emitter.emit("closeCreateEntityDialog");
 }
-const invitationFormModel = ref<OrganizationInvitation[]>([]);
 
-const threadFormRef = ref<FormInst | null>(null);
-const threadFormModel = ref<{
-  title: string,
-  description: string,
-}>({ title: "", description: "" });
-const threadFormRules: FormRules = {
-  title: [
-    { required: true, message: tFormError(t, "title"), trigger: ["input", "blur"] },
-  ],
-}
-const validateFormData = (nextStep: () => void) => {
-  threadFormRef.value?.validate((errors) => {
-    if (errors) {
-      console.error(errors);
-      return;
-    }
+const { t } = useI18n();
 
-    nextStep();
-  })
+type ThreadFormModel = {
+  title: string;
+  description: string;
 }
 
-const handleThreadCreation = async () => {
-  const uniqueInvitations: ThreadInvitation[] = deduplicateInvitationsByUsername(invitationFormModel.value);
+const formRef = ref<FormInst | null>(null);
+const invitationFormRef = ref<FormInst | null>(null);
 
-  // TODO: Support proper roles
-  const res = await makeRequest(() => createThread(organizationId, {
-    title: threadFormModel.value.title,
-    description: threadFormModel.value.description,
-    usersToAssign: uniqueInvitations.map(x => x.username),
-  }))
-
-  if (!res.ok) return;
-  message.success(tEntityToastAction(t, "thread", "created"));
-
-  emitter.emit("closeCreateEntityDialog");
-
-  // TODO: Increment number of threads in the organization
-
-  // All the mandatory data except for `createdAt` is known at this point
-  // Id was returned by the server. The rest is known locally
-  // User is automatically assigned to the thread and has all the rights
-  addOne<ThreadWithRole>("threads", {
-    id: res.data.threadId,
-    title: threadFormModel.value.title,
-    description: threadFormModel.value.description,
+const { formModel, formRules, invitationFormModel, validateFormData, handleCreation } = useEntityCreate<
+  ThreadFormModel,
+  ThreadWithRole,
+  CreateThreadResponse
+>({
+  scopeType: "thread",
+  listType: "threads",
+  defaultInvitationRole: "THR_ASSIGNEE",
+  invitationPlaceholder: t("scopes.thread.no-assignees"),
+  formRef,
+  invitationFormRef,
+  initialFormModel: { title: "", description: "" },
+  createApiCall: async (formData, invitations) =>
+    createThread(organizationId, {
+      title: formData.title,
+      description: formData.description,
+      usersToAssign: invitations.map((x) => x.username),
+    }),
+  buildEntity: (response, formData) => ({
+    id: response.threadId,
+    title: formData.title,
+    description: formData.description,
     organizationId: organizationId,
     createdAt: new Date().toUTCString(),
     stats: {
-      assignees: 0,
+      assignees: response.assignees,
       deadlines: 0,
-      completedDeadlines: 0
+      completedDeadlines: 0,
     },
     permissions: {
       createDeadlines: true,
       delete: true,
       manageAssignees: true,
-      update: true
+      update: true,
     },
-    role: "THR_OWNER"
-  })
-}
+    role: "THR_OWNER",
+  }),
+});
 </script>
 
 <template>
   <EntityCreationDialogLayout scope-type="thread">
     <Step title="Details" :value="1" v-slot="{ nextStep }">
-      <n-form ref="threadFormRef" :model="threadFormModel" :rules="threadFormRules">
+      <n-form ref="formRef" :model="formModel" :rules="formRules">
         <n-form-item :label="t('scopes.common.form-labels.title')" path="title">
-          <n-input v-model:value="threadFormModel.title" />
+          <n-input v-model:value="formModel.title" />
         </n-form-item>
         <n-form-item :label="t('scopes.common.form-labels.description')" path="description">
-          <n-input v-model:value="threadFormModel.description" type="textarea"/>
+          <n-input v-model:value="formModel.description" type="textarea" />
         </n-form-item>
       </n-form>
       <div class="flex flex-1 justify-end">
@@ -122,7 +101,6 @@ const handleThreadCreation = async () => {
     <Step title="Invitations" :value="2" v-slot="{ prevStep }">
       <n-form ref="invitationFormRef" :model="invitationFormModel">
         <n-form-item :label="t('scopes.common.form-labels.invitations')" path="username">
-          <!-- TODO: Remove hardcoded ORG_MEMBER -->
           <DynamicUserInvitationInput
             v-model="invitationFormModel"
             default-role="THR_ASSIGNEE"
@@ -136,7 +114,9 @@ const handleThreadCreation = async () => {
             <ArrowLeft />
           </n-icon>
         </n-button>
-        <n-button role="button" @click="handleThreadCreation" type="info"> {{ t("actions.create") }} </n-button>
+        <n-button role="button" @click="handleCreation" type="info">
+          {{ t("actions.create") }}
+        </n-button>
       </div>
     </Step>
   </EntityCreationDialogLayout>

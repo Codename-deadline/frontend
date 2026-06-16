@@ -10,7 +10,6 @@ import type { AuthMethod } from "@/types/api";
 import { displayApiError, displayFormErrors } from "@/utils";
 import BaseAuthForm from "../common/BaseAuthForm.vue";
 
-// biome-ignore lint/correctness/noUnusedVariables: Biome does not yet check <template>
 const { t } = useI18n();
 const { makeRequest } = useApi();
 const tokenStore = useTokenStore();
@@ -23,7 +22,7 @@ console.log(props.requestId);
 
 const password = ref<string>("");
 
-const _submit = async () => {
+const submitAuthForm = async () => {
   const response = await makeRequest(
     () => apiAuth.verifyPassword({ id: props.requestId, password: password.value }),
     displayFormErrors,
@@ -38,9 +37,9 @@ const _submit = async () => {
 
 <template>
   <BaseAuthForm
-    @submit="_submit"
-    :isSignIn="true"
-    :authMethod="authMethod"
+    @submit="submitAuthForm"
+    :is-sign-in="true"
+    :auth-method="authMethod"
     button-selector="auth.password.action"
     header-selector="auth.password.header"
     description-selector="auth.password.description"
