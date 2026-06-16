@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { toRef } from "@vueuse/core";
-// biome-ignore lint/correctness/noUnusedImports: Tags are written with kebab-case
 import { NFormItem, NInput, NSelect } from "naive-ui";
 import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -39,7 +38,7 @@ Object.values(Language).forEach((language) => {
 
 const { makeRequest } = useApi();
 
-const _submit = async () => {
+const submitAuthForm = async () => {
   registrationData.value.channel = authMethod.value.toUpperCase();
 
   const response = await makeRequest(() => apiAuth.signUp(registrationData.value), displayFormErrors, displayApiError);
@@ -51,7 +50,7 @@ const _submit = async () => {
 
 <template>
   <BaseAuthForm
-    @submit="_submit"
+    @submit="submitAuthForm"
     :is-sign-in="false"
     :auth-method="authMethod"
     button-selector="auth.sign-up.action"

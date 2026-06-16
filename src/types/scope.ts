@@ -10,4 +10,3 @@ export type UserScopedRoles<T extends AnyRole> = {
   scope: T | null;
   global?: AnyRole;
 };
-export type RoleKey = "role" | "globalRole";

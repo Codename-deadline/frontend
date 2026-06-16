@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { User } from "@vicons/fa";
+// biome-ignore lint/correctness/noUnusedImports: Biome reports a false positive. Icon is used and is renamed to avoid collision with "@/types/Language" 
+import { Language as LanguageIcon, User } from "@vicons/fa";
 import { NButton, NDropdown, useThemeVars } from "naive-ui";
 import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
 import { useI18n } from "vue-i18n";

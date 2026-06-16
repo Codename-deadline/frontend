@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// biome-ignore lint/correctness/noUnusedImports: Biome does not yet check <template>
 import { NButton, NForm } from "naive-ui";
 import { capitalize } from "vue";
 import { useI18n } from "vue-i18n";
@@ -17,14 +16,14 @@ const props = defineProps<{
   authMethod: AuthMethod;
 }>();
 
-const _resetAuthProcess = () => {
+const resetAuthProcess = () => {
   emitter.emit("resetAuthProgress");
 };
 </script>
 
 <template>
   <auth-card
-    @back="_resetAuthProcess"
+    @back="resetAuthProcess"
     :show-back-button="true"
     :header-selector="headerSelector"
     :description-selector="descriptionSelector"

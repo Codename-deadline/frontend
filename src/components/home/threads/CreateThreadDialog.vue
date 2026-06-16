@@ -5,6 +5,7 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
+import type { CreateThreadResponse } from "@/api/schemas/thread/create/CreateThreadResponse";
 import { createThread } from "@/api/thread";
 import EntityCreationDialogLayout from "@/components/home/common/dialogs/EntityCreationDialogLayout.vue";
 import DynamicUserInvitationInput from "@/components/home/common/forms/DynamicUserInvitationInput.vue";
@@ -39,7 +40,7 @@ const invitationFormRef = ref<FormInst | null>(null);
 const { formModel, formRules, invitationFormModel, validateFormData, handleCreation } = useEntityCreate<
   ThreadFormModel,
   ThreadWithRole,
-  { threadId: number }
+  CreateThreadResponse
 >({
   scopeType: "thread",
   listType: "threads",
@@ -61,7 +62,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
     organizationId: organizationId,
     createdAt: new Date().toUTCString(),
     stats: {
-      assignees: 0,
+      assignees: 1, // TODO: Adjust based on number of assignees. Consider returning from the backend
       deadlines: 0,
       completedDeadlines: 0,
     },

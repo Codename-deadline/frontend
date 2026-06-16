@@ -6,13 +6,14 @@ import { useI18n } from "vue-i18n";
 import { createOrganization } from "@/api/organization";
 import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
 import type { OrganizationType } from "@/api/schemas/organization/common/OrganizationType";
+import type { CreateOrganizationResponse } from "@/api/schemas/organization/create/CreateOrganizationResponse";
 import EntityCreationDialogLayout from "@/components/home/common/dialogs/EntityCreationDialogLayout.vue";
 import DynamicUserInvitationInput from "@/components/home/common/forms/DynamicUserInvitationInput.vue";
 import Step from "@/components/home/common/stepper/Step.vue";
 import { useEntityCreate } from "@/composables/useEntityCreate";
 import { tFormError } from "@/locales/utils";
 
-interface OrgFormModel {
+type OrgFormModel = {
   title: string;
   description: string;
   visibility: OrganizationType;
@@ -35,7 +36,7 @@ const organizationVisibilityOptions: { value: OrganizationType; label: string }[
 const { formModel, formRules, invitationFormModel, validateFormData, handleCreation } = useEntityCreate<
   OrgFormModel,
   OrganizationWithRole,
-  { organizationId: number }
+  CreateOrganizationResponse
 >({
   scopeType: "organization",
   listType: "organizations",
