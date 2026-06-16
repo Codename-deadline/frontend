@@ -85,4 +85,6 @@ emitter.on("failedToRefreshToken", () => {
 });
 </script>
 
-<template></template>
+<template>
+  <div event-handler></div>
+</template>

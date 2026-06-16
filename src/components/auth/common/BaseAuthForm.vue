@@ -36,7 +36,7 @@ const _resetAuthProcess = () => {
     </template>
     <template v-slot:footer>
       <div class="flex flex-col items-center">
-        <n-button type="info" class="w-full! rounded-lg!" @click="emit('submit')">{{ t(buttonSelector) }}</n-button>
+        <n-button role="button" type="info" class="w-full! rounded-lg!" @click="emit('submit')">{{ t(buttonSelector) }}</n-button>
         <small class="mt-5 text-gray-500">
           {{ t("auth.method") }}
           {{ capitalize(authMethod.valueOf().toLowerCase()) }}

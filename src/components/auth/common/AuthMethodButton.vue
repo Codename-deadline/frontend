@@ -10,13 +10,13 @@ const props = defineProps<{
 
 const model = defineModel<AuthMethod>();
 
-const _updateMethod = () => {
+const updateMethod = () => {
   model.value = props.method;
 };
 </script>
 
 <template>
-  <n-button @click="_updateMethod" type="info" size="large">
+  <n-button role="button" @click="updateMethod" type="info" size="large">
     <template #icon>
       <Icon>
         <component :is="icon"/>

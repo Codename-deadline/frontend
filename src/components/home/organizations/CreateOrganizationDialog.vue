@@ -112,7 +112,7 @@ const organizationVisibilityOptions: { value: OrganizationType; label: string }[
         </n-form-item>
       </n-form>
       <div class="flex flex-1 justify-end">
-        <n-button @click="() => validateOrganizationData(nextStep!)">
+        <n-button role="button" @click="() => validateOrganizationData(nextStep!)">
           <template #icon>
             <n-icon>
               <ArrowRight />
@@ -133,12 +133,12 @@ const organizationVisibilityOptions: { value: OrganizationType; label: string }[
         </n-form-item>
       </n-form>
       <div class="flex flex-1 justify-between">
-        <n-button @click="prevStep">
+        <n-button role="button" @click="prevStep">
           <n-icon>
             <ArrowLeft />
           </n-icon>
         </n-button>
-        <n-button @click="handleOrganizationCreation" type="info"> {{ t("actions.create") }} </n-button>
+        <n-button role="button" @click="handleOrganizationCreation" type="info"> {{ t("actions.create") }} </n-button>
       </div>
     </Step>
   </EntityCreationDialogLayout>

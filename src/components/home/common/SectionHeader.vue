@@ -23,6 +23,7 @@ const { t } = useI18n();
     </div>
     <div class="mt-3 sm:mt-0">
       <n-button
+        role="button"
         v-if="showCreateButton"
         @click="emitter.emit('openCreateEntityDialog')"
         type="info"

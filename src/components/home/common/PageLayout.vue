@@ -117,6 +117,7 @@ watch(() => props.reset, (value) => {
             :key="row.index"
           >
             <component
+              role="button"
               :is="props.entityCardComponent"
               @click="emit('cardClicked', item.id)"
               @edit="objectToEdit = item"
@@ -151,7 +152,8 @@ watch(() => props.reset, (value) => {
       v-if="isDialogOpen"
       class="fixed inset-0 z-50 flex items-center justify-center"
     >
-      <div
+      <button
+        type="button"
         class="absolute inset-0 bg-black/30 backdrop-blur-sm"
         @click="closeAllDialogs"
       />

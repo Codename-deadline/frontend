@@ -145,7 +145,7 @@ const handleMemberRemoval = async (username: string) => {
             {{ tEntityActionConfirmation(t, "organization", "delete") }}
           </n-popconfirm>
           <div></div>
-          <n-button @click="handleOrganizationPatch" class="rounded-lg!" type="info">{{ t('actions.save') }}</n-button>
+          <n-button role="button" @click="handleOrganizationPatch" class="rounded-lg!" type="info">{{ t('actions.save') }}</n-button>
         </div>
       </n-form>
     </n-tab-pane>

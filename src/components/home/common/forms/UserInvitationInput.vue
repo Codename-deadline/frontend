@@ -36,7 +36,7 @@ const handleClick = (e: MouseEvent) => {
       :filter="(role: AnyRole) => !role.endsWith('OWNER')"
       size="medium"
     />
-    <n-button v-if="invitationButton" @click="handleClick" class="rounded-lg!" type="info">
+    <n-button role="button" v-if="invitationButton" @click="handleClick" class="rounded-lg!" type="info">
       <template #icon>
         <n-icon :size="14">
           <Envelope />

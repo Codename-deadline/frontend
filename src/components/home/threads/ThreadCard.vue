@@ -42,7 +42,7 @@ const calculateCompletionPercentage = (stats: ThreadStats): number => {
           </n-tag>
         </div>
         <div class="flex space-x-3">
-          <n-button v-if="hasAnyEditPermission" @click.stop="emit('edit', entity.id)" text>
+          <n-button role="button" v-if="hasAnyEditPermission" @click.stop="emit('edit', entity.id)" text>
             <template #icon>
               <icon class="">
                 <Cog/>

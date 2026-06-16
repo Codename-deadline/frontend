@@ -26,7 +26,7 @@ const emit = defineEmits<(e: "back") => void>();
   <n-card class="max-w-1/2 max-sm:max-w-4/5 rounded-xl! shadow-lg! p-4! border!">
     <header class="flex flex-col items-center justify-center space-y-4">
       <div class="w-full" v-if="showBackButton">
-        <n-button text @click="emit('back')">
+        <n-button role="button" text @click="emit('back')">
           <template #icon>
             <Icon>
               <ArrowLeft/>

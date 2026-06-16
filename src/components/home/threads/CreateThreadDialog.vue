@@ -110,7 +110,7 @@ const handleThreadCreation = async () => {
         </n-form-item>
       </n-form>
       <div class="flex flex-1 justify-end">
-        <n-button @click="() => validateFormData(nextStep!)">
+        <n-button role="button" @click="() => validateFormData(nextStep!)">
           <template #icon>
             <n-icon>
               <ArrowRight />
@@ -131,12 +131,12 @@ const handleThreadCreation = async () => {
         </n-form-item>
       </n-form>
       <div class="flex flex-1 justify-between">
-        <n-button @click="prevStep">
+        <n-button role="button" @click="prevStep">
           <n-icon>
             <ArrowLeft />
           </n-icon>
         </n-button>
-        <n-button @click="handleThreadCreation" type="info"> {{ t("actions.create") }} </n-button>
+        <n-button role="button" @click="handleThreadCreation" type="info"> {{ t("actions.create") }} </n-button>
       </div>
     </Step>
   </EntityCreationDialogLayout>

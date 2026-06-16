@@ -145,12 +145,12 @@ const handleAssigneeRemoval = async (username: string) => {
             class="rounded-lg!"
           >
             <template #trigger>
-              <n-button :disabled="!entity.permissions.delete" class="rounded-lg!" type="error">{{ t('actions.delete') }}</n-button>
+              <n-button role="button" :disabled="!entity.permissions.delete" class="rounded-lg!" type="error">{{ t('actions.delete') }}</n-button>
             </template>
             {{ tEntityActionConfirmation(t, "thread", "delete") }}
           </n-popconfirm>
           <div></div>
-          <n-button @click="handleThreadPatch" class="rounded-lg!" type="info">{{ t('actions.save') }}</n-button>
+          <n-button role="button" @click="handleThreadPatch" class="rounded-lg!" type="info">{{ t('actions.save') }}</n-button>
         </div>
       </n-form>
     </n-tab-pane>
