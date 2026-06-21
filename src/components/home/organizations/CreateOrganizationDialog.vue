@@ -5,6 +5,7 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { createOrganization } from "@/api/organization";
 import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
+import type { OrganizationRole } from "@/api/schemas/organization/common/OrganizationRole";
 import type { OrganizationType } from "@/api/schemas/organization/common/OrganizationType";
 import type { CreateOrganizationResponse } from "@/api/schemas/organization/create/CreateOrganizationResponse";
 import EntityCreationDialogLayout from "@/components/home/common/dialogs/EntityCreationDialogLayout.vue";
@@ -33,6 +34,7 @@ const organizationVisibilityOptions: { value: OrganizationType; label: string }[
   label: t(`scopes.organization.type.${type.toLowerCase()}`),
 }));
 
+const defaultInvitationRole: OrganizationRole = "ORG_MEMBER"
 const { formModel, formRules, invitationFormModel, validateFormData, handleCreation } = useEntityCreate<
   OrgFormModel,
   OrganizationWithRole,
@@ -40,7 +42,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
 >({
   scopeType: "organization",
   listType: "organizations",
-  defaultInvitationRole: "ORG_MEMBER",
+  defaultInvitationRole,
   invitationPlaceholder: t("scopes.organization.no-invitations"),
   formRef,
   invitationFormRef,
@@ -106,7 +108,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
           <!-- TODO: Remove hardcoded ORG_MEMBER -->
           <DynamicUserInvitationInput
             v-model="invitationFormModel"
-            default-role="ORG_MEMBER"
+            :default-role="defaultInvitationRole"
             :placeholder="t('scopes.organization.no-invitations')"
           />
         </n-form-item>

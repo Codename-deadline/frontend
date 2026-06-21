@@ -5,6 +5,7 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
+import type { ThreadRole } from "@/api/schemas/thread/common/ThreadRole";
 import type { CreateThreadResponse } from "@/api/schemas/thread/create/CreateThreadResponse";
 import { createThread } from "@/api/thread";
 import EntityCreationDialogLayout from "@/components/home/common/dialogs/EntityCreationDialogLayout.vue";
@@ -37,6 +38,7 @@ type ThreadFormModel = {
 const formRef = ref<FormInst | null>(null);
 const invitationFormRef = ref<FormInst | null>(null);
 
+const defaultInvitationRole: ThreadRole = "THR_ASSIGNEE"
 const { formModel, formRules, invitationFormModel, validateFormData, handleCreation } = useEntityCreate<
   ThreadFormModel,
   ThreadWithRole,
@@ -44,7 +46,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
 >({
   scopeType: "thread",
   listType: "threads",
-  defaultInvitationRole: "THR_ASSIGNEE",
+  defaultInvitationRole,
   invitationPlaceholder: t("scopes.thread.no-assignees"),
   formRef,
   invitationFormRef,
@@ -53,7 +55,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
     createThread(organizationId, {
       title: formData.title,
       description: formData.description,
-      usersToAssign: invitations.map((x) => x.username),
+      invitations: invitations,
     }),
   buildEntity: (response, formData) => ({
     id: response.threadId,
@@ -103,7 +105,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
         <n-form-item :label="t('scopes.common.form-labels.invitations')" path="username">
           <DynamicUserInvitationInput
             v-model="invitationFormModel"
-            default-role="THR_ASSIGNEE"
+            :default-role="defaultInvitationRole"
             :placeholder="t('scopes.thread.no-assignees')"
           />
         </n-form-item>

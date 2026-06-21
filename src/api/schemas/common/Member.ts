@@ -1,5 +1,5 @@
 import z from "zod";
-import type { AnyRole } from "@/types/scope";
+import type { AnyRole } from "@/api/common/AnyRole";
 import { IsoUtcDateSchema } from "./IsoUtcDate";
 import { UserSchema } from "./User";
 

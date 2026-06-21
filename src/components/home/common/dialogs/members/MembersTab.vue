@@ -2,11 +2,11 @@
 import { useMessage } from 'naive-ui';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { AnyRole } from '@/api/common/AnyRole';
 import type { PagedResponse } from '@/api/common/PaginationResponse';
 import type { MemberWithRole } from '@/api/schemas/common/Member';
 import { useApi } from '@/composables/useApi';
 import type { SafeApiCall } from '@/types/api';
-import type { AnyRole } from '@/types/scope';
 import MemberManager from './MemberManager.vue';
 
 const props = defineProps<{

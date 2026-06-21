@@ -3,6 +3,7 @@ import { TrashAlt } from '@vicons/fa';
 import { NAvatar, NButton, NPagination, NPopconfirm, NSkeleton, useThemeVars } from 'naive-ui';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { AnyRole } from '@/api/common/AnyRole';
 import type { MemberWithRole } from '@/api/schemas/common/Member';
 import type { User } from '@/api/schemas/common/User';
 import type { RolesMetadata } from '@/api/schemas/roles/metadata';
@@ -10,7 +11,7 @@ import RoleDropdown from '@/components/home/common/forms/RoleDropdown.vue';
 import { PAGE_SIZE_KEY, USER_KEY } from '@/constants/providerKeys';
 import { tActionConfirmation } from '@/locales/utils';
 import { useMetadataStore } from '@/stores/MetadataStore';
-import type { AnyRole, ScopeType } from '@/types/scope';
+import type { ScopeType } from '@/types/scope';
 import { injectOrThrow } from '@/utils';
 
 const props = defineProps<{

@@ -2,7 +2,7 @@ import z from "zod";
 import { paginationResponseSchema as pagedResponseSchema } from "@/api/common/PaginationResponse";
 import { IsoUtcDateSchema } from "@/api/schemas/common/IsoUtcDate";
 import { ThreadPermissionsSchema } from "./ThreadPermissions";
-import { ThreadOrOrganizationRoleSchem as ThreadOrOrganizationRoleSchema, ThreadRoleSchema } from "./ThreadRole";
+import { ThreadOrOrganizationRoleSchema, ThreadRoleSchema } from "./ThreadRole";
 import { ThreadStatsSchema } from "./ThreadStats";
 
 export const ThreadSchema = z.object({

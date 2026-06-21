@@ -1,6 +1,7 @@
 import { type FormInst, type FormRules, useMessage } from "naive-ui";
 import { computed, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import type { AnyRole } from "@/api/common/AnyRole";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
 import type { MemberWithRole } from "@/api/schemas/common/Member";
 import { useApi } from "@/composables/useApi";
@@ -10,7 +11,7 @@ import emitter from "@/plugins/emitter";
 import type { ListType } from "@/stores/InfiniteListStore";
 import { useInfiniteListStore } from "@/stores/InfiniteListStore";
 import type { SafeApiCall } from "@/types/api";
-import type { AnyRole, ScopeType, UserScopedRoles } from "@/types/scope";
+import type { ScopeType, UserScopedRoles } from "@/types/scope";
 
 export function useEntityEdit(config: {
   scopeType: ScopeType;
