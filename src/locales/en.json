@@ -159,6 +159,8 @@
       "members": "Members",
       "assignees": "Assignees",
       "unknown": "Unknown",
+      "due": "Due",
+      "nothing-here": "Nothing here yet",
       "form-sections": {
         "settings": "Settings",
         "invitations": "Invitations"
@@ -211,7 +213,8 @@
       "description": "Manage and track all deadlines",
       "no-assignees": "No assignees yet",
       "role": {
-        "assignee": "Assignee"
+        "assignee": "Assignee",
+        "owner": "Owner"
       }
     }
   }

@@ -1,0 +1,74 @@
+<script setup lang="ts">
+import { CalendarAlt, Cog, UserFriends } from "@vicons/fa";
+import { NButton, NTag, NTooltip, type PopoverTrigger } from "naive-ui";
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import type { DeadlineWithRole } from "@/api/schemas/deadline/common/Deadline";
+import { extractRoleFromString } from "@/locales/utils";
+import { hasAnyEditPermission } from "@/utils/permissions";
+import EntityCard from "../common/EntityCard.vue";
+
+const { t } = useI18n();
+
+const props = defineProps<{
+  entity: DeadlineWithRole;
+}>();
+const emit = defineEmits<{
+  edit: [id: number];
+}>();
+
+const dueDate = computed(() => new Date(props.entity.due));
+const formattedDueDate = computed(() => {
+  const tmp = dueDate.value;
+
+  const short: string = `${tmp.getDate()}.${tmp.getMonth()}.${tmp.getFullYear()}`;
+  return { short, long: `${tmp.getHours()}:${tmp.getMinutes()} ${short}` };
+})
+
+const popoverTrigger: PopoverTrigger = window.screen.width < 768 && navigator.maxTouchPoints > 0 ? "click" : "hover";
+</script>
+
+<template>
+  <EntityCard>
+    <template #header>
+      <div class="flex w-full justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <h3 class="overflow-x-auto whitespace-nowrap">{{ entity.title }}</h3>
+          <n-tag v-if="entity.role" round :bordered="false" size="small">
+            {{ t(extractRoleFromString('deadline', entity.role)) }}
+          </n-tag>
+        </div>
+        <div class="flex space-x-3">
+          <n-button role="button" v-if="hasAnyEditPermission(entity.permissions)" @click.stop="emit('edit', entity.id)" text>
+            <template #icon>
+              <icon class="">
+                <Cog/>
+              </icon>
+            </template>
+          </n-button>
+        </div>
+      </div>
+    </template>
+    <template #footer>
+      <div class="w-full flex justify-between items-center">
+        <div class="flex items-center">
+          <icon class="mr-2" size="16">
+            <CalendarAlt />
+          </icon>
+          <n-tooltip placement="bottom" :trigger="popoverTrigger">
+            <template #trigger>
+              <div class="cursor-help"> {{ formattedDueDate.short }} </div>
+            </template>
+            <span> {{ formattedDueDate.long }} </span>
+          </n-tooltip>
+        </div>
+        <div class="flex items-center">
+          <icon class="mr-2" size="16">
+            <UserFriends />
+          </icon>
+          {{ entity.stats.assignees }} {{ t('scopes.common.assignees').toLowerCase() }}
+        </div>
+      </div>
+    </template>
+  </EntityCard>
+</template>

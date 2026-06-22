@@ -1,6 +1,6 @@
 import z from "zod";
 import { paginationResponseSchema as pagedResponseSchema } from "@/api/common/PaginationResponse";
-import { IsoUtcDateSchema } from "@/api/schemas/common/IsoUtcDate";
+import { IsoAsMsSchema } from "@/api/schemas/common/IsoUtcDate";
 import { OrganizationStatsSchema } from "@/api/schemas/organization/common/OrganizationStats";
 import { OrganizationTypeSchema } from "@/api/schemas/organization/common/OrganizationType";
 import { OrganizationPermissionsSchema } from "./OrganizationPermissions";
@@ -11,7 +11,7 @@ export const OrganizationSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   type: OrganizationTypeSchema,
-  createdAt: IsoUtcDateSchema,
+  createdAt: IsoAsMsSchema,
   stats: OrganizationStatsSchema,
   permissions: OrganizationPermissionsSchema,
 });

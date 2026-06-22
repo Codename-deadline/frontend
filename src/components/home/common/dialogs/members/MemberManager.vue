@@ -18,6 +18,7 @@ const props = defineProps<{
   members: MemberWithRole[];
   totalPages: number;
   canManageRoles: boolean;
+  isLoadingMembers: boolean;
   myRole?: AnyRole;
 }>();
 const emit = defineEmits<{
@@ -45,7 +46,6 @@ const membersToRender = computed<MemberWithRole[]>(
   () => props.members.slice((currentPage.value - 1) * pageSize, (currentPage.value) * pageSize)
 );
 const placeholdersToRender = computed<number>(() => pageSize - membersToRender.value.length);
-const isLoading = computed<boolean>(() => membersToRender.value.length === 0);
 
 const metadataStore = useMetadataStore();
 const rolesMetadata: RolesMetadata | undefined = metadataStore.metadata.roles?.value;
@@ -74,47 +74,54 @@ const getAvatarText = (fullname: string) => {
 </script>
 
 <template>
-  <div class="mt-2 space-y-2">
-    <div
-      v-for="member in membersToRender" :key="member.user.id"
-      class="flex items-center member-border rounded-lg p-2 space-x-3"
-    >
-      <n-avatar round>{{ getAvatarText(member.user.fullName) }}</n-avatar>
-      <div class="flex flex-1 justify-between items-center">
-        <div class="flex flex-col">
-          <span>{{ member.user.fullName }}</span>
-          <span class="text-sm description">@{{ member.user.username }}</span>
-        </div>
-        <div class="flex items-center space-x-2!">
-          <RoleDropdown
-            @select="(role) => emit('updateRole', member, role)"
-            :button-role="member.role"
-            :filter="canUserAssignY"
-            :disabled="!canManageRoles || isMe(member)"
-          />
-          <n-popconfirm
-            v-if="canManageRoles"
-            @positive-click="() => emit('removeMember', member)"
-            class="rounded-lg!"
-          >
-            <template #trigger>
-              <n-button v-show="!isMe(member)" class="rounded-lg!" size="small" type="error" ghost>
-                <template #icon>
-                  <Icon :size="16">
-                    <TrashAlt />
-                  </Icon>
-                </template>
-              </n-button>
-            </template>
-            {{ tActionConfirmation(t, 'remove-member') }}
-          </n-popconfirm>
+  <section class="mt-2 min-w-75!">
+    <div v-if="isLoadingMembers" class="space-y-2">
+      <n-skeleton v-for="i in placeholdersToRender" :key="i" class="h-[60.4px]!" :sharp="false" />
+    </div>
+    <div v-if="!isLoadingMembers && members.length > 0" class="space-y-2">
+      <div
+        v-for="member in membersToRender" :key="member.user.id"
+        class="flex items-center member-border rounded-lg p-2 space-x-3"
+      >
+        <n-avatar round>{{ getAvatarText(member.user.fullName) }}</n-avatar>
+        <div class="flex flex-1 justify-between items-center">
+          <div class="flex flex-col">
+            <span>{{ member.user.fullName }}</span>
+            <span class="text-sm description">@{{ member.user.username }}</span>
+          </div>
+          <div class="flex items-center space-x-2!">
+            <RoleDropdown
+              @select="(role) => emit('updateRole', member, role)"
+              :button-role="member.role"
+              :filter="canUserAssignY"
+              :disabled="!canManageRoles || isMe(member)"
+            />
+            <n-popconfirm
+              v-if="canManageRoles"
+              @positive-click="() => emit('removeMember', member)"
+              class="rounded-lg!"
+            >
+              <template #trigger>
+                <n-button v-show="!isMe(member)" class="rounded-lg!" size="small" type="error" ghost>
+                  <template #icon>
+                    <Icon :size="16">
+                      <TrashAlt />
+                    </Icon>
+                  </template>
+                </n-button>
+              </template>
+              {{ tActionConfirmation(t, 'remove-member') }}
+            </n-popconfirm>
+          </div>
         </div>
       </div>
+      <!-- Keep the element height constant regardless of the number of members rendered -->
+      <div v-for="i in (pageSize - membersToRender.length)" :key="i + pageSize" class="h-[60.4px]!"></div>
     </div>
-    <div v-for="i in placeholdersToRender" :key="i" class="min-w-75 h-[60.4px]">
-      <n-skeleton v-if="isLoading" height="100%" width="100%" :sharp="false" />
+    <div v-else class="flex justify-center items-center p-5">
+      {{ t("scopes.common.nothing-here") }}
     </div>
-  </div>
+  </section>
   <div class="flex justify-center">
     <n-pagination class="mt-3" v-model:page="currentPage" :page-count="totalPages" />
   </div>

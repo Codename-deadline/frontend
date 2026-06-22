@@ -1,7 +1,7 @@
 import z from "zod";
 import { AnyRoleSchema } from "@/api/common/AnyRole";
 import { paginationResponseSchema as pagedResponseSchema } from "@/api/common/PaginationResponse";
-import { IsoUtcDateSchema } from "@/api/schemas/common/IsoUtcDate";
+import { IsoAsMsSchema } from "@/api/schemas/common/IsoUtcDate";
 import { DeadlinePermissionsSchema } from "./DeadlinePermissions";
 import { DeadlineRoleSchema } from "./DeadlineRole";
 import { DeadlineStatsSchema } from "./DeadlineStats";
@@ -11,8 +11,8 @@ export const DeadlineSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   threadId: z.number(),
-  createdAt: IsoUtcDateSchema,
-  due: IsoUtcDateSchema,
+  createdAt: IsoAsMsSchema,
+  due: IsoAsMsSchema,
   stats: DeadlineStatsSchema,
   permissions: DeadlinePermissionsSchema,
 });

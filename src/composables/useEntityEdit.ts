@@ -13,7 +13,7 @@ import { useInfiniteListStore } from "@/stores/InfiniteListStore";
 import type { SafeApiCall } from "@/types/api";
 import type { ScopeType, UserScopedRoles } from "@/types/scope";
 
-export function useEntityEdit(config: {
+export function useEntityEdit<TFormModel extends { title: string; description?: string }>(config: {
   scopeType: ScopeType;
   listType: ListType;
   entity: {
@@ -29,8 +29,12 @@ export function useEntityEdit(config: {
   invitationFormRef: Ref<FormInst | null>;
   managePermissionKey: string;
   invitePermissionKey: string;
-  statsField: string;
+  memberStatKey: string;
   defaultInvitationRole: AnyRole;
+  initialFormModel: TFormModel;
+  extraFormRules?: FormRules;
+  transformPatchData?: (data: TFormModel) => Record<string, unknown>;
+  syncFields?: (keyof TFormModel)[];
   apiCalls: {
     patch: (id: number, data: { title: string; description?: string }) => Promise<SafeApiCall<unknown>>;
     delete: (id: number) => Promise<SafeApiCall<unknown>>;
@@ -46,23 +50,34 @@ export function useEntityEdit(config: {
 
   const membersToLoad = DEFAULT_MEMBERS_PAGE_SIZE;
 
-  const patchFormModel = ref<{ title: string; description?: string }>({
-    title: config.entity.title,
-    description: config.entity.description,
-  });
-  const patchFormRules: FormRules = {
+  const patchFormModel = ref<TFormModel>(config.initialFormModel);
+  const defaultFormRules: FormRules = {
     title: [{ required: true, message: tFormError(t, "title"), trigger: ["input", "blur"] }],
+  };
+  const patchFormRules: FormRules = {
+    ...defaultFormRules,
+    ...config.extraFormRules,
   };
 
   const handlePatch = async (e: MouseEvent) => {
     e.preventDefault();
     config.patchFormRef.value?.validate(async (errors) => {
       if (errors) return;
-      const res = await makeRequest(() => config.apiCalls.patch(config.entity.id, patchFormModel.value));
+      const patchData = config.transformPatchData
+        ? config.transformPatchData(patchFormModel.value)
+        : (patchFormModel.value as unknown as Record<string, unknown>);
+      const res = await makeRequest(() =>
+        config.apiCalls.patch(config.entity.id, patchData as Parameters<typeof config.apiCalls.patch>[1]),
+      );
       if (!res.ok) return;
 
       config.entity.title = patchFormModel.value.title;
       config.entity.description = patchFormModel.value.description;
+      if (config.syncFields) {
+        for (const field of config.syncFields) {
+          (config.entity as Record<string, unknown>)[field as string] = patchFormModel.value[field];
+        }
+      }
       message.success(tEntityToastAction(t, config.scopeType, "updated"));
     });
   };
@@ -109,7 +124,7 @@ export function useEntityEdit(config: {
     config.apiCalls.changeRole(config.entity.id, request);
 
   const handleRemoveMember = async (username: string) => {
-    config.entity.stats[config.statsField]--;
+    config.entity.stats[config.memberStatKey]--;
     return config.apiCalls.removeMember(config.entity.id, username);
   };
 
