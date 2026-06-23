@@ -54,8 +54,12 @@ const {
   invitationFormRef,
   managePermissionKey: "manageAssignees",
   invitePermissionKey: "manageAssignees",
-  statsField: "assignees",
+  memberStatKey: "assignees",
   defaultInvitationRole: "THR_ASSIGNEE",
+  initialFormModel: {
+    title: props.entity.title,
+    description: props.entity.description
+  },
   apiCalls: {
     patch: patchThread,
     delete: deleteThread,

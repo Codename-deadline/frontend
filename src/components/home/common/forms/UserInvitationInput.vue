@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Envelope } from '@vicons/fa';
 import { NButton, NIcon } from 'naive-ui';
-import type { AnyRole } from '@/types/scope';
+import type { AnyRole } from '@/api/common/AnyRole';
 import RoleDropdown from './RoleDropdown.vue';
 import UsernameInput from './UsernameInput.vue';
 

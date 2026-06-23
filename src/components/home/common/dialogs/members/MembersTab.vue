@@ -2,11 +2,12 @@
 import { useMessage } from 'naive-ui';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { AnyRole } from '@/api/common/AnyRole';
 import type { PagedResponse } from '@/api/common/PaginationResponse';
 import type { MemberWithRole } from '@/api/schemas/common/Member';
 import { useApi } from '@/composables/useApi';
+import { useLoading } from '@/composables/useLoading';
 import type { SafeApiCall } from '@/types/api';
-import type { AnyRole } from '@/types/scope';
 import MemberManager from './MemberManager.vue';
 
 const props = defineProps<{
@@ -22,8 +23,10 @@ const members = ref<MemberWithRole[]>([]);
 const totalPages = ref<number>(1);
 
 const { makeRequest } = useApi();
+
+const { isLoading: isLoadingMembers, withLoading } = useLoading();
 const loadMembers = async (page: number) => {
-  const res = await makeRequest(() => props.fetcher(page));
+  const res = await withLoading(() => makeRequest(() => props.fetcher(page)));
   if (!res.ok) return;
   members.value = members.value.concat(res.data.data);
   totalPages.value = res.data.totalPages;
@@ -63,6 +66,7 @@ onMounted(async () => {
       @updateRole="handleRoleUpdate"
       @removeMember="handleRemoveMember"
       :members="members"
+      :is-loading-members="isLoadingMembers"
       :total-pages="totalPages"
       :can-manage-roles="canManageRoles"
       :my-role="myRole"

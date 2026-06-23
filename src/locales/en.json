@@ -159,6 +159,8 @@
       "members": "Members",
       "assignees": "Assignees",
       "unknown": "Unknown",
+      "due": "Due",
+      "nothing-here": "Nothing here yet",
       "form-sections": {
         "settings": "Settings",
         "invitations": "Invitations"
@@ -173,7 +175,8 @@
         "fullName": "Full name",
         "language": "Language",
         "invitations": "Invitations",
-        "visibility": "Visibility"
+        "visibility": "Visibility",
+        "due-date": "Due date"
       }
     },
     "organization": {
@@ -205,7 +208,14 @@
       "x-of-total-deadlines-done": "{done} of {total} deadlines done "
     },
     "deadline": {
-      "header": "Deadlines"
+      "name": "Deadline",
+      "header": "Deadlines",
+      "description": "Manage and track all deadlines",
+      "no-assignees": "No assignees yet",
+      "role": {
+        "assignee": "Assignee",
+        "owner": "Owner"
+      }
     }
   }
 }

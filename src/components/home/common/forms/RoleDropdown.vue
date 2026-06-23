@@ -2,10 +2,11 @@
 import { NButton, NDropdown } from 'naive-ui';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { AnyRole } from '@/api/common/AnyRole';
 import { SCOPE_TYPE_KEY } from '@/constants/providerKeys';
 import { extractRoleFromString } from '@/locales/utils';
 import { useMetadataStore } from '@/stores/MetadataStore';
-import type { AnyRole, ScopeType } from '@/types/scope';
+import type { ScopeType } from '@/types/scope';
 import { injectOrThrow, isRoleInScope } from '@/utils';
 
 const props = withDefaults(

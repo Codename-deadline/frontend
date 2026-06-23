@@ -35,7 +35,9 @@ export const displayFormErrors = (t: any, notification: NotificationApiInjection
       field: capitalize(error.field),
       ...(error.params ?? {}),
     };
-    // TODO: errors.form.invalid-type
+    // TODO: Localize:
+    // 1. errors.form.invalid-type
+    // 2. errors.form.invalid-format
     return `${index}. ${t(`errors.form.${error.code.replace("_", "-")}`, params)}\n`;
   };
 

@@ -1,8 +1,8 @@
 import z from "zod";
 import { paginationResponseSchema as pagedResponseSchema } from "@/api/common/PaginationResponse";
-import { IsoUtcDateSchema } from "@/api/schemas/common/IsoUtcDate";
+import { IsoAsMsSchema } from "@/api/schemas/common/IsoUtcDate";
 import { ThreadPermissionsSchema } from "./ThreadPermissions";
-import { ThreadOrOrganizationRoleSchem as ThreadOrOrganizationRoleSchema, ThreadRoleSchema } from "./ThreadRole";
+import { ThreadOrOrganizationRoleSchema, ThreadRoleSchema } from "./ThreadRole";
 import { ThreadStatsSchema } from "./ThreadStats";
 
 export const ThreadSchema = z.object({
@@ -10,7 +10,7 @@ export const ThreadSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   organizationId: z.number(),
-  createdAt: IsoUtcDateSchema,
+  createdAt: IsoAsMsSchema,
   stats: ThreadStatsSchema,
   permissions: ThreadPermissionsSchema,
 });

@@ -1,13 +1,14 @@
 import { type FormInst, type FormRules, useMessage } from "naive-ui";
 import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import type { AnyRole } from "@/api/common/AnyRole";
 import { useApi } from "@/composables/useApi";
 import { tEntityToastAction, tFormError } from "@/locales/utils";
 import emitter from "@/plugins/emitter";
 import type { ListType } from "@/stores/InfiniteListStore";
 import { useInfiniteListStore } from "@/stores/InfiniteListStore";
 import type { SafeApiCall } from "@/types/api";
-import type { AnyRole, ScopeType } from "@/types/scope";
+import type { ScopeType } from "@/types/scope";
 import { deduplicateInvitationsByUsername } from "@/utils";
 
 type InvitationEntry = { username: string; role: AnyRole };

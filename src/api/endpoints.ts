@@ -89,6 +89,40 @@ const endpoints = {
     path: "/threads/{thrId}/assignees/{username}",
     pathParams: {} as { thrId: number; username: string },
   },
+  THREAD_DEADLINES: {
+    path: "/threads/{thrId}/deadlines",
+    pathParams: {} as { thrId: number },
+    queryParams: {} as { page: number },
+  },
+  DEADLINE_CREATE: {
+    path: "/threads/{thrId}/deadlines",
+    pathParams: {} as { thrId: number },
+  },
+  DEADLINE_GET_MY: {
+    path: "/deadlines/me",
+    queryParams: {} as { page: number },
+  },
+  DEADLINE_DELETE: {
+    path: "/deadlines/{ddlId}",
+    pathParams: {} as { ddlId: number },
+  },
+  DEADLINE_PATCH: {
+    path: "/deadlines/{ddlId}",
+    pathParams: {} as { ddlId: number },
+  },
+  DEADLINE_ASSIGNEES: {
+    path: "/deadlines/{ddlId}/assignees",
+    pathParams: {} as { ddlId: number },
+    queryParams: {} as { page: number; size: number },
+  },
+  DEADLINE_ADD_ASSIGNEE: {
+    path: "/deadlines/{ddlId}/assignees",
+    pathParams: {} as { ddlId: number },
+  },
+  DEADLINE_REMOVE_ASSIGNEE: {
+    path: "/deadlines/{ddlId}/assignees/{username}",
+    pathParams: {} as { ddlId: number; username: string },
+  },
   ROLES_METADATA: {
     path: "/roles/metadata",
     pathParams: {} as never,
