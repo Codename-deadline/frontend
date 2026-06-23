@@ -62,7 +62,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
     title: formData.title,
     description: formData.description,
     organizationId: organizationId,
-    createdAt: new Date().toUTCString(),
+    createdAt: Date.now(),
     stats: {
       assignees: response.assignees,
       deadlines: 0,

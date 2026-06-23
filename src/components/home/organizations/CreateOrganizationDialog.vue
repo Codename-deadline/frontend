@@ -64,7 +64,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
     title: formData.title,
     description: formData.description,
     type: formData.visibility,
-    createdAt: new Date().toUTCString(),
+    createdAt: Date.now(),
     stats: { members: 1, threads: 0 },
     permissions: {
       update: true,
