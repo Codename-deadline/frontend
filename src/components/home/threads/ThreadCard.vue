@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Cog, UserFriends } from "@vicons/fa";
-import { NButton, NTag } from "naive-ui";
+import { NButton } from "naive-ui";
 import { useI18n } from "vue-i18n";
 import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
 import type { ThreadStats } from "@/api/schemas/thread/common/ThreadStats";
-import { extractRoleFromString } from "@/locales/utils";
 import { hasAnyEditPermission } from "@/utils/permissions";
 import EntityCard from "../common/EntityCard.vue";
+import RoleTag from "../common/RoleTag.vue";
 
 const { t } = useI18n();
 
@@ -24,14 +24,12 @@ const calculateCompletionPercentage = (stats: ThreadStats): number => {
 </script>
 
 <template>
-  <EntityCard>
+  <entity-card>
     <template #header>
       <div class="flex w-full justify-between items-center">
         <div class="flex items-center space-x-3">
           <h3 class="overflow-x-auto whitespace-nowrap">{{ entity.title }}</h3>
-          <n-tag v-if="entity.role" round :bordered="false" size="small">
-            {{ t(extractRoleFromString('thread', entity.role)) }}
-          </n-tag>
+          <role-tag scope-type="thread" :role="entity.role" />
         </div>
         <div class="flex space-x-3">
           <n-button role="button" v-if="hasAnyEditPermission(entity.permissions)" @click.stop="emit('edit', entity.id)" text>
@@ -72,5 +70,5 @@ const calculateCompletionPercentage = (stats: ThreadStats): number => {
         {{ entity.stats.assignees }} {{ t('scopes.common.assignees').toLowerCase() }}
       </div>
     </template>
-  </EntityCard>
+  </entity-card>
 </template>

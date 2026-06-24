@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { Cog, Globe, Lock, UserFriends, UserLock } from "@vicons/fa";
-import { NButton, NIconWrapper, NTag } from "naive-ui";
+import { NButton, NIconWrapper } from "naive-ui";
 import { useI18n } from "vue-i18n";
-import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
-import { extractRoleFromString } from "@/locales/utils";
+import type { OrganizationWithStatsAndRole } from "@/api/schemas/organization/common/Organization";
 import { hasAnyEditPermission } from "@/utils/permissions";
 import EntityCard from "../common/EntityCard.vue";
+import RoleTag from "../common/RoleTag.vue";
 
 const { t } = useI18n();
 
 const props = defineProps<{
-  entity: OrganizationWithRole;
+  entity: OrganizationWithStatsAndRole;
 }>();
 const emit = defineEmits<{
   edit: [id: number];
@@ -18,7 +18,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <EntityCard>
+  <entity-card>
     <template #header>
       <div class="flex w-full justify-between">
         <n-icon-wrapper color="" :size="48" :border-radius="16">
@@ -35,9 +35,7 @@ const emit = defineEmits<{
                 </icon>
               </template>
             </n-button>
-            <n-tag round :bordered="false" size="small">
-              {{ t(extractRoleFromString('organization', entity.role)) }}
-            </n-tag>
+            <role-tag scope-type="organization" :role="entity.role" />
           </div>
         </div>
       </div>
@@ -64,5 +62,5 @@ const emit = defineEmits<{
         {{entity.stats.threads}} {{ t('scopes.thread.header').toLowerCase() }}
       </div>
     </template>
-  </EntityCard>
+  </entity-card>
 </template>

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { CalendarAlt, Cog, UserFriends } from "@vicons/fa";
-import { NButton, NTag, NTooltip, type PopoverTrigger } from "naive-ui";
+import { NButton, NTooltip } from "naive-ui";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { DeadlineWithRole } from "@/api/schemas/deadline/common/Deadline";
-import { extractRoleFromString } from "@/locales/utils";
+import { getPopoverTrigger } from "@/utils/flags";
 import { hasAnyEditPermission } from "@/utils/permissions";
 import EntityCard from "../common/EntityCard.vue";
+import RoleTag from "../common/RoleTag.vue";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const props = defineProps<{
   entity: DeadlineWithRole;
@@ -17,26 +18,21 @@ const emit = defineEmits<{
   edit: [id: number];
 }>();
 
-const dueDate = computed(() => new Date(props.entity.due));
 const formattedDueDate = computed(() => {
-  const tmp = dueDate.value;
-
-  const short: string = `${tmp.getDate()}.${tmp.getMonth()}.${tmp.getFullYear()}`;
-  return { short, long: `${tmp.getHours()}:${tmp.getMinutes()} ${short}` };
+  const date = new Date(props.entity.due);
+  const short = new Intl.DateTimeFormat(locale.value, { dateStyle: "short" }).format(date);
+  const long = new Intl.DateTimeFormat(locale.value, { dateStyle: "short", timeStyle: "short" }).format(date);
+  return { short, long };
 })
-
-const popoverTrigger: PopoverTrigger = window.screen.width < 768 && navigator.maxTouchPoints > 0 ? "click" : "hover";
 </script>
 
 <template>
-  <EntityCard>
+  <entity-card>
     <template #header>
       <div class="flex w-full justify-between items-center">
         <div class="flex items-center space-x-3">
           <h3 class="overflow-x-auto whitespace-nowrap">{{ entity.title }}</h3>
-          <n-tag v-if="entity.role" round :bordered="false" size="small">
-            {{ t(extractRoleFromString('deadline', entity.role)) }}
-          </n-tag>
+          <role-tag scope-type="deadline" :role="entity.role" />
         </div>
         <div class="flex space-x-3">
           <n-button role="button" v-if="hasAnyEditPermission(entity.permissions)" @click.stop="emit('edit', entity.id)" text>
@@ -55,7 +51,7 @@ const popoverTrigger: PopoverTrigger = window.screen.width < 768 && navigator.ma
           <icon class="mr-2" size="16">
             <CalendarAlt />
           </icon>
-          <n-tooltip placement="bottom" :trigger="popoverTrigger">
+          <n-tooltip placement="bottom" :trigger="getPopoverTrigger()">
             <template #trigger>
               <div class="cursor-help"> {{ formattedDueDate.short }} </div>
             </template>
@@ -70,5 +66,5 @@ const popoverTrigger: PopoverTrigger = window.screen.width < 768 && navigator.ma
         </div>
       </div>
     </template>
-  </EntityCard>
+  </entity-card>
 </template>

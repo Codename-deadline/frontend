@@ -19,12 +19,11 @@ const emit = defineEmits<{
   cardClicked: [entityId: number]
 }>();
 
-
 const props = withDefaults(
   defineProps<{
     entityCardComponent: Component;
     editDialogComponent: Component;
-    createDialogComponent: Component;
+    createDialogComponent?: Component;
     fetcher: (page: number) => Promise<SafeApiCall<PagedResponse<T>>>;
     scopeType: ScopeType;
     showCreateButton?: boolean;
@@ -50,9 +49,9 @@ const itemsPerRow = computed<number>(() => {
 });
 const cardHeight = computed<number>(() => {
   switch (props.scopeType) {
-    case "organization": return 208;
-    case "thread": return 176
-    case "deadline": return 176 // TODO
+    case "organization": return 211;
+    case "thread": return 179;
+    case "deadline": return 128;
   }
 });
 
@@ -104,7 +103,7 @@ watch(() => props.reset, (value) => {
   <global-header class="mt"/>
   <div class="mt-8 layout-dynamic-padding">
     <section-header
-      :scope-type="scopeType"
+      :section="scopeType"
       :show-create-button="showCreateButton"
       button-action="create"
     />
@@ -166,18 +165,10 @@ watch(() => props.reset, (value) => {
       />
       <component
         :is="props.createDialogComponent"
-        v-if="isCreatingEntity"
+        v-if="isCreatingEntity && props.createDialogComponent"
         class="relative min-w-1/3! w-fit! h-fit! rounded-xl!"
       />
     </div>
   </Transition>
   <global-footer/>
 </template>
-
-<style>
-@reference "@/styles.css";
-
-.layout-dynamic-padding {
-  @apply px-6 lg:px-24 2xl:px-32;
-}
-</style>

@@ -12,6 +12,9 @@
     "create": "Create",
     "delete": "Delete",
     "save": "Save",
+    "accept": "Accept",
+    "decline": "Decline",
+    "revoke": "Revoke",
     "page-reload": "Please perform a page reload",
     "confirmation": "Confirm {action}",
     "to-confirm": {
@@ -153,7 +156,10 @@
       "role-assigned": "Role assigned",
       "entity-created": "{entity} created",
       "entity-updated": "{entity} updated",
-      "entity-deleted": "{entity} deleted"
+      "entity-deleted": "{entity} deleted",
+      "invitation-accepted": "Invitation accepted",
+      "invitation-declined": "Invitation declined",
+      "invitation-revoked": "Invitation revoked"
     },
     "common": {
       "members": "Members",
@@ -161,6 +167,7 @@
       "unknown": "Unknown",
       "due": "Due",
       "nothing-here": "Nothing here yet",
+      "name-not-provided": "Name is not provided",
       "form-sections": {
         "settings": "Settings",
         "invitations": "Invitations"
@@ -216,6 +223,14 @@
         "assignee": "Assignee",
         "owner": "Owner"
       }
+    },
+    "invitation": {
+      "name": "Invitation",
+      "header": "Invitations",
+      "description": "Accept or decline organization invitations",
+      "invited-by": "Invited by",
+      "received": "Received",
+      "sent": "Sent"
     }
   }
 }

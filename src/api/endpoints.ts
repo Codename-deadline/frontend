@@ -143,6 +143,26 @@ const endpoints = {
     path: "/metadata",
     pathParams: {} as never,
   },
+  INVITATION_USER_PENDING: {
+    path: "/invitation/me/pending",
+    queryParams: {} as { page: number },
+  },
+  INVITATION_ACCEPT: {
+    path: "/invitation/{invitationId}/accept",
+    pathParams: {} as { invitationId: number },
+  },
+  INVITATION_DECLINE: {
+    path: "/invitation/{invitationId}/decline",
+    pathParams: {} as { invitationId: number },
+  },
+  INVITATION_USER_PENDING_SENT: {
+    path: "/invitation/me/pending-sent",
+    queryParams: {} as { page: number },
+  },
+  INVITATION_REVOKE: {
+    path: "/invitation/{invitationId}/revoke",
+    pathParams: {} as { invitationId: number },
+  },
 } as const;
 
 export type EndpointSpec<K extends EndpointKey> = {

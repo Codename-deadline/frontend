@@ -10,7 +10,7 @@ import {
   removeOrganizationMember,
 } from "@/api/organization";
 import { changeOrganizationMemberRole } from "@/api/roles";
-import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
+import type { OrganizationWithStatsAndRole } from "@/api/schemas/organization/common/Organization";
 import EntityDialoglayout from "@/components/home/common/dialogs/EntityDialoglayout.vue";
 import MembersTab from "@/components/home/common/dialogs/members/MembersTab.vue";
 import UserInvitationInput from "@/components/home/common/forms/UserInvitationInput.vue";
@@ -18,7 +18,7 @@ import { useEntityEdit } from "@/composables/useEntityEdit";
 import { tEntityActionConfirmation } from "@/locales/utils";
 
 const props = defineProps<{
-  entity: OrganizationWithRole;
+  entity: OrganizationWithStatsAndRole;
 }>();
 
 const { t } = useI18n();

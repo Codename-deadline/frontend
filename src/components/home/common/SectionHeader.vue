@@ -7,7 +7,7 @@ import emitter from "@/plugins/emitter";
 import type { ScopeType } from "@/types/scope";
 
 const props = defineProps<{
-  scopeType: ScopeType;
+  section: ScopeType | "invitation";
   buttonAction: string;
   showCreateButton: boolean
 }>();
@@ -18,8 +18,8 @@ const { t } = useI18n();
 <template>
   <header class="flex flex-col w-full sm:flex-row sm:justify-between sm:items-center">
     <div>
-      <h2>{{ t(`scopes.${scopeType}.header`) }}</h2>
-      <div class="description">{{ t(`scopes.${scopeType}.description`) }}</div>
+      <h2>{{ t(`scopes.${section}.header`) }}</h2>
+      <div class="description">{{ t(`scopes.${section}.description`) }}</div>
     </div>
     <div class="mt-3 sm:mt-0">
       <n-button

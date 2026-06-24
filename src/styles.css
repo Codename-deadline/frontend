@@ -48,3 +48,9 @@
     font-size: 0.75rem;
   }
 }
+
+@layer components {
+  .layout-dynamic-padding {
+    @apply px-6 lg:px-24 2xl:px-32;
+  }
+}

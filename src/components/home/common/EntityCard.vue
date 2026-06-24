@@ -8,7 +8,7 @@ import { NCard, NDivider } from 'naive-ui';
       <slot name="header"></slot>
     </header>
     <slot name="body"></slot>
-    <n-divider class="my-3!" />
+    <n-divider v-if="$slots.footer" class="my-3!" />
     <footer class="flex space-x-3 description">
       <slot name="footer"></slot>
     </footer>

@@ -7,7 +7,10 @@ import {
   CreateOrganizationRequestSchema,
 } from "./schemas/organization/create/CreateOrganizationRequest";
 import { CreateOrganizationResponseSchema } from "./schemas/organization/create/CreateOrganizationResponse";
-import { type OrganizationInvitation, OrganizationInvitationSchema } from "./schemas/organization/Invitation";
+import {
+  type CreateOrganizationInvitationRequest,
+  CreateOrganizationInvitationRequestSchema,
+} from "./schemas/organization/invitation/create/CreateOrganizationInvitationRequest";
 import type { OrganizationMember } from "./schemas/organization/Member";
 import {
   type PatchOrganizationRequest,
@@ -43,8 +46,8 @@ export const getOrganizationMembers = async (organizationId: number, page: numbe
     ),
   );
 
-export const inviteMemberToOrganization = async (organizationId: number, data: OrganizationInvitation) =>
-  validateAndRequest(OrganizationInvitationSchema, data, (validated) =>
+export const inviteMemberToOrganization = async (organizationId: number, data: CreateOrganizationInvitationRequest) =>
+  validateAndRequest(CreateOrganizationInvitationRequestSchema, data, (validated) =>
     client.post(getEndpoint("ORGANIZATION_INVITE_MEMBER", { pathParams: { orgId: organizationId } }), validated),
   );
 
