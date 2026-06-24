@@ -84,7 +84,7 @@ const scopeTypeToListType = (scopeType: ScopeType): ListType => {
   }
 };
 
-const { containerProps, wrapperProps, virtualItems, loading, reset } = useInfiniteVirtualList(
+const { containerProps, wrapperProps, virtualItems, showSkeleton, $reset } = useInfiniteVirtualList(
   scopeTypeToListType(props.scopeType),
   (page: number) => props.fetcher(page),
   {
@@ -95,7 +95,7 @@ const { containerProps, wrapperProps, virtualItems, loading, reset } = useInfini
 );
 
 watch(() => props.reset, (value) => {
-  if (value) reset();
+  if (value) $reset();
 }, { immediate: true });
 </script>
 
@@ -128,16 +128,24 @@ watch(() => props.reset, (value) => {
         </div>
       </div>
     </div>
-    <div>
-      <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+    <Transition
+      mode="out-in"
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div v-if="showSkeleton" key="skeleton" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${cardHeight}px`">
           <n-skeleton height="100%" width="100%" :sharp="false" />
         </div>
       </div>
-      <div v-else-if="virtualItems.length === 0" class="w-full flex flex-col justify-center items-center description">
+      <div v-else-if="virtualItems.length === 0" key="empty" class="w-full flex flex-col justify-center items-center description">
         {{ t("state.no-entities-found", { entity: t(`scopes.${scopeType}.header`).toLowerCase() }) }}
-      </div> 
-    </div>
+      </div>
+    </Transition>
   </div>
   <Transition
     enter-active-class="transition duration-200 ease-out"

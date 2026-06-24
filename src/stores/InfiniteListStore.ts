@@ -10,22 +10,23 @@ import type { OperationResult } from "@/types/OperationResult";
 
 export type ListType = "organizations" | "threads" | "deadlines" | "invitations_received" | "invitations_sent";
 
-interface InfiniteListState<T extends { id: number }> {
+type InfiniteListState<T extends { id: number }> = {
   items: T[];
   ids: Set<number>;
   page: number;
   pageSize: number;
   totalPages: number;
   loading: boolean;
-}
+};
 
 // totalPages will be updated with the actual total pages from the server on first request
+export const LIST_STORE_INITIAL_TOTAL_PAGES: number = Number.MAX_SAFE_INTEGER;
 const initialState = <T extends { id: number }>(pageSize: number): InfiniteListState<T> => ({
   items: [],
   ids: new Set(),
   page: 0,
   pageSize,
-  totalPages: Number.MAX_SAFE_INTEGER,
+  totalPages: LIST_STORE_INITIAL_TOTAL_PAGES,
   loading: false,
 });
 
@@ -98,9 +99,9 @@ export const useInfiniteListStore = defineStore("infiniteList", () => {
     state.ids.delete(itemId);
   }
 
-  function reset(type: ListType) {
+  function $reset(type: ListType) {
     stateMap.value[type] = initialState(DEFAULT_ENTITIES_PAGE_SIZE);
   }
 
-  return { stateMap, loadMore, addOne, removeItem, hasMore, reset };
+  return { stateMap, loadMore, addOne, removeItem, hasMore, $reset };
 });

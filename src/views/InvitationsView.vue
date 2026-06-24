@@ -25,10 +25,18 @@ const activeTab = ref<"received" | "sent">("received");
       <n-tab-pane name="sent" :tab="t('scopes.invitation.sent')" />
     </n-tabs>
     <div v-show="activeTab === 'received'" class="mt-6">
-      <InvitationList variant="received" :fetcher="getPendingInvitations" />
+      <InvitationList
+        :fetcher="getPendingInvitations"
+        :reset="true"
+        variant="received"
+      />
     </div>
     <div v-show="activeTab === 'sent'" class="mt-6">
-      <InvitationList variant="sent" :fetcher="getSentInvitations" />
+      <InvitationList
+        :fetcher="getSentInvitations"
+        :reset="true"
+        variant="sent"
+      />
     </div>
   </div>
   <global-footer />

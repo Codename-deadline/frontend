@@ -23,6 +23,7 @@ const onCardClick = (orgId: number) => {
     :edit-dialog-component="EditOrganizationDialog"
     :create-dialog-component="CreateOrganizationDialog"
     :fetcher="getOrganizations"
+    :reset="true"
     scope-type="organization"
   />
 </template>
