@@ -9,7 +9,7 @@ import { hasAnyEditPermission } from "@/utils/permissions";
 import EntityCard from "../common/EntityCard.vue";
 import RoleTag from "../common/RoleTag.vue";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const props = defineProps<{
   entity: DeadlineWithRole;
@@ -18,12 +18,11 @@ const emit = defineEmits<{
   edit: [id: number];
 }>();
 
-const dueDate = computed(() => new Date(props.entity.due));
 const formattedDueDate = computed(() => {
-  const tmp = dueDate.value;
-
-  const short: string = `${tmp.getDate()}.${tmp.getMonth()}.${tmp.getFullYear()}`;
-  return { short, long: `${tmp.getHours()}:${tmp.getMinutes()} ${short}` };
+  const date = new Date(props.entity.due);
+  const short = new Intl.DateTimeFormat(locale.value, { dateStyle: "short" }).format(date);
+  const long = new Intl.DateTimeFormat(locale.value, { dateStyle: "short", timeStyle: "short" }).format(date);
+  return { short, long };
 })
 </script>
 
