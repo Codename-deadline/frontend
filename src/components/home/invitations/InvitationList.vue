@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const { width } = useWindowSize();
-const CARD_HEIGHT = 177;
+const CARD_HEIGHT = 179;
 
 const itemsPerRow = computed(() => {
   if (width.value >= 640) return 2;
@@ -37,7 +37,11 @@ const items = computed<UseVirtualListItem<OrganizationInvitation[]>[]>(
 </script>
 
 <template>
-  <div v-bind="containerProps" class="overflow-y-auto max-h-[65vh]">
+  <div
+    v-bind="containerProps"
+    class="overflow-y-auto"
+    :class="{ 'h-[65vh]': items.length > 0 }"
+  >
     <div v-bind="wrapperProps" class="space-y-4">
       <div
         class="grid grid-cols-1 sm:grid-cols-2 gap-4"
