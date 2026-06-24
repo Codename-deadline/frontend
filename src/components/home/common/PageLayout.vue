@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T extends {id: number}">
 import { useWindowSize } from "@vueuse/core";
-import { NSkeleton } from "naive-ui";
 import type { Component } from "vue";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
@@ -14,6 +13,7 @@ import type { ScopeType } from "@/types/scope";
 import GlobalFooter from "./GlobalFooter.vue";
 import GlobalHeader from "./GlobalHeader.vue";
 import SectionHeader from "./SectionHeader.vue";
+import SkeletonGrid from "./SkeletonGrid.vue";
 
 const emit = defineEmits<{
   cardClicked: [entityId: number]
@@ -130,20 +130,12 @@ watch(() => props.reset, (value) => {
           {{ t("state.no-entities-found", { entity: t(`scopes.${scopeType}.header`).toLowerCase() }) }}
         </div>
       </div>
-      <Transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition duration-200 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-      >
-        <div v-if="showSkeleton" key="skeleton" class="z-100 col-start-1 row-start-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 pointer-events-none">
-          <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${cardHeight}px`">
-            <n-skeleton height="100%" width="100%" :sharp="false" />
-          </div>
-        </div>
-      </Transition>
+      <SkeletonGrid
+        :show="showSkeleton"
+        :count="itemsPerRow * 3"
+        :card-height="cardHeight"
+        grid-class="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+      />
     </div>
   </div>
   <Transition

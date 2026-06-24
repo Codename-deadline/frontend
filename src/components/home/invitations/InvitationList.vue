@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { type UseVirtualListItem, useWindowSize } from "@vueuse/core";
-import { NSkeleton } from "naive-ui";
 import { computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
 import type { OrganizationInvitation } from "@/api/schemas/organization/invitation/Invitation";
+import SkeletonGrid from "@/components/home/common/SkeletonGrid.vue";
 import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
 import type { SafeApiCall } from "@/types/api";
 import InvitationCard from "./InvitationCard.vue";
@@ -69,19 +69,11 @@ watch(() => props.reset, (value) => {
         {{ t("state.no-entities-found", { entity: t("scopes.invitation.header").toLowerCase() }) }}
       </div>
     </div>
-    <Transition
-      enter-active-class="transition duration-200 ease-out"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition duration-150 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div v-if="showSkeleton" key="skeleton" class="z-100 col-start-1 row-start-1 grid grid-cols-1 sm:grid-cols-2 gap-4 pointer-events-none">
-        <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${CARD_HEIGHT}px`">
-          <n-skeleton height="100%" width="100%" :sharp="false" />
-        </div>
-      </div>
-    </Transition>
+    <SkeletonGrid
+      :show="showSkeleton"
+      :count="itemsPerRow * 3"
+      :card-height="CARD_HEIGHT"
+      grid-class="grid-cols-1 sm:grid-cols-2"
+    />
   </div>
 </template>
