@@ -12,18 +12,20 @@ export const OrganizationSchema = z.object({
   description: z.string().optional(),
   type: OrganizationTypeSchema,
   createdAt: IsoAsMsSchema,
+});
+export const OrganizationWithStatsSchema = OrganizationSchema.safeExtend({
   stats: OrganizationStatsSchema,
   permissions: OrganizationPermissionsSchema,
 });
 
-export const PagedOrganizationSchema = pagedResponseSchema(OrganizationSchema);
-export type Organization = z.infer<typeof OrganizationSchema>;
-export type PagedOrganization = z.infer<typeof PagedOrganizationSchema>;
+export const PagedOrganizationWithStatsSchema = pagedResponseSchema(OrganizationWithStatsSchema);
+export type OrganizationWithStats = z.infer<typeof OrganizationWithStatsSchema>;
+export type PagedOrganizationWithStats = z.infer<typeof PagedOrganizationWithStatsSchema>;
 
-export const OrganizationWithRoleSchema = OrganizationSchema.extend({
+export const OrganizationWithStatsAndRoleSchema = OrganizationWithStatsSchema.extend({
   role: OrganizationRoleSchema,
 });
 
-export const PagedOrganizationWithRoleSchema = pagedResponseSchema(OrganizationWithRoleSchema);
-export type OrganizationWithRole = z.infer<typeof OrganizationWithRoleSchema>;
-export type PagedOrganizationWithRole = z.infer<typeof PagedOrganizationWithRoleSchema>;
+export const PagedOrganizationWithStatsAndRoleSchema = pagedResponseSchema(OrganizationWithStatsAndRoleSchema);
+export type OrganizationWithStatsAndRole = z.infer<typeof OrganizationWithStatsAndRoleSchema>;
+export type PagedOrganizationWithStatsAndRole = z.infer<typeof PagedOrganizationWithStatsAndRoleSchema>;

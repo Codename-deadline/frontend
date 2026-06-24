@@ -42,7 +42,7 @@ const {
   myRoles,
   membersToLoad,
 } = useEntityEdit({
-  scopeType: "organization",
+  scopeType: "deadline",
   listType: "organizations",
   entity: props.entity,
   patchFormRef,

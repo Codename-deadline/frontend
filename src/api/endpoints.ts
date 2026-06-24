@@ -143,6 +143,18 @@ const endpoints = {
     path: "/metadata",
     pathParams: {} as never,
   },
+  INVITATION_USER_PENDING: {
+    path: "/invitation/me/pending",
+    queryParams: {} as { page: number },
+  },
+  INVITATION_ACCEPT: {
+    path: "/invitation/{invitationId}/accept",
+    pathParams: {} as { invitationId: number },
+  },
+  INVITATION_DECLINE: {
+    path: "/invitation/{invitationId}/accept",
+    pathParams: {} as { invitationId: number },
+  },
 } as const;
 
 export type EndpointSpec<K extends EndpointKey> = {

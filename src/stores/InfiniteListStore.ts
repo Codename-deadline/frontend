@@ -1,12 +1,14 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
-import type { OrganizationWithRole } from "@/api/schemas/organization/common/Organization";
+import type { DeadlineWithRole } from "@/api/schemas/deadline/common/Deadline";
+import type { OrganizationWithStatsAndRole } from "@/api/schemas/organization/common/Organization";
+import type { OrganizationInvitation } from "@/api/schemas/organization/invitation/Invitation";
 import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
 import { DETAULT_ENTITIES_PAGE_SIZE as DEFAULT_ENTITIES_PAGE_SIZE } from "@/constants/defaults";
 import type { OperationResult } from "@/types/OperationResult";
 
-export type ListType = "organizations" | "threads" | "deadlines";
+export type ListType = "organizations" | "threads" | "deadlines" | "invitations";
 
 interface InfiniteListState<T extends { id: number }> {
   items: T[];
@@ -28,11 +30,16 @@ const initialState = <T extends { id: number }>(pageSize: number): InfiniteListS
 });
 
 export const useInfiniteListStore = defineStore("infiniteList", () => {
-  // TODO: Add deadlines and threads to type union
-  const stateMap = ref<Record<ListType, InfiniteListState<OrganizationWithRole | ThreadWithRole>>>({
-    organizations: initialState<OrganizationWithRole>(DEFAULT_ENTITIES_PAGE_SIZE),
+  const stateMap = ref<
+    Record<
+      ListType,
+      InfiniteListState<OrganizationWithStatsAndRole | ThreadWithRole | DeadlineWithRole | OrganizationInvitation>
+    >
+  >({
+    organizations: initialState<OrganizationWithStatsAndRole>(DEFAULT_ENTITIES_PAGE_SIZE),
     threads: initialState<ThreadWithRole>(DEFAULT_ENTITIES_PAGE_SIZE),
-    deadlines: initialState(DEFAULT_ENTITIES_PAGE_SIZE),
+    deadlines: initialState<DeadlineWithRole>(DEFAULT_ENTITIES_PAGE_SIZE),
+    invitations: initialState<OrganizationInvitation>(DEFAULT_ENTITIES_PAGE_SIZE),
   });
 
   async function loadMore<T extends { id: number }>(

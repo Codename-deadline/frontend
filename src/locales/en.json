@@ -17,7 +17,9 @@
     "to-confirm": {
       "remove-member": "removing this member",
       "delete-entity": "deleting this {entity}"
-    }
+    },
+    "accept": "Accept",
+    "decline": "Decline"
   },
   "errors": {
     "error": "Error",
@@ -216,6 +218,12 @@
         "assignee": "Assignee",
         "owner": "Owner"
       }
+    },
+    "invitation": {
+      "name": "Invitation",
+      "header": "Invitations",
+      "description": "Accept or decline organization invitations",
+      "invited-by": "Invited by"
     }
   }
 }
