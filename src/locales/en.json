@@ -167,6 +167,7 @@
       "unknown": "Unknown",
       "due": "Due",
       "nothing-here": "Nothing here yet",
+      "name-not-provided": "Name is not provided",
       "form-sections": {
         "settings": "Settings",
         "invitations": "Invitations"

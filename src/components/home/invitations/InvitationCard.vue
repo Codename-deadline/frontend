@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { TrashAlt, UserFriends } from "@vicons/fa";
 import { NButton, NIconWrapper, NTooltip } from 'naive-ui';
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { OrganizationInvitation } from '@/api/schemas/organization/invitation/Invitation';
 import { useInvitationActions } from '@/composables/useInvitationActions';
+import { getRelativeTimeString } from '@/utils/date';
 import { getPopoverTrigger } from '@/utils/flags';
 import EntityCard from "../common/EntityCard.vue";
 import RoleTag from '../common/RoleTag.vue';
@@ -13,8 +15,10 @@ const props = defineProps<{
   variant: "received" | "sent";
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { accept, decline, revoke } = useInvitationActions(props.variant);
+
+const createdAtRelative = computed(() => getRelativeTimeString(props.invitation.createdAt, locale.value));
 </script>
 
 <template>
@@ -37,11 +41,15 @@ const { accept, decline, revoke } = useInvitationActions(props.variant);
                 <div v-if="variant === 'received'" class="cursor-help"> {{ `@${invitation.invitedBy.username}` }} </div>
                 <div v-else class="cursor-help"> {{ `@${invitation.invitedUser.username}` }} </div>
               </template>
-              <span v-if="variant === 'received'"> {{ t("scopes.invitation.invited-by") }} {{ invitation.invitedBy.fullName ?? "Full name unknown" }} </span>
-              <span v-else> {{ t("scopes.invitation.invited") }} {{ invitation.invitedUser.fullName ?? "Full name unknown" }} </span>
+              <span v-if="variant === 'received'">
+                {{ t("scopes.invitation.invited-by") }} {{ invitation.invitedBy.fullName ?? t("scopes.common.name-not-provided") }}
+              </span>
+              <span v-else>
+                {{ invitation.invitedUser.fullName ?? t("scopes.common.name-not-provided") }}
+              </span>
             </n-tooltip>
             <span class="mx-1">•</span>
-            <span>2 weeks ago</span>
+            <span>{{ createdAtRelative }}</span>
           </span>
           <role-tag class="my-1" scope-type="organization" :role="invitation.role" />
         </div>
