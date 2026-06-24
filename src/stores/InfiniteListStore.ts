@@ -54,7 +54,10 @@ export const useInfiniteListStore = defineStore("infiniteList", () => {
 
     try {
       const res = await fetcher(state.page);
-      if (!res.ok) return;
+      if (!res.ok) {
+        state.totalPages = state.page;
+        return;
+      }
 
       for (const item of res.data.data) {
         if (!state.ids.has(item.id)) {
