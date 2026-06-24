@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const { width } = useWindowSize();
-const CARD_HEIGHT = 176;
+const CARD_HEIGHT = 177;
 
 const itemsPerRow = computed(() => {
   if (width.value >= 640) return 2;

@@ -12,14 +12,15 @@
     "create": "Create",
     "delete": "Delete",
     "save": "Save",
+    "accept": "Accept",
+    "decline": "Decline",
+    "revoke": "Revoke",
     "page-reload": "Please perform a page reload",
     "confirmation": "Confirm {action}",
     "to-confirm": {
       "remove-member": "removing this member",
       "delete-entity": "deleting this {entity}"
-    },
-    "accept": "Accept",
-    "decline": "Decline"
+    }
   },
   "errors": {
     "error": "Error",

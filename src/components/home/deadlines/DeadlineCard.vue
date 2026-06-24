@@ -28,7 +28,7 @@ const formattedDueDate = computed(() => {
 </script>
 
 <template>
-  <EntityCard>
+  <entity-card>
     <template #header>
       <div class="flex w-full justify-between items-center">
         <div class="flex items-center space-x-3">
@@ -67,5 +67,5 @@ const formattedDueDate = computed(() => {
         </div>
       </div>
     </template>
-  </EntityCard>
+  </entity-card>
 </template>

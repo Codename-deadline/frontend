@@ -18,7 +18,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <EntityCard>
+  <entity-card>
     <template #header>
       <div class="flex w-full justify-between">
         <n-icon-wrapper color="" :size="48" :border-radius="16">
@@ -62,5 +62,5 @@ const emit = defineEmits<{
         {{entity.stats.threads}} {{ t('scopes.thread.header').toLowerCase() }}
       </div>
     </template>
-  </EntityCard>
+  </entity-card>
 </template>
