@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type UseVirtualListItem, useWindowSize } from "@vueuse/core";
 import { NSkeleton, NTabPane, NTabs } from "naive-ui";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { getPendingInvitations, getSentInvitations } from "@/api/invitation";
 import type { OrganizationInvitation } from "@/api/schemas/organization/invitation/Invitation";
@@ -54,7 +54,7 @@ const sentItems = computed<UseVirtualListItem<OrganizationInvitation[]>[]>(
       <n-tab-pane name="sent" :tab="t('scopes.invitation.sent')" />
     </n-tabs>
     <div v-show="activeTab === 'received'" class="mt-6">
-      <div v-bind="receivedList.containerProps" class="overflow-y-auto max-h-[72.5vh]">
+      <div v-bind="receivedList.containerProps" class="overflow-y-auto max-h-[65vh]">
         <div v-bind="receivedList.wrapperProps" class="space-y-4">
           <div
             class="grid grid-cols-1 sm:grid-cols-2 gap-4"
@@ -70,7 +70,7 @@ const sentItems = computed<UseVirtualListItem<OrganizationInvitation[]>[]>(
           </div>
         </div>
       </div>
-      <div v-if="receivedList.loading" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div v-if="receivedList.loading.value" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${CARD_HEIGHT}px`">
           <n-skeleton height="100%" width="100%" :sharp="false" />
         </div>
@@ -83,7 +83,7 @@ const sentItems = computed<UseVirtualListItem<OrganizationInvitation[]>[]>(
       </div>
     </div>
     <div v-show="activeTab === 'sent'" class="mt-6">
-      <div v-bind="sentList.containerProps" class="overflow-y-auto max-h-[72.5vh]">
+      <div v-bind="sentList.containerProps" class="overflow-y-auto max-h-[65vh]">
         <div v-bind="sentList.wrapperProps" class="space-y-4">
           <div
             class="grid grid-cols-1 sm:grid-cols-2 gap-4"
@@ -99,7 +99,7 @@ const sentItems = computed<UseVirtualListItem<OrganizationInvitation[]>[]>(
           </div>
         </div>
       </div>
-      <div v-if="sentList.loading" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div v-if="sentList.loading.value" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${CARD_HEIGHT}px`">
           <n-skeleton height="100%" width="100%" :sharp="false" />
         </div>
