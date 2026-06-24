@@ -15,6 +15,9 @@ export function useInfiniteVirtualList<T extends { id: number }>(
     distance?: number;
   },
 ) {
+  // Initial fetch is expected to be "external"
+  // No internal fetch on first use is made to avoid making multiple "initial requests"
+
   const { makeRequest } = useApi();
   const store = useInfiniteListStore();
   const distance = options.distance ?? 200;
@@ -22,10 +25,6 @@ export function useInfiniteVirtualList<T extends { id: number }>(
   const fetcherClosure = async (page: number) => {
     return await makeRequest(() => fetcher(page), displayFormErrors, displayApiError);
   };
-
-  if (!store.stateMap[type].items.length) {
-    store.loadMore<T>(type, fetcherClosure);
-  }
 
   const items = computed<T[]>(() => store.stateMap[type].items as T[]);
   const rows = computed(() => {
