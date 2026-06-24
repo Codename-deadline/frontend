@@ -155,7 +155,10 @@
       "role-assigned": "Role assigned",
       "entity-created": "{entity} created",
       "entity-updated": "{entity} updated",
-      "entity-deleted": "{entity} deleted"
+      "entity-deleted": "{entity} deleted",
+      "invitation-accepted": "Invitation accepted",
+      "invitation-declined": "Invitation declined",
+      "invitation-revoked": "Invitation revoked"
     },
     "common": {
       "members": "Members",
@@ -223,7 +226,9 @@
       "name": "Invitation",
       "header": "Invitations",
       "description": "Accept or decline organization invitations",
-      "invited-by": "Invited by"
+      "invited-by": "Invited by",
+      "received": "Received",
+      "sent": "Sent"
     }
   }
 }

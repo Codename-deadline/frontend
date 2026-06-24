@@ -25,7 +25,7 @@ const props = withDefaults(
     editDialogComponent: Component;
     createDialogComponent?: Component;
     fetcher: (page: number) => Promise<SafeApiCall<PagedResponse<T>>>;
-    scopeType: ScopeType | "invitation";
+    scopeType: ScopeType;
     showCreateButton?: boolean;
     reset?: boolean;
     itemHeight?: number;
@@ -52,7 +52,6 @@ const cardHeight = computed<number>(() => {
     case "organization": return 208;
     case "thread": return 176;
     case "deadline": return 126;
-    case "invitation": return 126;
   }
 });
 
@@ -74,7 +73,7 @@ const closeAllDialogs = () => {
   objectToEdit.value = null;
   isCreatingEntity.value = false;
 };
-const scopeTypeToListType = (scopeType: ScopeType | "invitation"): ListType => {
+const scopeTypeToListType = (scopeType: ScopeType): ListType => {
   switch (scopeType) {
     case "organization":
       return "organizations";
@@ -82,8 +81,6 @@ const scopeTypeToListType = (scopeType: ScopeType | "invitation"): ListType => {
       return "threads";
     case "deadline":
       return "deadlines";
-    case "invitation":
-      return "invitations"
   }
 };
 

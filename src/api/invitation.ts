@@ -20,3 +20,15 @@ export const declineInvitation = async (invitationId: number) =>
   validateAndRequest(EmptySchema, {}, () =>
     client.post(getEndpoint("INVITATION_DECLINE", { pathParams: { invitationId } })),
   );
+
+export const getSentInvitations = async (page: number) =>
+  validateAndRequest(EmptySchema, {}, () =>
+    client.get(getEndpoint("INVITATION_USER_PENDING_SENT", { queryParams: { page } }), {
+      validate: validateWith(PagedOrganizationInvitationSchema),
+    }),
+  );
+
+export const revokeInvitation = async (invitationId: number) =>
+  validateAndRequest(EmptySchema, {}, () =>
+    client.post(getEndpoint("INVITATION_REVOKE", { pathParams: { invitationId } })),
+  );

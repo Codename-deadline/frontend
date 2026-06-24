@@ -8,7 +8,7 @@ import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
 import { DETAULT_ENTITIES_PAGE_SIZE as DEFAULT_ENTITIES_PAGE_SIZE } from "@/constants/defaults";
 import type { OperationResult } from "@/types/OperationResult";
 
-export type ListType = "organizations" | "threads" | "deadlines" | "invitations";
+export type ListType = "organizations" | "threads" | "deadlines" | "invitations_received" | "invitations_sent";
 
 interface InfiniteListState<T extends { id: number }> {
   items: T[];
@@ -39,7 +39,8 @@ export const useInfiniteListStore = defineStore("infiniteList", () => {
     organizations: initialState<OrganizationWithStatsAndRole>(DEFAULT_ENTITIES_PAGE_SIZE),
     threads: initialState<ThreadWithRole>(DEFAULT_ENTITIES_PAGE_SIZE),
     deadlines: initialState<DeadlineWithRole>(DEFAULT_ENTITIES_PAGE_SIZE),
-    invitations: initialState<OrganizationInvitation>(DEFAULT_ENTITIES_PAGE_SIZE),
+    invitations_received: initialState<OrganizationInvitation>(DEFAULT_ENTITIES_PAGE_SIZE),
+    invitations_sent: initialState<OrganizationInvitation>(DEFAULT_ENTITIES_PAGE_SIZE),
   });
 
   async function loadMore<T extends { id: number }>(

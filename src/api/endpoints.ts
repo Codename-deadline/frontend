@@ -152,7 +152,15 @@ const endpoints = {
     pathParams: {} as { invitationId: number },
   },
   INVITATION_DECLINE: {
-    path: "/invitation/{invitationId}/accept",
+    path: "/invitation/{invitationId}/decline",
+    pathParams: {} as { invitationId: number },
+  },
+  INVITATION_USER_PENDING_SENT: {
+    path: "/invitation/me/pending-sent",
+    queryParams: {} as { page: number },
+  },
+  INVITATION_REVOKE: {
+    path: "/invitation/{invitationId}/revoke",
     pathParams: {} as { invitationId: number },
   },
 } as const;
