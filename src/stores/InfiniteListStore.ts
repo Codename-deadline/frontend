@@ -64,9 +64,7 @@ export const useInfiniteListStore = defineStore("infiniteList", () => {
       }
       state.totalPages = res.data.totalPages;
 
-      if (state.page < state.totalPages - 1) {
-        state.page++;
-      }
+      state.page++;
     } finally {
       state.loading = false;
     }
@@ -88,7 +86,7 @@ export const useInfiniteListStore = defineStore("infiniteList", () => {
 
   function hasMore<T extends { id: number }>(type: ListType): boolean {
     const state: InfiniteListState<T> = stateMap.value[type] as InfiniteListState<T>;
-    return state.page < state.totalPages - 1;
+    return state.page < state.totalPages;
   }
 
   function removeItem<T extends { id: number }>(type: ListType, itemId: number) {
