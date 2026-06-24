@@ -13,10 +13,10 @@ export const getPendingInvitations = async (page: number) =>
 
 export const acceptInvitation = async (invitationId: number) =>
   validateAndRequest(EmptySchema, {}, () =>
-    client.get(getEndpoint("INVITATION_ACCEPT", { pathParams: { invitationId } })),
+    client.post(getEndpoint("INVITATION_ACCEPT", { pathParams: { invitationId } })),
   );
 
 export const declineInvitation = async (invitationId: number) =>
   validateAndRequest(EmptySchema, {}, () =>
-    client.get(getEndpoint("INVITATION_DECLINE", { pathParams: { invitationId } })),
+    client.post(getEndpoint("INVITATION_DECLINE", { pathParams: { invitationId } })),
   );
