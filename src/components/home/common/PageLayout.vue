@@ -107,8 +107,8 @@ watch(() => props.reset, (value) => {
       :show-create-button="showCreateButton"
       button-action="create"
     />
-    <div class="mt-6">
-      <div v-bind="containerProps" class="overflow-y-auto max-h-[72.5vh]">
+    <div class="mt-6 grid">
+      <div v-bind="containerProps" class="overflow-y-auto max-h-[72.5vh] col-start-1 row-start-1">
         <div v-bind="wrapperProps" class="space-y-4">
           <div
             class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
@@ -126,26 +126,25 @@ watch(() => props.reset, (value) => {
             />
           </div>
         </div>
-      </div>
-    </div>
-    <Transition
-      mode="out-in"
-      enter-active-class="transition duration-200 ease-out"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition duration-150 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div v-if="showSkeleton" key="skeleton" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${cardHeight}px`">
-          <n-skeleton height="100%" width="100%" :sharp="false" />
+        <div v-if="!showSkeleton && virtualItems.length === 0" class="w-full flex flex-col justify-center items-center description py-10">
+          {{ t("state.no-entities-found", { entity: t(`scopes.${scopeType}.header`).toLowerCase() }) }}
         </div>
       </div>
-      <div v-else-if="virtualItems.length === 0" key="empty" class="w-full flex flex-col justify-center items-center description">
-        {{ t("state.no-entities-found", { entity: t(`scopes.${scopeType}.header`).toLowerCase() }) }}
-      </div>
-    </Transition>
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition duration-200 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div v-if="showSkeleton" key="skeleton" class="z-100 col-start-1 row-start-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 pointer-events-none">
+          <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${cardHeight}px`">
+            <n-skeleton height="100%" width="100%" :sharp="false" />
+          </div>
+        </div>
+      </Transition>
+    </div>
   </div>
   <Transition
     enter-active-class="transition duration-200 ease-out"

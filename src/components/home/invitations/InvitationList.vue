@@ -42,46 +42,46 @@ watch(() => props.reset, (value) => {
 </script>
 
 <template>
-  <div
-    v-bind="containerProps"
-    class="overflow-y-auto"
-    :class="{ 'h-[65vh]': items.length > 0 }"
-  >
-    <div v-bind="wrapperProps" class="space-y-4">
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 gap-4"
-        v-for="row in items"
-        :key="row.index"
-      >
-        <InvitationCard
-          v-for="item in row.data"
-          :key="item.id"
-          :variant="variant"
-          :invitation="item"
-        />
-      </div>
-    </div>
-  </div>
-  <Transition
-    mode="out-in"
-    enter-active-class="transition duration-200 ease-out"
-    enter-from-class="opacity-0"
-    enter-to-class="opacity-100"
-    leave-active-class="transition duration-150 ease-in"
-    leave-from-class="opacity-100"
-    leave-to-class="opacity-0"
-  >
-    <div v-if="showSkeleton" key="skeleton" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${CARD_HEIGHT}px`">
-        <n-skeleton height="100%" width="100%" :sharp="false" />
-      </div>
-    </div>
+  <div class="grid">
     <div
-      v-else-if="items.length === 0"
-      key="empty"
-      class="w-full flex flex-col justify-center items-center description"
+      v-bind="containerProps"
+      class="overflow-y-auto col-start-1 row-start-1"
+      :class="{ 'h-[65vh]': items.length > 0 }"
     >
-      {{ t("state.no-entities-found", { entity: t("scopes.invitation.header").toLowerCase() }) }}
+      <div v-bind="wrapperProps" class="space-y-4">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          v-for="row in items"
+          :key="row.index"
+        >
+          <InvitationCard
+            v-for="item in row.data"
+            :key="item.id"
+            :variant="variant"
+            :invitation="item"
+          />
+        </div>
+      </div>
+      <div
+        v-if="!showSkeleton && items.length === 0"
+        class="w-full flex flex-col justify-center items-center description py-10"
+      >
+        {{ t("state.no-entities-found", { entity: t("scopes.invitation.header").toLowerCase() }) }}
+      </div>
     </div>
-  </Transition>
+    <Transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div v-if="showSkeleton" key="skeleton" class="z-100 col-start-1 row-start-1 grid grid-cols-1 sm:grid-cols-2 gap-4 pointer-events-none">
+        <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${CARD_HEIGHT}px`">
+          <n-skeleton height="100%" width="100%" :sharp="false" />
+        </div>
+      </div>
+    </Transition>
+  </div>
 </template>
