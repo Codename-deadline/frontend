@@ -81,7 +81,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
 
 <template>
   <EntityCreationDialogLayout scope-type="thread">
-    <Step title="Details" :value="1" v-slot="{ nextStep }">
+    <Step :title="t('scopes.common.form-sections.details')" :value="1" v-slot="{ nextStep }">
       <n-form ref="formRef" :model="formModel" :rules="formRules">
         <n-form-item :label="t('scopes.common.form-labels.title')" path="title">
           <n-input v-model:value="formModel.title" />
@@ -100,7 +100,7 @@ const { formModel, formRules, invitationFormModel, validateFormData, handleCreat
         </n-button>
       </div>
     </Step>
-    <Step title="Invitations" :value="2" v-slot="{ prevStep }">
+    <Step :title="t('scopes.common.form-sections.invitations')" :value="2" v-slot="{ prevStep }">
       <n-form ref="invitationFormRef" :model="invitationFormModel">
         <n-form-item :label="t('scopes.common.form-labels.invitations')" path="username">
           <DynamicUserInvitationInput

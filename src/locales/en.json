@@ -92,7 +92,16 @@
     "form": {
       "invalid-input": "Invalid input",
       "too-small": "{field} is too small. Minimum length: {min}",
-      "too-big": "{field} is too big. Maximum length: {max}"
+      "too-big": "{field} is too big. Maximum length: {max}",
+      "invalid-type": "{field} has an invalid type. Expected {expected}",
+      "invalid-format": "{field} has an invalid format",
+      "not-multiple-of": "{field} must be a multiple of {divisor}",
+      "unrecognized-keys": "{field} contains unrecognized keys",
+      "invalid-union": "{field} does not match any valid variant",
+      "invalid-key": "{field} has an invalid key",
+      "invalid-element": "{field} contains an invalid element",
+      "invalid-value": "{field} has an invalid value",
+      "custom": "{field} is invalid"
     }
   },
   "auth": {
@@ -117,10 +126,17 @@
     "sign-up": {
       "fields": {
         "identifier": {
-          "telegram": "Telegram user ID"
+          "telegram": "Telegram user ID",
+          "placeholder": "Enter your identifier"
         },
-        "username": "Username",
-        "fullName": "Full name",
+        "username": {
+          "label": "Username",
+          "placeholder": "Enter your username"
+        },
+        "fullName": {
+          "label": "Full name",
+          "placeholder": "Enter your full name"
+        },
         "language": "Language"
       },
       "action": "Sign up",
@@ -131,9 +147,13 @@
     "sign-in": {
       "fields": {
         "identifier": {
-          "telegram": "Telegram user ID"
+          "telegram": "Telegram user ID",
+          "placeholder": "Enter your identifier"
         },
-        "username": "Username"
+        "username": {
+          "label": "Username",
+          "placeholder": "Enter your username"
+        }
       },
       "action": "Sign in",
       "header": "Welcome back",
@@ -168,8 +188,12 @@
       "due": "Due",
       "nothing-here": "Nothing here yet",
       "name-not-provided": "Name is not provided",
+      "mention": {
+        "placeholder": "@username"
+      },
       "form-sections": {
         "settings": "Settings",
+        "details": "Details",
         "invitations": "Invitations"
       },
       "form-errors": {

@@ -131,7 +131,7 @@ const {
         </div>
       </n-form>
     </n-tab-pane>
-    <n-tab-pane name="members" tab="Members">
+    <n-tab-pane name="members" :tab="t('scopes.common.members')">
       <MembersTab
         :fetcher="handleFetchMembers"
         :update-member-role="handleRoleUpdate"

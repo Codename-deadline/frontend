@@ -3,9 +3,11 @@ import { useDebounceFn } from '@vueuse/core';
 import type { MentionOption } from 'naive-ui';
 import { NMention } from 'naive-ui';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { getUsersWithUsernameStartingWith } from '@/api/user';
 import { useApi } from '@/composables/useApi';
 
+const { t } = useI18n();
 const { makeRequest } = useApi();
 
 const options = ref<MentionOption[]>([]);
@@ -40,6 +42,6 @@ const handleSearch = useDebounceFn(fetchUsers, 250);
     :options="options"
     :loading="loading"
     default-value="@"
-    placeholder="@username"
+    :placeholder="t('scopes.common.mention.placeholder')"
   />
 </template>

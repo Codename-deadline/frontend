@@ -5,11 +5,11 @@ import { useI18n } from "vue-i18n";
 import { changeThreadAssigneeRole } from "@/api/roles";
 import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
 import {
-  addThreadAssignee,
-  deleteThread,
-  getThreadAssignees,
-  patchThread,
-  removeThreadAssignee,
+    addThreadAssignee,
+    deleteThread,
+    getThreadAssignees,
+    patchThread,
+    removeThreadAssignee,
 } from "@/api/thread";
 import EntityDialoglayout from "@/components/home/common/dialogs/EntityDialoglayout.vue";
 import MembersTab from "@/components/home/common/dialogs/members/MembersTab.vue";
@@ -119,7 +119,7 @@ const {
         </div>
       </n-form>
     </n-tab-pane>
-    <n-tab-pane name="members" tab="Members">
+    <n-tab-pane name="members" :tab="t('scopes.common.members')">
       <MembersTab
         :fetcher="handleFetchMembers"
         :update-member-role="handleRoleUpdate"
