@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
+import type { OrganizationWithStatsAndRole } from "@/api/schemas/organization/common/Organization";
 import { getOrganizations } from "@/api/user";
 import PageLayout from "@/components/home/common/PageLayout.vue";
 import CreateOrganizationDialog from "@/components/home/organizations/CreateOrganizationDialog.vue";
@@ -10,9 +11,9 @@ import { useCurrentScopeStore } from "@/stores/CurrentScopeStore";
 const router = useRouter();
 const currentScopeStore = useCurrentScopeStore();
 
-const onCardClick = (orgId: number) => {
-  router.push({ path: '/threads', query: { orgId } });
-  currentScopeStore.withScope(orgId, "organization");
+const onCardClick = (org: OrganizationWithStatsAndRole) => {
+  router.push({ path: '/threads', query: { orgId: org.id } });
+  currentScopeStore.withScope({ entity: org, type: "organization" });
 }
 </script>
 

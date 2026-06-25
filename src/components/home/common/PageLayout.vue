@@ -16,7 +16,7 @@ import SectionHeader from "./SectionHeader.vue";
 import SkeletonGrid from "./SkeletonGrid.vue";
 
 const emit = defineEmits<{
-  cardClicked: [entityId: number]
+  cardClicked: [entity: T]
 }>();
 
 const props = withDefaults(
@@ -118,7 +118,7 @@ watch(() => props.reset, (value) => {
             <component
               role="button"
               :is="props.entityCardComponent"
-              @click="emit('cardClicked', item.id)"
+              @click="emit('cardClicked', item)"
               @edit="objectToEdit = item"
               v-for="item in row.data"
               :key="item.id"
