@@ -32,7 +32,7 @@ watch(currentMethod, (newMethod) => {
 <template>
   <AuthCard description-selector="auth.description">
     <template v-slot:body>
-      <div class="flex justify-center mt-6">
+      <div class="flex justify-center">
         <AuthMethodButton
           v-for="method in Object.values(AuthMethod)"
           class="w-full! rounded-lg!"
@@ -44,7 +44,7 @@ watch(currentMethod, (newMethod) => {
       </div>
     </template>
     <template v-slot:footer>
-      <small class="flex justify-center mt-8">
+      <small class="flex justify-center mt-6">
         <div class="space-x-1" v-if="isSignIn">
           <span>{{ t("auth.sign-in.notRegistered") }}</span>
           <n-button role="button" text size="tiny" @click="isSignIn = false">

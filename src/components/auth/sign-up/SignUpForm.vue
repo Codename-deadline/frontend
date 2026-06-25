@@ -58,13 +58,13 @@ const submitAuthForm = async () => {
     description-selector="auth.sign-up.description"
   >
     <n-form-item :label="t(`auth.sign-up.fields.identifier.${authMethod.toLowerCase()}`)">
-      <n-input v-model:value="registrationData.identifier" placeholder="Enter your identifier"/>
+      <n-input v-model:value="registrationData.identifier" :placeholder="t('auth.sign-up.fields.identifier.placeholder')"/>
     </n-form-item>
-    <n-form-item :label="t('auth.sign-up.fields.username')">
-      <n-input v-model:value="registrationData.username" type="text" placeholder="Enter your username"/>
+    <n-form-item :label="t('auth.sign-up.fields.username.label')">
+      <n-input v-model:value="registrationData.username" type="text" :placeholder="t('auth.sign-up.fields.username.placeholder')"/>
     </n-form-item>
-    <n-form-item :label="t('auth.sign-up.fields.fullName')">
-      <n-input v-model:value="registrationData.fullName" type="text" placeholder="Enter your full name"/>
+    <n-form-item :label="t('auth.sign-up.fields.fullName.label')">
+      <n-input v-model:value="registrationData.fullName" type="text" :placeholder="t('auth.sign-up.fields.fullName.placeholder')"/>
     </n-form-item>
     <n-form-item :label="t('auth.sign-up.fields.language')">
       <n-select v-model:value="registrationData.language" :options="languageOptions"/>

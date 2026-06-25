@@ -1,7 +1,7 @@
 import { useInfiniteScroll, useVirtualList } from "@vueuse/core";
 import { type ComputedRef, computed } from "vue";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
-import { type ListType, useInfiniteListStore } from "@/stores/InfiniteListStore";
+import { LIST_STORE_INITIAL_TOTAL_PAGES, type ListType, useInfiniteListStore } from "@/stores/InfiniteListStore";
 import type { SafeApiCall } from "@/types/api";
 import { displayApiError, displayFormErrors } from "@/utils";
 import { useApi } from "./useApi";
@@ -23,11 +23,8 @@ export function useInfiniteVirtualList<T extends { id: number }>(
     return await makeRequest(() => fetcher(page), displayFormErrors, displayApiError);
   };
 
-  if (!store.stateMap[type].items.length) {
-    store.loadMore<T>(type, fetcherClosure);
-  }
-
-  const items = computed<T[]>(() => store.stateMap[type].items as T[]);
+  const state = computed(() => store.stateMap[type]);
+  const items = computed<T[]>(() => state.value.items as T[]);
   const rows = computed(() => {
     const result: T[][] = [];
     for (let i = 0; i < items.value.length; i += options.itemsPerRow.value) {
@@ -42,16 +39,22 @@ export function useInfiniteVirtualList<T extends { id: number }>(
 
   useInfiniteScroll(virtual.containerProps.ref, () => store.loadMore<T>(type, fetcherClosure), { distance });
 
+  const loading = computed(() => state.value.loading);
+  const showSkeleton = computed(
+    () => loading.value || (state.value.totalPages === LIST_STORE_INITIAL_TOTAL_PAGES && items.value.length === 0),
+  );
+
   return {
     containerProps: virtual.containerProps,
     wrapperProps: virtual.wrapperProps,
     virtualItems: virtual.list,
     scrollTo: virtual.scrollTo,
 
-    loading: computed(() => store.stateMap[type].loading),
+    loading,
+    showSkeleton,
     hasMore: computed(() => store.hasMore(type)),
 
     loadMore: () => store.loadMore<T>(type, fetcherClosure),
-    reset: () => store.reset(type),
+    $reset: () => store.$reset(type),
   };
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import type { ThreadWithRole } from '@/api/schemas/thread/common/Thread';
 import { getMyThreads, getOrganizationThreads } from '@/api/thread';
 import PageLayout from '@/components/home/common/PageLayout.vue';
 import CreateThreadDialog from '@/components/home/threads/CreateThreadDialog.vue';
@@ -12,19 +13,21 @@ const router = useRouter();
 const route = useRoute();
 const currentScopeStore = useCurrentScopeStore();
 
-const orgId = ref<number | null>(currentScopeStore.orgId);
+const orgId = ref<number | undefined>(currentScopeStore.organization?.id);
 if (!orgId.value && Number.isInteger(Number(route.query.orgId))) {
   orgId.value = Number(route.query.orgId);
-  currentScopeStore.exitAndUpdate(orgId.value, "organization");
 }
+const showCreateThreadButton = computed(
+  () => Number.isInteger(orgId.value) && currentScopeStore.organization?.permissions.createThreads
+);
 
 const userThreadsFetcher = (page: number) => getMyThreads(page);
 const organizationThreadFetcher = (page: number) => getOrganizationThreads(orgId.value ?? -1, page);
 const threadFetcher = computed(() => Number.isInteger(orgId.value) ? organizationThreadFetcher : userThreadsFetcher)
 
-const onCardClick = (thrId: number) => {
-  router.push({ path: '/deadlines', query: { thrId } });
-  currentScopeStore.withScope(thrId, "thread");
+const onCardClick = (thread: ThreadWithRole) => {
+  router.push({ path: '/deadlines', query: { thrId: thread.id } });
+  currentScopeStore.withScope({ entity: thread, type: "thread" });
 }
 </script>
 
@@ -35,7 +38,7 @@ const onCardClick = (thrId: number) => {
     :edit-dialog-component="EditThreadDialog"
     :create-dialog-component="CreateThreadDialog"
     :fetcher="threadFetcher"
-    :show-create-button="Number.isInteger(orgId)"
+    :show-create-button="showCreateThreadButton"
     :reset="true"
     scope-type="thread"
   />

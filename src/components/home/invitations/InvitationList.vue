@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { type UseVirtualListItem, useWindowSize } from "@vueuse/core";
-import { NSkeleton } from "naive-ui";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PagedResponse } from "@/api/common/PaginationResponse";
 import type { OrganizationInvitation } from "@/api/schemas/organization/invitation/Invitation";
+import SkeletonGrid from "@/components/home/common/SkeletonGrid.vue";
 import { useInfiniteVirtualList } from "@/composables/useInfiniteVirtualList";
 import type { SafeApiCall } from "@/types/api";
 import InvitationCard from "./InvitationCard.vue";
@@ -12,6 +12,7 @@ import InvitationCard from "./InvitationCard.vue";
 const props = defineProps<{
   variant: "received" | "sent";
   fetcher: (page: number) => Promise<SafeApiCall<PagedResponse<OrganizationInvitation>>>;
+  reset?: boolean
 }>();
 
 const { t } = useI18n();
@@ -25,7 +26,7 @@ const itemsPerRow = computed(() => {
 
 const listType = props.variant === "received" ? "invitations_received" : "invitations_sent";
 
-const { containerProps, wrapperProps, virtualItems, loading } =
+const { containerProps, wrapperProps, virtualItems, showSkeleton, $reset } =
   useInfiniteVirtualList<OrganizationInvitation>(listType, props.fetcher, {
     itemsPerRow,
     itemHeight: CARD_HEIGHT,
@@ -34,38 +35,45 @@ const { containerProps, wrapperProps, virtualItems, loading } =
 const items = computed<UseVirtualListItem<OrganizationInvitation[]>[]>(
   () => virtualItems.value as UseVirtualListItem<OrganizationInvitation[]>[],
 );
+
+watch(() => props.reset, (value) => {
+  if (value) $reset();
+}, { immediate: true });
 </script>
 
 <template>
-  <div
-    v-bind="containerProps"
-    class="overflow-y-auto"
-    :class="{ 'h-[65vh]': items.length > 0 }"
-  >
-    <div v-bind="wrapperProps" class="space-y-4">
+  <div class="grid">
+    <div
+      v-bind="containerProps"
+      class="overflow-y-auto col-start-1 row-start-1"
+      :class="{ 'h-[65vh]': items.length > 0 }"
+    >
+      <div v-bind="wrapperProps" class="space-y-4">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          v-for="row in items"
+          :key="row.index"
+        >
+          <InvitationCard
+            v-for="item in row.data"
+            :key="item.id"
+            :variant="variant"
+            :invitation="item"
+          />
+        </div>
+      </div>
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 gap-4"
-        v-for="row in items"
-        :key="row.index"
+        v-if="!showSkeleton && items.length === 0"
+        class="w-full flex flex-col justify-center items-center description py-10"
       >
-        <InvitationCard
-          v-for="item in row.data"
-          :key="item.id"
-          :variant="variant"
-          :invitation="item"
-        />
+        {{ t("state.no-entities-found", { entity: t("scopes.invitation.header").toLowerCase() }) }}
       </div>
     </div>
-  </div>
-  <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${CARD_HEIGHT}px`">
-      <n-skeleton height="100%" width="100%" :sharp="false" />
-    </div>
-  </div>
-  <div
-    v-else-if="items.length === 0"
-    class="w-full flex flex-col justify-center items-center description"
-  >
-    {{ t("state.no-entities-found", { entity: t("scopes.invitation.header").toLowerCase() }) }}
+    <SkeletonGrid
+      :show="showSkeleton"
+      :count="itemsPerRow * 3"
+      :card-height="CARD_HEIGHT"
+      grid-class="grid-cols-1 sm:grid-cols-2"
+    />
   </div>
 </template>

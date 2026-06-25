@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T extends {id: number}">
 import { useWindowSize } from "@vueuse/core";
-import { NSkeleton } from "naive-ui";
 import type { Component } from "vue";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
@@ -14,9 +13,10 @@ import type { ScopeType } from "@/types/scope";
 import GlobalFooter from "./GlobalFooter.vue";
 import GlobalHeader from "./GlobalHeader.vue";
 import SectionHeader from "./SectionHeader.vue";
+import SkeletonGrid from "./SkeletonGrid.vue";
 
 const emit = defineEmits<{
-  cardClicked: [entityId: number]
+  cardClicked: [entity: T]
 }>();
 
 const props = withDefaults(
@@ -84,7 +84,7 @@ const scopeTypeToListType = (scopeType: ScopeType): ListType => {
   }
 };
 
-const { containerProps, wrapperProps, virtualItems, loading, reset } = useInfiniteVirtualList(
+const { containerProps, wrapperProps, virtualItems, showSkeleton, $reset } = useInfiniteVirtualList(
   scopeTypeToListType(props.scopeType),
   (page: number) => props.fetcher(page),
   {
@@ -95,20 +95,20 @@ const { containerProps, wrapperProps, virtualItems, loading, reset } = useInfini
 );
 
 watch(() => props.reset, (value) => {
-  if (value) reset();
+  if (value) $reset();
 }, { immediate: true });
 </script>
 
 <template>
   <global-header class="mt"/>
-  <div class="mt-8 layout-dynamic-padding">
+  <div class="mt-4 sm:mt-8 layout-dynamic-padding">
     <section-header
       :section="scopeType"
       :show-create-button="showCreateButton"
       button-action="create"
     />
-    <div class="mt-6">
-      <div v-bind="containerProps" class="overflow-y-auto max-h-[72.5vh]">
+    <div class="mt-6 grid">
+      <div v-bind="containerProps" class="overflow-y-auto h-full pb-14 col-start-1 row-start-1">
         <div v-bind="wrapperProps" class="space-y-4">
           <div
             class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
@@ -118,7 +118,7 @@ watch(() => props.reset, (value) => {
             <component
               role="button"
               :is="props.entityCardComponent"
-              @click="emit('cardClicked', item.id)"
+              @click="emit('cardClicked', item)"
               @edit="objectToEdit = item"
               v-for="item in row.data"
               :key="item.id"
@@ -126,17 +126,16 @@ watch(() => props.reset, (value) => {
             />
           </div>
         </div>
-      </div>
-    </div>
-    <div>
-      <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        <div v-for="i in itemsPerRow * 3" :key="i" :style="`height: ${cardHeight}px`">
-          <n-skeleton height="100%" width="100%" :sharp="false" />
+        <div v-if="!showSkeleton && virtualItems.length === 0" class="w-full flex flex-col justify-center items-center description py-10">
+          {{ t("state.no-entities-found", { entity: t(`scopes.${scopeType}.header`).toLowerCase() }) }}
         </div>
       </div>
-      <div v-else-if="virtualItems.length === 0" class="w-full flex flex-col justify-center items-center description">
-        {{ t("state.no-entities-found", { entity: t(`scopes.${scopeType}.header`).toLowerCase() }) }}
-      </div> 
+      <SkeletonGrid
+        :show="showSkeleton"
+        :count="itemsPerRow * 3"
+        :card-height="cardHeight"
+        grid-class="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+      />
     </div>
   </div>
   <Transition

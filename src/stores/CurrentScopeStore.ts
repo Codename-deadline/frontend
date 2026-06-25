@@ -1,59 +1,70 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import type { DeadlineWithRole } from "@/api/schemas/deadline/common/Deadline";
+import type { OrganizationWithStatsAndRole } from "@/api/schemas/organization/common/Organization";
+import type { ThreadWithRole } from "@/api/schemas/thread/common/Thread";
 import type { ScopeType } from "@/types/scope";
 
+type ScopeEntity =
+  | { entity: OrganizationWithStatsAndRole; type: "organization" }
+  | { entity: ThreadWithRole; type: "thread" }
+  | { entity: DeadlineWithRole; type: "deadline" };
+
 export const useCurrentScopeStore = defineStore("currentScope", () => {
-  const orgId = ref<number | null>(null);
-  const thrId = ref<number | null>(null);
-  const ddlId = ref<number | null>(null);
+  const organization = ref<OrganizationWithStatsAndRole | null>(null);
+  const thread = ref<ThreadWithRole | null>(null);
+  const deadline = ref<DeadlineWithRole | null>(null);
 
-  function withScope(id: number, scopeType: ScopeType) {
-    if (id < 0) {
-      console.error(`Invalid id (${id}) passed for scope type '${scopeType}'`);
-      $reset();
-      return;
-    }
-
-    switch (scopeType) {
+  function withScope(config: ScopeEntity) {
+    switch (config.type) {
       case "organization":
-        orgId.value = id;
+        organization.value = config.entity;
+        thread.value = null;
+        deadline.value = null;
         break;
       case "thread":
-        thrId.value = id;
+        thread.value = config.entity;
+        deadline.value = null;
         break;
       case "deadline":
-        ddlId.value = id;
+        deadline.value = config.entity;
         break;
     }
   }
 
   function exitScope(scopeType: ScopeType) {
-    // Fallthrough would fit here, but the sheer amount of "ignore" comments for
-    // biome + ts is not worth it
     switch (scopeType) {
       case "organization":
-        orgId.value = null;
-        thrId.value = null;
-        ddlId.value = null;
+        organization.value = null;
+        thread.value = null;
+        deadline.value = null;
         break;
       case "thread":
-        thrId.value = null;
-        ddlId.value = null;
+        thread.value = null;
+        deadline.value = null;
         break;
       case "deadline":
-        ddlId.value = null;
+        deadline.value = null;
         break;
     }
   }
 
-  function exitAndUpdate(id: number, scopeType: ScopeType) {
-    exitScope(scopeType);
-    withScope(id, scopeType);
+  function exitAndSet(config: ScopeEntity) {
+    exitScope(config.type);
+    withScope(config);
   }
 
   function $reset() {
     exitScope("organization");
   }
 
-  return { orgId, thrId, ddlId, withScope, exitScope, exitAndUpdate, $reset };
+  return {
+    organization,
+    thread,
+    deadline,
+    withScope,
+    exitScope,
+    exitAndSet,
+    $reset,
+  };
 });

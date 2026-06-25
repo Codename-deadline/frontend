@@ -11,11 +11,14 @@ import { useCurrentScopeStore } from '@/stores/CurrentScopeStore';
 const route = useRoute();
 const currentScopeStore = useCurrentScopeStore();
 
-const thrId = ref<number | null>(currentScopeStore.thrId);
+const thrId = ref<number | undefined>(currentScopeStore.thread?.id);
 if (!thrId.value && Number.isInteger(Number(route.query.thrId))) {
   thrId.value = Number(route.query.thrId);
-  currentScopeStore.exitAndUpdate(thrId.value, "thread");
 }
+const showCreateDeadlineButton = computed(
+  () => Number.isInteger(thrId.value) && currentScopeStore.thread?.permissions.createDeadlines
+);
+
 
 const userDeadlineFetcher = (page: number) => getMyDeadlines(page);
 const threadDeadlinesFetcher = (page: number) => getThreadDeadlines(thrId.value ?? -1, page);
@@ -28,7 +31,7 @@ const deadlineFetcher = computed(() => Number.isInteger(thrId.value) ? threadDea
     :edit-dialog-component="EditDeadlineDialog"
     :create-dialog-component="CreateDeadlineDialog"
     :fetcher="deadlineFetcher"
-    :show-create-button="Number.isInteger(thrId)"
+    :show-create-button="showCreateDeadlineButton"
     :reset="true"
     scope-type="deadline"
   />

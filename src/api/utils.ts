@@ -50,6 +50,12 @@ const extractParams = (issue: ZodIssue) => {
       return { max: issue.maximum };
     case "invalid_type":
       return { expected: issue.expected };
+    case "invalid_format":
+      return { format: issue.format, pattern: issue.pattern };
+    case "not_multiple_of":
+      return { divisor: issue.divisor };
+    case "unrecognized_keys":
+      return { keys: issue.keys.join(", ") };
     default:
       return undefined;
   }
