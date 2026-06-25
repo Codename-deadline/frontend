@@ -163,10 +163,10 @@
   },
   "navigation": {
     "buttons": {
-      "organizations": "Orgs",
+      "organizations": "Organizations",
       "threads": "Threads",
       "deadlines": "Deadlines",
-      "invitations": "Invites"
+      "invitations": "Invitations"
     }
   },
   "scopes": {
@@ -189,7 +189,7 @@
       "nothing-here": "Nothing here yet",
       "name-not-provided": "Name is not provided",
       "mention": {
-        "placeholder": "@username"
+        "placeholder": "username"
       },
       "form-sections": {
         "settings": "Settings",

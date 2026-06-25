@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useWindowSize } from "@vueuse/core";
 import { useThemeVars } from "naive-ui";
 import type { Component } from "vue";
 import { useI18n } from "vue-i18n";
@@ -15,6 +16,8 @@ const emit = defineEmits<(e: "click", id: MainSection) => void>();
 
 const { t } = useI18n();
 const themeVars = useThemeVars();
+
+const { width } = useWindowSize();
 </script>
 
 <template>
@@ -25,10 +28,11 @@ const themeVars = useThemeVars();
     :class="{ 'nav-button__active': isActive }"
   >
     <div class="flex flex-col items-center space-y-0.5">
-      <Icon size="20">
+      <!-- 640 is tied to the "sm" query -->
+      <Icon :size="width < 640 ? 32 : 20">
         <component :is="icon"/>
       </Icon>
-      <span class="capitalize">{{ t(textSelector) }}</span>
+      <span class="hidden sm:block capitalize">{{ t(textSelector) }}</span>
     </div>
   </button>
 </template>

@@ -44,16 +44,16 @@ const updateCurrentSection = (section: MainSection) => {
 
 <template>
   <nav class="w-full border-t flex justify-center py-2">
-    <div class="w-full px-2 gap-2 sm:w-3/4 sm:gap-4 md:w-1/2 md:gap-6 xl:gap-8 inline-grid grid-flow-col auto-cols-fr">
+    <div class="w-full px-2 gap-2 sm:w-3/4 sm:gap-4 md:w-2/3 lg:w-1/2 md:gap-6 xl:gap-8 inline-grid grid-flow-col auto-cols-fr">
       <nav-button
-        role="button"
-        @click="updateCurrentSection"
         v-for="button in buttons"
         :key="button.section"
+        @click="updateCurrentSection"
         :text-selector="`navigation.buttons.${button.section.toLowerCase()}`"
         :icon="button.icon"
         :section="button.section"
         :is-active="currentSection === button.section"
+        role="button"
       />
     </div>
   </nav>

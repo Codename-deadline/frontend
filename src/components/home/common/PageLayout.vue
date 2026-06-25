@@ -101,14 +101,14 @@ watch(() => props.reset, (value) => {
 
 <template>
   <global-header class="mt"/>
-  <div class="mt-8 layout-dynamic-padding">
+  <div class="mt-4 sm:mt-8 layout-dynamic-padding">
     <section-header
       :section="scopeType"
       :show-create-button="showCreateButton"
       button-action="create"
     />
     <div class="mt-6 grid">
-      <div v-bind="containerProps" class="overflow-y-auto max-h-[72.5vh] col-start-1 row-start-1">
+      <div v-bind="containerProps" class="overflow-y-auto h-full pb-14 col-start-1 row-start-1">
         <div v-bind="wrapperProps" class="space-y-4">
           <div
             class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"

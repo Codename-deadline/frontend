@@ -23,7 +23,7 @@ const emit = defineEmits<(e: "back") => void>();
 </script>
 
 <template>
-  <n-card class="max-w-1/2 max-sm:max-w-4/5 rounded-xl! shadow-lg! p-4! border!">
+  <n-card class="max-w-4/5 sm:max-w-3/5 lg:max-w-2/5 rounded-xl! shadow-lg! md:p-2 border!">
     <header class="flex flex-col items-center justify-center space-y-4">
       <div class="w-full" v-if="showBackButton">
         <n-button role="button" text @click="emit('back')">
@@ -35,19 +35,19 @@ const emit = defineEmits<(e: "back") => void>();
           {{ t("actions.back") }}
         </n-button>
       </div>
-      <Icon size="48" class="mb-0!">
+      <Icon size="48" class="hidden! md:block mb-0!">
         <CalendarAlt/>
       </Icon>
       <div class="flex flex-col items-center justify-center space-y-4">
-        <h1 class="mb-0 max-sm:text-3xl">
+        <h1 class="text-center mt-2 max-md:text-3xl">
           {{ headerSelector ? t(headerSelector) : APP_NAME }}
         </h1>
-        <div v-if="descriptionSelector" class="text-center text-gray-500">
+        <div v-if="descriptionSelector" class="mb-6 text-center description">
           {{ t(descriptionSelector) }}
         </div>
       </div>
     </header>
-    <section class="card__body mt-6">
+    <section class="card__body">
       <slot name="body"></slot>
     </section>
     <footer>

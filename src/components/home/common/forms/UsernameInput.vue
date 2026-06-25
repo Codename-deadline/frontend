@@ -42,6 +42,6 @@ const handleSearch = useDebounceFn(fetchUsers, 250);
     :options="options"
     :loading="loading"
     default-value="@"
-    :placeholder="t('scopes.common.mention.placeholder')"
+    :placeholder="`@${t('scopes.common.mention.placeholder')}`"
   />
 </template>
