@@ -132,7 +132,7 @@ export function useEntityEdit<TFormModel extends { title: string; description?: 
   const canInvite = computed(() => config.entity.permissions[config.invitePermissionKey] ?? false);
 
   const myRoles = computed<UserScopedRoles<AnyRole>>(() => {
-    return { scope: config.entity.role, global: config.entity.globalRole };
+    return { scope: config.entity.role, global: config.entity.globalRole ?? config.entity.role ?? undefined };
   });
 
   return {
